@@ -19,6 +19,8 @@ user_route.use(bodyparser.urlencoded({extended:true}));
 
 user_route.get('/',userController.loadHome)
 user_route.get('/login',userController.loadLogin)
+user_route.post('/login',userController.insertUser)
+user_route.post('/',userController.verify)
 
 
 

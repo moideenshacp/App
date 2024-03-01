@@ -36,7 +36,7 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <!-- <li class="breadcrumb-item"><a href="#">Pages</a></li> -->
                         <li class="breadcrumb-item active" aria-current="page">Login</li>
                     </ol>
@@ -57,15 +57,15 @@
 							</ul>
 							<div class="tab-content">
 							    <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
-							    	<form action="#">
+							    	<form  method="post" action="/">
 							    		<div class="form-group">
 							    			<label for="singin-email-2">Username or email address *</label>
-							    			<input type="text" class="form-control" id="singin-email-2" name="singin-email" required>
+							    			<input type="text" class="form-control" id="singin-email-2" name="email" required>
 							    		</div><!-- End .form-group -->
 
 							    		<div class="form-group">
 							    			<label for="singin-password-2">Password *</label>
-							    			<input type="password" class="form-control" id="singin-password-2" name="singin-password" required>
+							    			<input type="password" class="form-control" id="singin-password-2" name="password" required>
 							    		</div><!-- End .form-group -->
 
 							    		<div class="form-footer">
@@ -101,16 +101,38 @@
 							    	</div><!-- End .form-choice -->
 							    </div><!-- .End .tab-pane -->
 							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-							    	<form action="#">
+							    	<form method="post" action="/login">
+
+                                        <%
+                                        if(typeof message !== 'undefined'){
+                                            %>
+                                            <p style="color: green;"><%= message %></p>
+                                            <%
+                                        }
+                                        %>
+                                        
+							    		<div class="form-group">
+							    			<label for="register-password-2">Name *</label>
+							    			<input type="name" class="form-control" id="register-password-2" name="name" required>
+							    		</div><!-- End .form-group -->
+
 							    		<div class="form-group">
 							    			<label for="register-email-2">Your email address *</label>
-							    			<input type="email" class="form-control" id="register-email-2" name="register-email" required>
+							    			<input type="email" class="form-control" id="register-email-2" name="email" required>
 							    		</div><!-- End .form-group -->
 
 							    		<div class="form-group">
 							    			<label for="register-password-2">Password *</label>
-							    			<input type="password" class="form-control" id="register-password-2" name="register-password" required>
+							    			<input type="password" class="form-control" id="register-password-2" name="password" required>
 							    		</div><!-- End .form-group -->
+
+                                        
+							    		<div class="form-group">
+							    			<label for="register-password-2">Mobile *</label>
+							    			<input type="mobile" class="form-control" id="register-password-2" name="mobile" required>
+							    		</div><!-- End .form-group -->
+
+                                        
 
 							    		<div class="form-footer">
 							    			<button type="submit" class="btn btn-outline-primary-2">
@@ -123,6 +145,9 @@
 												<label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
 											</div><!-- End .custom-checkbox -->
 							    		</div><!-- End .form-footer -->
+                                        <div class="message">
+                                           
+                                            </div>
 							    	</form>
 							    	<div class="form-choice">
 								    	<p class="text-center">or sign in with</p>
@@ -521,6 +546,8 @@
     <script src="/usercss/assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
+
+   
 </body>
 
 

@@ -5,7 +5,8 @@ const express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const session = require('express-session')
+const bodyParser = require('body-parser')
 var adminRouter = require('./routes/adminRoute');
 var usersRouter = require('./routes/userRoute');
 
@@ -15,6 +16,7 @@ const app = express();
 // app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(session({secret:config.sessionsecret}))
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,6 +35,7 @@ app.use('/',userRoute)
 //for admin routes
 const adminRoute = require('./routes/adminRoute');
 const { name } = require('ejs');
+const { config } = require('process');
 app.use('/admin',adminRoute)
 
 
