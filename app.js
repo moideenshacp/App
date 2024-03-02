@@ -6,6 +6,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session')
+const config = require('./config/config')
 const bodyParser = require('body-parser')
 var adminRouter = require('./routes/adminRoute');
 var usersRouter = require('./routes/userRoute');
@@ -34,8 +35,7 @@ app.use('/',userRoute)
 
 //for admin routes
 const adminRoute = require('./routes/adminRoute');
-const { name } = require('ejs');
-const { config } = require('process');
+const { name } = require('ejs');;
 app.use('/admin',adminRoute)
 
 
