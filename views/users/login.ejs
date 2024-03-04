@@ -63,10 +63,11 @@
                                     <form method="post" action="/">
                                         <% if(typeof message!=='undefined' ){ %>
 
-                                            <h4 class="message">
+                                            <p style="color: red;text-align: center;" class="message">
                                                 <%= message %>
-                                            </h4>
+                                            </p>
                                             <% } %>
+                                            <br>
                                                 <div class="form-group">
                                                     <label for="singin-email-2">Username or email address *</label>
                                                     <input type="text" class="form-control" id="singin-email-2"
@@ -91,13 +92,11 @@
                                                     </button>
 
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="signin-remember-2">
-                                                        <label class="custom-control-label"
-                                                            for="signin-remember-2">Remember Me</label>
+                                                        <a href="#" class="forgot-link">Forgot Your Password?</a>
+                                                       
                                                     </div><!-- End .custom-checkbox -->
 
-                                                    <a href="#" class="forgot-link">Forgot Your Password?</a>
+                                                    <!-- <a href="#" class="forgot-link">Forgot Your Password?</a> -->
                                                 </div><!-- End .form-footer -->
                                     </form>
                                     <div class="form-choice">

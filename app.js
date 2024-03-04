@@ -10,11 +10,12 @@ const config = require('./config/config')
 const bodyParser = require('body-parser')
 var adminRouter = require('./routes/adminRoute');
 var usersRouter = require('./routes/userRoute');
+const nocache = require('nocache')
 
 const app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(session({secret:config.sessionsecret}))
@@ -23,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(nocache())
 
 
 const port = process.env.PORT||3001;
@@ -35,8 +36,11 @@ app.use('/',userRoute)
 
 //for admin routes
 const adminRoute = require('./routes/adminRoute');
-const { name } = require('ejs');;
+// const { name } = require('ejs')
+;
 app.use('/admin',adminRoute)
+
+
 
 
 

@@ -1,40 +1,117 @@
 // const { name } = require('ejs');
 const users = require('../models/userModel');
-const otp = require('../models/otpModel')
+const Otp = require('../models/otpModel')
 const bcrypt = require('bcrypt');
-
-
-//nodemailer
+const { use, emit } = require('../app');
 const nodemailer = require('nodemailer');
-const { ReturnDocument } = require('mongodb');
-let transporter = nodemailer.createTransport({
-    host:'smtp-mail.outlook.com',
-    auth:{
-        user:'marsappproject@hotmail.com',
-        pass:'marsapp10@'
+// const { name } = require('ejs');
 
+
+
+//to generate otp
+function generateOtp(){
+    var digits ='1234567890';
+    var otp ='';
+    for(let i=0;i<6;i++){
+        otp+=digits[Math.floor(Math.random()*10)]
     }
-});
+    return otp;
+}
 
-//test transporter
-transporter.verify((error,success)=>{
-    if(error){
-        console.log(error);
-    }else{
-        console.log(success);
-    }
-})
 
-//send email
-const sendEmail = async(mailOptions)=>{
+//for send otp
+const sendOtpMail = async(name,email,userda_id)=>{
     try {
-       await transporter.sendMail(mailOptions)
-       return
+        const otp = generateOtp();
+        
+      // Store OTP in the database
+      const newOtp = new Otp({
+        email: email,
+        otp: otp,
+        createdAt: new Date(), // Set the current date/time as the creation time
+        expiredAt: new Date(new Date().getTime() + 1 * 60 * 1000) // Set the expiry time
+    });
+    await newOtp.save(); // Save the OTP document to the database
+
+      const transporter =   nodemailer.createTransport({
+            host:'smtp.gmail.com',
+            port:587,
+            secure:false,
+            requireTLS:true,
+            auth:{
+                user:'moideenshacp28@gmail.com',
+                pass:'fcnk qnbj fqpj pmuz'
+            }
+        });
+       
+        const mailOptions = {
+            from :'moideenshacp28@gmail.com',
+            to:email,
+            subject:'OTP Verification',
+            html:` <p>Hi ${name}, please verify this OTP: ${otp}</p>`
+        }
+        transporter.sendMail(mailOptions,function(error){
+            if (error) {
+                console.log(error.message);
+            } else {
+                console.log('otp send successfully');
+                
+            }
+        })
+        
+        
     } catch (error) {
         console.log(error.message);
-        
     }
 }
+
+Otp.collection.createIndex({ "expiredAt": 1 }, { expireAfterSeconds: 0 });
+
+let userdata;
+
+// Function to verify OTP
+const verifyOtp = async (req, res) => {
+    try {
+        const { email, otp  } = req.body;
+        console.log(otp);
+
+        const otpData = await Otp.findOne({otp:otp});
+        // const dataotp = otpData.otp
+        // const otpfound = otpData.otp;
+    //    const otps = req.body.OTP;
+       console.log(otpData);
+  
+      
+        // Check if otp exists
+        // if (!otpData) {
+        //     return res.render('otp', { messages: 'OTP not found' });
+        // }
+
+        // Check if otp has expired
+        const currentTime = new Date();
+        if (currentTime > otpData.expiredAt) {
+            return res.render('otp', { messages: 'OTP has expired' });
+        }
+
+        // Compare otp
+        if (otpData && otpData.otp === otp) {
+          await userdata.save()
+          if(userdata){
+                  return res.render('login', { message: 'registered successfully,Login in now' });
+          }
+        } else {
+            return res.render('otp', { messages: 'Invalid OTP' });
+            
+        }
+
+    } catch (error) {
+        console.log(error.message);
+        return res.render('otp', { messages: 'An error occurred during OTP verification' });
+    }
+};
+
+
+
 
 
 
@@ -119,9 +196,10 @@ const insertUser = async(req,res)=>{
     
             });
     
-            const userdata  = await user.save();  
+           userdata  = await user;  
             if(userdata){
-                res.render('signup',{messages:'Registered succesfully,Go to Login'})
+                await sendOtpMail(req.body.name,req.body.email,userdata._id)
+                res.render('otp',{messages:'Check your email for the OTP and enter it below'})
             }else{
                 res.render('signup',{messages:'failed to register'})
             }
@@ -149,7 +227,7 @@ const verify = async(req,res)=>{
             const passwordMatch = await bcrypt.compare(password,userData.password);
             if(passwordMatch){
                     req.session.user_id = userData._id;
-                    return res.render('home');
+                    return res.render('userhome');
  
                     
                 }else{
@@ -178,74 +256,39 @@ const loadOtp = async(req,res)=>{
         console.log(error.message);
     }
 }
-
-//verification otp 
-
-const verificationOtp = async(req,res)=>{
+//load profile
+const loadprofile = async(req,res)=>{
     try {
-
-        const {email,subject,message,duration}= req.body;
-        
+        res.render('profile')
     } catch (error) {
         console.log(error.message);
     }
 }
 
-//sendotp
-
-const sendOtp = async({email,subject,message,duration = 1})=>{
+//load userhome
+const userhome = async(req,res)=>{
     try {
-
-        if(!(email && subject && message)){
-            throw Error('provide values for email,subject and message')
-        }
-        
-        //clear old otps
-        await otp.deleteOne({email})
-
-        //generated pin
-        const generatedOtp = await generateOtp();
-
-        //send email
-        const mailOptions = {
-            from : 'marsappproject@hotmail.com',
-            to:email,
-            subject,
-            html : `<p>${message}</p> <p style='color:black;
-            font-size:25px;letter-spacing:2px;'><b>${generatedOtp}
-            </b></p><p>This code <b> expires in ${duration} hour(s)</b>.</p>`,
-        }
-        await sendEmail(mailOptions)
-
-        //save otp in Db
-
-        const otp = generatedOtp;
-        const newOtp  = await new otp({
-            email,
-            otp:generatedOtp,
-            createdAt :Date.now(),
-            expiresAt :Date.now()+3600000 * +duration,
-        })
-
-        const createdOtpRecord = await newOtp.save();
-        return createdOtpRecord;
-
+        res.render('userhome')
     } catch (error) {
         console.log(error.message);
     }
 }
 
 
-//generate otp
-const generateOtp = async()=>{
+//signout
+const signout = async(req,res)=>{
     try {
-
-        return (otp = `${Math.floor(1000+Math.round()*9000)}`)
+        req.session.destroy()
+        res.render('home')
         
     } catch (error) {
-        throw error
+        console.log(error.message);
     }
 }
+
+
+
+
 
 
 
@@ -256,9 +299,11 @@ module.exports= {
     verify,
     loadOtp,
     SignupHome,
-    verificationOtp,
-    sendOtp,
-    generateOtp,
-    sendEmail
+    verifyOtp,
+    loadprofile,
+    userhome,
+    signout
+   
   
+   
 }

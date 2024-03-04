@@ -28,6 +28,24 @@
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
+
+    <style>
+        /* Timer styles */
+        #timer {
+            margin-top: 20px;
+            text-align: center; 
+            font-size: 16px;
+        }
+
+        /* Resend link styles */
+        #resend-link {
+            display: block;
+            text-align: center; 
+            margin-top: 10px; 
+            font-size: 18px; 
+            color: red; 
+        }
+    </style>
 </head>
 
 <body>
@@ -50,12 +68,14 @@
                     <div class="form-box">
                         <div class="form-tab">
                             <ul class="nav nav-pills nav-fill" role="tablist">
-                            
+
                                 <li class="nav-item">
                                     <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2"
                                         role="tab" aria-controls="register-2" aria-selected="true">OTP verification</a>
                                 </li>
+
                             </ul>
+                            <br><br>
                             <div class="tab-content">
 
                                 <div class="tab-pane fade show active" id="register-2" role="tabpanel"
@@ -63,30 +83,52 @@
                                     <form method="post" action="/otp">
 
                                         <% if(typeof messages !=='undefined' ){ %>
-                                            <p style="color: green;">
+                                            <p style="color: green; text-align: center;">
                                                 <%= messages %>
                                             </p>
                                             <% } %>
+                                                <br>
 
-                                                <div class="form-group">
-                                                    <label for="register-password-2">OTP *</label>
-                                                    <input type="name" class="form-control" id="register-password-2"
-                                                        name="name" required>
-                                                </div><!-- End .form-group -->
 
-                    
-                                                <div class="form-footer">
+                                                <label for="register-password-2"
+                                                    style="text-align:right; display: block;margin-bottom: 10px;"></label>
+                                                <input
+                                                    style="border: none;border-bottom: 1px solid black; outline: none; width: 150px; margin: 0 auto;;"
+                                                    type="number" class="form-control" id="register-password-2"
+                                                    name="otp" required>
+
+                                                <br>
+
+                                                <div class="center" style="text-align: center;">
                                                     <button type="submit" class="btn btn-outline-primary-2">
                                                         <span>SUBMIT</span>
                                                         <i class="icon-long-arrow-right"></i>
                                                     </button>
 
                                                 </div><!-- End .form-footer -->
-                                               
+                                                <div 
+                                                
+                                                id="timer">
+                                               </div>
+                                              
+
+
                                     </form>
-                              
+                                    <br><br>
+                                    <div class="center" style="text-align: center;">
+                                    <form method="post" action="/resendotp">
+                                       
+                                       <!-- <div id="resend-link"></div> -->
+                                        <button type="submit" class="btn btn-outline-primary-2" id="resend" disabled>
+                                            <span>RESEND OTP</span>
+                                            <!-- <i class="icon-long-arrow-right"></i> -->
+                                        </button>
+                                    </div>       
+                                       
+                                    </form>
+
                                 </div><!-- .End .tab-pane -->
-                                
+
                             </div><!-- End .tab-content -->
                         </div><!-- End .form-tab -->
                     </div><!-- End .form-box -->
@@ -102,9 +144,10 @@
                             <div class="widget widget-about">
                                 <!-- <img src="/usercss/assets/images/logo.png" class="footer-logo" alt="Footer Logo"
                                  -->
-                                 
-                        <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Mars</h3>
-                                    <!-- width="105" height="25"> -->
+
+                                <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Mars
+                                </h3>
+                                <!-- width="105" height="25"> -->
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                     magna eros eu erat. </p>
 
@@ -490,8 +533,40 @@
     <script src="/usercss/assets/js/jquery.waypoints.min.js"></script>
     <script src="/usercss/assets/js/superfish.min.js"></script>
     <script src="/usercss/assets/js/owl.carousel.min.js"></script>
+    <script src="/controllers/usercontroller.js"> </script>
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
+
+    <script>
+        // Set the timer duration in seconds
+        var timerDuration = 120; // 10 seconds for testing
+
+        // Function to update the timer
+        function updateTimer() {
+            var minutes = Math.floor(timerDuration / 60);
+            var seconds = timerDuration % 60;
+            document.getElementById("timer").textContent = "Expire After :" + minutes + "m " + seconds + "s";
+
+            // Decrement timer duration
+            timerDuration--;
+
+            // Check if timer has reached 0
+            if (timerDuration < 0) {
+                clearInterval(timerInterval); // Stop the timer
+                document.getElementById("timer").textContent = "Time expires resend the otp ";
+                // document.getElementById("resend-link").innerHTML = '<a href="/otp">Resend OTP</a>' // Show the resend link
+            }else{
+                
+            }
+        }
+
+        // Call updateTimer function every second
+        var timerInterval = setInterval(updateTimer, 1000);
+
+        setTimeout(function() {
+    document.getElementById("resend").disabled = false;
+}, 2 * 60 * 1000);
+    </script>
 
 
 </body>

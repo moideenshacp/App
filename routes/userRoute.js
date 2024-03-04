@@ -23,13 +23,22 @@ user_route.post('/signup',userController.insertUser)
 user_route.get('/login',userController.loadLogin)
 user_route.post('/login',userController.insertUser)
 user_route.post('/',userController.verify)
+// user_route.('/',userController.verifyOtp)
 
 
 //for otp
 
 user_route.get('/otp',userController.loadOtp)
-user_route.post('/otp',userController.verificationOtp)
+user_route.post('/otp',userController.verifyOtp)
 
+
+//profile
+user_route.get('/profile',userController.loadprofile)
+//userhome
+user_route.get('/home',userController.userhome)
+
+//signout
+user_route.get('/signout',userController.signout)
 
 
 

@@ -1,9 +1,27 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express')
+const admin_route = express();
+const session = require('express-session');
+const config = require('../config/config');
+const auth = require('../middleware/adminauth');
+const bodyparser = require('body-parser');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+admin_route.use(session({secret:config.sessionsecret}))
 
-module.exports = router;
+
+
+
+admin_route.use(bodyparser.json());
+admin_route.use(bodyparser.urlencoded({extended:true}));
+
+admin_route.set('view engine','ejs')
+admin_route.set('views','./views/admin');
+
+//middleware
+
+const adminController = require('../controllers/adminController')
+
+//load login
+admin_route.get('/',adminController.loadLogin)
+
+
+module.exports = admin_route;
