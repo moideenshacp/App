@@ -20,7 +20,7 @@ function generateOtp(){
 
 
 //for send otp
-const sendOtpMail = async(name,email,userda_id)=>{
+const sendOtpMail = async(name,email)=>{
     try {
         const otp = generateOtp();
         
@@ -32,6 +32,7 @@ const sendOtpMail = async(name,email,userda_id)=>{
         expiredAt: new Date(new Date().getTime() + 1 * 60 * 1000) // Set the expiry time
     });
     await newOtp.save(); // Save the OTP document to the database
+    
 
       const transporter =   nodemailer.createTransport({
             host:'smtp.gmail.com',
@@ -60,14 +61,79 @@ const sendOtpMail = async(name,email,userda_id)=>{
         })
         
         
+        
     } catch (error) {
         console.log(error.message);
     }
 }
 
-Otp.collection.createIndex({ "expiredAt": 1 }, { expireAfterSeconds: 0 });
+// Otp.collection.createIndex({ "expiredAt": 1 }, { expireAfterSeconds: 0 });
 
 let userdata;
+
+
+//resend
+const resendotp  = async(req,res,email)=>{
+    
+   try {
+    // const email = req.body.email;
+       // Check if the user exists in the database
+   const existingOTP = await Otp.findOne({ email:req.session.email });
+   console.log(existingOTP);
+   
+
+   if (existingOTP) {
+    await Otp.deleteOne({email:req.session.email})
+       // Generate a new OTP
+       const newOTP = generateOtp();
+       console.log(newOTP);
+
+       const resendotp = new Otp({
+        email: req.session.email,
+        otp: newOTP,
+        createdAt: new Date(), // Set the current date/time as the creation time
+        expiredAt: new Date(new Date().getTime() + 1 * 60 * 1000) // Set the expiry time
+    });
+    await resendotp.save();
+
+
+       const transporter =   nodemailer.createTransport({
+        host:'smtp.gmail.com',
+        port:587,
+        secure:false,
+        requireTLS:true,
+        auth:{
+            user:'moideenshacp28@gmail.com',
+            pass:'fcnk qnbj fqpj pmuz'
+        }
+    });
+   
+    const mailOptions = {
+        from :'moideenshacp28@gmail.com',
+        to:req.session.email,
+        subject:'OTP Verification',
+        html:` <p>Hi , please verify this OTP: ${newOTP}</p>`
+    }
+    transporter.sendMail(mailOptions,function(error){
+        if (error) {
+            console.log(error.message);
+        } else {
+            console.log('resenotp send successfully');
+            
+        }
+    })
+
+       
+ 
+   }
+   res.render('otp')
+    
+
+   } catch (error) {
+    console.log(error.message);
+   }
+
+}
 
 // Function to verify OTP
 const verifyOtp = async (req, res) => {
@@ -83,9 +149,9 @@ const verifyOtp = async (req, res) => {
   
       
         // Check if otp exists
-        // if (!otpData) {
-        //     return res.render('otp', { messages: 'OTP not found' });
-        // }
+        if (!otpData) {
+            return res.render('otp', { messages: 'OTP not found' });
+        }
 
         // Check if otp has expired
         const currentTime = new Date();
@@ -95,7 +161,8 @@ const verifyOtp = async (req, res) => {
 
         // Compare otp
         if (otpData && otpData.otp === otp) {
-          await userdata.save()
+          await userdata.save();
+          
           if(userdata){
                   return res.render('login', { message: 'registered successfully,Login in now' });
           }
@@ -196,7 +263,9 @@ const insertUser = async(req,res)=>{
     
             });
     
-           userdata  = await user;  
+            userdata  = await user; 
+            req.session.email = userdata.email;
+            
             if(userdata){
                 await sendOtpMail(req.body.name,req.body.email,userdata._id)
                 res.render('otp',{messages:'Check your email for the OTP and enter it below'})
@@ -279,7 +348,7 @@ const userhome = async(req,res)=>{
 const signout = async(req,res)=>{
     try {
         req.session.destroy()
-        res.render('home')
+        res.redirect('/')
         
     } catch (error) {
         console.log(error.message);
@@ -302,7 +371,8 @@ module.exports= {
     verifyOtp,
     loadprofile,
     userhome,
-    signout
+    signout,
+    resendotp
    
   
    
