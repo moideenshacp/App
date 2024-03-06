@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const { use, emit } = require('../app');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
+const passport = require('passport')
 
 
 
@@ -28,10 +29,10 @@ const sendOtpMail = async(name,email)=>{
       const newOtp = new Otp({
         email: email,
         otp: otp,
-        createdAt: new Date(), // Set the current date/time as the creation time
+        createdAt: new Date(), // Set the current date
         expiredAt: new Date(new Date().getTime() + 1 * 60 * 1000) // Set the expiry time
     });
-    await newOtp.save(); // Save the OTP document to the database
+    await newOtp.save(); 
     
 
       const transporter =   nodemailer.createTransport({
@@ -67,7 +68,7 @@ const sendOtpMail = async(name,email)=>{
     }
 }
 
-// Otp.collection.createIndex({ "expiredAt": 1 }, { expireAfterSeconds: 0 });
+// Otp.collection.createIndex({ "expiredAt": 1 }, { expireAfterSeconds: 180 });
 
 let userdata;
 
@@ -76,7 +77,6 @@ let userdata;
 const resendotp  = async(req,res,email)=>{
     
    try {
-    // const email = req.body.email;
        // Check if the user exists in the database
    const existingOTP = await Otp.findOne({ email:req.session.email });
    console.log(existingOTP);
@@ -85,44 +85,7 @@ const resendotp  = async(req,res,email)=>{
    if (existingOTP) {
     await Otp.deleteOne({email:req.session.email})
        // Generate a new OTP
-       const newOTP = generateOtp();
-       console.log(newOTP);
-
-       const resendotp = new Otp({
-        email: req.session.email,
-        otp: newOTP,
-        createdAt: new Date(), // Set the current date/time as the creation time
-        expiredAt: new Date(new Date().getTime() + 1 * 60 * 1000) // Set the expiry time
-    });
-    await resendotp.save();
-
-
-       const transporter =   nodemailer.createTransport({
-        host:'smtp.gmail.com',
-        port:587,
-        secure:false,
-        requireTLS:true,
-        auth:{
-            user:'moideenshacp28@gmail.com',
-            pass:'fcnk qnbj fqpj pmuz'
-        }
-    });
-   
-    const mailOptions = {
-        from :'moideenshacp28@gmail.com',
-        to:req.session.email,
-        subject:'OTP Verification',
-        html:` <p>Hi , please verify this OTP: ${newOTP}</p>`
-    }
-    transporter.sendMail(mailOptions,function(error){
-        if (error) {
-            console.log(error.message);
-        } else {
-            console.log('resenotp send successfully');
-            
-        }
-    })
-
+       await sendOtpMail(req.session.name,req.session.email,userdata._id)
        
  
    }
@@ -176,7 +139,6 @@ const verifyOtp = async (req, res) => {
         return res.render('otp', { messages: 'An error occurred during OTP verification' });
     }
 };
-
 
 
 
@@ -282,6 +244,54 @@ const insertUser = async(req,res)=>{
  
 
 }
+//google user
+
+const googleInsert = async(req,res)=>{
+    try {
+
+
+
+        const email = req.user.emails[0].value;
+        const name = req.user.displayName;
+        // const googleID = req.user.id;
+        console.log("_________________________________________________________"+email);
+
+        const checkEmail = await users.findOne({email:email})
+        if(checkEmail){
+            req.session.user_id = checkEmail._id;
+            res.redirect('/home')
+        }else{
+            const googleuser = new users({
+                name:name,
+                email:email,
+                // googleID:googleID
+    
+            });
+        
+          const usergoogle =   await googleuser.save()
+          if(usergoogle){
+            req.session.user_id = usergoogle._id;
+            res.redirect('/home')
+        }
+
+          
+
+        }
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
+
+//failure login
+const failureLogin = async(req,res)=>{
+    try {
+        res.render('login')
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 //verify login
 
@@ -325,14 +335,7 @@ const loadOtp = async(req,res)=>{
         console.log(error.message);
     }
 }
-//load profile
-const loadprofile = async(req,res)=>{
-    try {
-        res.render('profile')
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+
 
 //load userhome
 const userhome = async(req,res)=>{
@@ -342,6 +345,25 @@ const userhome = async(req,res)=>{
         console.log(error.message);
     }
 }
+
+//load profile
+const loadprofile = async(req,res)=>{
+    try {
+        res.render('profile')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+////load profile
+const loadproduct = async(req,res)=>{
+    try {
+        res.render('product')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 //signout
@@ -372,7 +394,10 @@ module.exports= {
     loadprofile,
     userhome,
     signout,
-    resendotp
+    resendotp,
+    loadproduct,
+    googleInsert,
+    failureLogin
    
   
    

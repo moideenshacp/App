@@ -2,15 +2,19 @@ const mongoose = require('mongoose');
 mongoose.connect("mongodb://127.0.0.1:27017/App");
 
 const express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const session = require('express-session')
 const config = require('./config/config')
 const bodyParser = require('body-parser')
-var adminRouter = require('./routes/adminRoute');
-var usersRouter = require('./routes/userRoute');
+const adminRouter = require('./routes/adminRoute');
+const usersRouter = require('./routes/userRoute');
 const nocache = require('nocache')
+// 
+require('dotenv').config()
+const passport = require('passport')
+require('./passportsetup')
 
 const app = express();
 
@@ -27,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(nocache())
 
 
-const port = process.env.PORT||3001;
+const port = process.env.PORT||3000;
 
 
 //for user routes
@@ -44,7 +48,7 @@ app.use('/admin',adminRoute)
 
 
 
-app.listen(port,()=>{console.log("Listening to the server on http://localhost:3001")});
+app.listen(port,()=>{console.log("Listening to the server on http://localhost:3000")});
 
 
 

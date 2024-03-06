@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
 
     name:{
         type:String,
-        required:true
+        // required:true
     },
     email:{
         type:String,
@@ -12,11 +12,11 @@ const userSchema = mongoose.Schema({
     },
     password:{
         type:String,
-        required:true
+        // required:true
     },
     mobile:{
         type:String,
-        required:true
+        // required:true
     },
     is_verified:{
         type:Number,
