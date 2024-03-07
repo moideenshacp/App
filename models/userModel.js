@@ -18,10 +18,15 @@ const userSchema = mongoose.Schema({
         type:String,
         // required:true
     },
-    is_verified:{
+    is_admin:{
         type:Number,
-        default:0
+
+    },
+    is_blocked:{
+        type:Boolean,
+        default:false
     }
+    
 
 })
 

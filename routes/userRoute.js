@@ -35,7 +35,7 @@ user_route.post('/signup',userController.insertUser)
 //login
 user_route.get('/login',auth.isLogout,userController.loadLogin)
 user_route.post('/login',userController.insertUser)
-user_route.post('/',userController.verify)
+user_route.post('/home',userController.verify)
 
 //for otp
 user_route.get('/otp',auth.isLogout,userController.loadOtp)
@@ -52,14 +52,14 @@ user_route.get('/home',(req,res)=>{
 user_route.get('/google',passport.authenticate('google',{scope:['email','profile']}))
 
 //google authentication
-user_route.get('/auth/google/callback',auth.isLogin,passport.authenticate('google',{
+user_route.get('/auth/google/callback',auth.isLogout,passport.authenticate('google',{
     successRedirect:'/success',
     failureRedirect:'/failure'
 }))
 //for success
-user_route.get('/success',auth.isLogin,userController.googleInsert)
+user_route.get('/success',auth.isLogout,userController.googleInsert)
 //failure
-user_route.get('/failure',auth.isLogin,userController.failureLogin)
+user_route.get('/failure',auth.isLogout,userController.failureLogin)
 
 user_route.get('/google',auth.isLogin,passport.authenticate('google',{failureRedirect:'/login'}),function(req,res){
     res.redirect('/home')
@@ -78,7 +78,7 @@ user_route.get('/signout',auth.isLogin,userController.signout)
 
 //product
 user_route.get('/product',auth.isLogin,userController.loadproduct)
-
+user_route.get('/denim',auth.isLogin,userController.denim)
 
 
 

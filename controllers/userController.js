@@ -221,11 +221,13 @@ const insertUser = async(req,res)=>{
                 name:req.body.name,
                 email:req.body.email,
                 password:spassword,
-                mobile:req.body.mobile
+                mobile:req.body.mobile,
+                is_admin:0
     
             });
     
             userdata  = await user; 
+            req.session.user_id =userdata._id;
             req.session.email = userdata.email;
             
             if(userdata){
@@ -303,6 +305,7 @@ const verify = async(req,res)=>{
         const userData = await users.findOne({email:email});
 
         if(userData){
+            if(!userData.is_blocked){
             const passwordMatch = await bcrypt.compare(password,userData.password);
             if(passwordMatch){
                     req.session.user_id = userData._id;
@@ -313,6 +316,9 @@ const verify = async(req,res)=>{
                    return  res.render('login',{message:'Please verify your mail.'});
 
                 }
+            }else{
+                return res.render('login',{message:'Access Restricted'})
+            }
 
             }else{
                return res.render('login',{message:'Email and Password is incorrect'})
@@ -355,7 +361,8 @@ const loadprofile = async(req,res)=>{
     }
 }
 
-////load profile
+
+////load product
 const loadproduct = async(req,res)=>{
     try {
         res.render('product')
@@ -363,6 +370,17 @@ const loadproduct = async(req,res)=>{
         console.log(error.message);
     }
 }
+
+//load denim
+const denim = async(req,res)=>{
+    try {
+        res.render('denimjacket')
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -397,7 +415,9 @@ module.exports= {
     resendotp,
     loadproduct,
     googleInsert,
-    failureLogin
+    failureLogin,
+    denim,
+    
    
   
    

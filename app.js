@@ -40,7 +40,7 @@ app.use('/',userRoute)
 
 //for admin routes
 const adminRoute = require('./routes/adminRoute');
-// const { name } = require('ejs')
+const { name } = require('ejs')
 ;
 app.use('/admin',adminRoute)
 
