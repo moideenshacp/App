@@ -15,7 +15,7 @@ admin_route.set('view engine','ejs')
 admin_route.set('views','./views/admin');
 
 //middleware
-const auth = require('../middleware/adminauth');
+const auth = require('../middleware/adminAuth');
 
 const adminController = require('../controllers/adminController')
 
@@ -32,9 +32,21 @@ admin_route.get('/home',auth.isLogin,adminController.loadHome)
 admin_route.get('/logout',auth.isLogin,adminController.logout)
 
 //customers page
-admin_route.get('/customers',adminController.customers)
-// admin_route.get('/customers/:userId', adminController.block);
-admin_route.post('/customers/:userId', adminController.block);
+admin_route.get('/customers',auth.isLogin,adminController.customers)
+admin_route.get('/blockuser/:Id',auth.isLogin, adminController.block);
+
+//addproduct
+admin_route.get('/addproduct',auth.isLogin,adminController.addproduct)
+
+//category
+admin_route.get('/category',auth.isLogin,adminController.category)
+admin_route.post('/category',auth.isLogin,adminController.addcategory)
+
+//productlist
+admin_route.get('/products',auth.isLogin,adminController.products)
+
+//edit category
+admin_route.get('/edit-category',auth.isLogin,adminController.editCategoryLoad)
 
 
 

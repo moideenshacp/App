@@ -1,11 +1,8 @@
-
+const users = require('../models/userModel');
 const isLogin = async (req, res, next) => {
     try {
-        if (req.session.admin_id) {
-            res.redirect('/admin')
-        }
-        else if (!req.session.user_id) {
-            res.redirect('/home')
+if (!req.session.user_id) {
+            res.redirect('/')
         }
         else {
             next()
@@ -18,10 +15,7 @@ const isLogin = async (req, res, next) => {
 
 const isLogout = async (req, res, next) => {
     try {
-        if (req.session.admin_id) {
-            res.redirect('/admin')
-        }
-        else if (req.session.user_id) {
+if (req.session.user_id) {
             res.redirect('/home')
         } else {
             next()
@@ -32,8 +26,10 @@ const isLogout = async (req, res, next) => {
     }
 }
 
+
 module.exports = {
     isLogin,
-    isLogout
+    isLogout,
+ 
 }
 

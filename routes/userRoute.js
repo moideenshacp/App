@@ -7,6 +7,7 @@ user_route.use(session({secret:config.sessionsecret}));
 
 //middleware
 const auth = require('../middleware/auth')
+const blockAuth = require('../middleware/blockAuth')
 
 //for view engine
 user_route.set('view engine','ejs');
@@ -34,7 +35,7 @@ user_route.post('/signup',userController.insertUser)
 
 //login
 user_route.get('/login',auth.isLogout,userController.loadLogin)
-user_route.post('/login',userController.insertUser)
+// user_route.post('/login',userController.insertUser)
 user_route.post('/home',userController.verify)
 
 //for otp
@@ -45,9 +46,9 @@ user_route.post('/otp',userController.verifyOtp)
 user_route.post('/resendotp',userController.resendotp)
 
 //google
-user_route.get('/home',(req,res)=>{
-    res.render('userhome')
-})
+// user_route.get('/home',(req,res)=>{
+//     res.render('userhome')
+// })
 
 user_route.get('/google',passport.authenticate('google',{scope:['email','profile']}))
 
@@ -71,7 +72,7 @@ user_route.get('/google',auth.isLogin,passport.authenticate('google',{failureRed
 user_route.get('/profile',auth.isLogin,userController.loadprofile)
 
 //userhome
-user_route.get('/home',auth.isLogin,userController.userhome)
+user_route.get('/home', blockAuth.block,auth.isLogin, userController.userhome)
 
 //signout
 user_route.get('/signout',auth.isLogin,userController.signout)

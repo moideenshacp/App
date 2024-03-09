@@ -133,6 +133,7 @@ const verifyOtp = async (req, res) => {
             return res.render('otp', { messages: 'Invalid OTP' });
             
         }
+  
 
     } catch (error) {
         console.log(error.message);
@@ -305,25 +306,27 @@ const verify = async(req,res)=>{
         const userData = await users.findOne({email:email});
 
         if(userData){
-            if(!userData.is_blocked){
+            if(userData.is_blocked===false){
             const passwordMatch = await bcrypt.compare(password,userData.password);
             if(passwordMatch){
-                    req.session.user_id = userData._id;
-                    return res.render('userhome');
- 
+                    req.session.user_id =userData._id;
+                    console.log(req.session.user_id+'---------------');
+                    
+                    res.redirect('/home');
+                
                     
                 }else{
-                   return  res.render('login',{message:'Please verify your mail.'});
+                    res.render('login',{message:'Please verify your mail.'});
 
                 }
             }else{
-                return res.render('login',{message:'Access Restricted'})
+                res.render('login',{message:'Access Restricted'})
             }
 
             }else{
-               return res.render('login',{message:'Email and Password is incorrect'})
+               res.render('login',{message:'Email and Password is incorrect'})
             }
-
+            
         
     } catch (error) {
         console.log(error.message);
@@ -345,7 +348,9 @@ const loadOtp = async(req,res)=>{
 
 //load userhome
 const userhome = async(req,res)=>{
+
     try {
+        // req.session.destroy()
         res.render('userhome')
     } catch (error) {
         console.log(error.message);

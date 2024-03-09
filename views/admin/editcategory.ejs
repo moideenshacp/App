@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Nest Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admincss/assets/imgs/theme/favicon.svg" />
+    <!-- Template CSS -->
+    <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+
+
+    <section class="content-main">
+
+        <div>
+            <h2 style="text-align: center;">Edit Category</h2>
+            <!-- <p>Edit Category</p> -->
+        </div>
+        <form action="">
+
+            <div class="card" style="width: 100%;">
+                <div class="card-body" style="width: 100%;">
+                    <div class="row" style="width: 100%;">
+
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                           <td><b><input style="border: none; width: 100%; height: 40px;" class="input" type="name" name="name"
+                                                        placeholder="Enter Your Name" value="<%= categoryData.name%>"
+                                                        required></b></td>
+                                            <td><input style="border: none; width: 100%;height: 40px;" class="input" type="name" name="name"
+                                                    placeholder="Enter Your Name" value="<%= categoryData.description%>"
+                                                    required></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div style="text-align: center;">
+                                    <button class="btn btn-primary" type="submit">Edit-category</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+      </form>
+    </section>
+    <!-- content-main end// -->
+
+
+    <script src="/admincss/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admincss/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admincss/assets/js/vendors/select2.min.js"></script>
+    <script src="/admincss/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admincss/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
+</body>
+
+</html>

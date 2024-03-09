@@ -1,7 +1,9 @@
 const users = require('../models/userModel');
+const categories =  require('../models/category')
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const { emit } = require('../app');
+const { TopologyClosedEvent } = require('mongodb');
 
 
 
@@ -89,7 +91,7 @@ const loadHome = async(req,res)=>{
 const customers = async(req,res)=>{
     try {
 
-        const userslist = await users.find({},'email name _id');
+        const userslist = await users.find({});
         
  
         res.render('customers',{users:userslist})
@@ -123,17 +125,20 @@ const customers = async(req,res)=>{
 
 const block =  async (req, res) => {
     try {
-        const userId = req.query._id;
-        const user = await users.findById(userId);
+        const Id = req.params.Id;
+        // console.log(Id);
+        const user = await users.findById(Id);
+        
         if(user.is_blocked === true){
-            await users.updateOne({_id:userId},{is_blocked:false})
+            await users.updateOne({_id:Id},{is_blocked:false})
         }else{
-            await users.updateOne({_id:userId},{is_blocked:true})
+            await users.updateOne({_id:Id},{is_blocked:true})
         }
+     
         res.redirect('/admin/customers')
         
     } catch (error) {
-        console.error('Error:', error);
+        console.error(error.message);
        
     }
 };
@@ -150,6 +155,105 @@ const logout = async(req,res)=>{
     }
 }
 
+//addproduct
+const addproduct =  async(req,res)=>{
+    try {
+        res.render('addproduct')
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//catogory
+const category =  async(req,res)=>{
+    try {
+        const categorylist = await categories.find({})
+        res.render('category',{categorylist})
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//product list
+const products = async(req,res)=>{
+    try {
+        res.render('productlist')
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//add category
+const addcategory = async (req, res) => {
+    try {
+        const name = req.body.name.trim();
+        const description = req.body.description;
+        const lowercase = name.toLowerCase()
+
+        if (!name || /^\s*$/.test(name)) {
+            const categorylist = await categories.find({});
+            return res.render('category', { categorylist, message: 'Invalid Name Provided' });
+        }
+
+        const existingCategory = await categories.findOne({ name:{$regex:'^'+lowercase+'$',$options:'i'}});
+
+        if (existingCategory) {
+
+            const categorylist = await categories.find({});
+            return res.render('category', { categorylist, message: 'Category already exists.' });
+        }
+
+        const category = new categories({
+            name: name,
+            description: description
+        });
+
+        const categoryData = await category.save();
+
+        if (categoryData) {
+            const categorylist = await categories.find({});
+            return res.render('category', { categorylist, message: 'Category added successfully.' });
+        }
+    } catch (error) {
+        console.log(error.message);
+
+    }
+};
+
+//edit categoryload
+
+const editCategoryLoad = async(req,res)=>{
+    try {
+
+        const categorylist = await categories.find({});
+        const id = req.query.id;
+        const categoryData = await categories.findById({_id:id})
+        console.log(categoryData);
+        if(categoryData){
+            res.render('editcategory',{categoryData})
+        }else{
+            res.redirect('/admin/category')
+        }
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//editing
+const editcategory = async(req,res)=>{
+    try {
+        
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 
 module.exports = {
     loadLogin,
@@ -157,6 +261,11 @@ module.exports = {
     loadHome,
     logout,
     customers,
-    block
+    block,
+    addproduct,
+    category,
+    products,
+    addcategory,
+    editCategoryLoad
   
 }
