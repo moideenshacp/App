@@ -1,5 +1,6 @@
 const users = require('../models/userModel');
 const categories =  require('../models/category')
+const products = require('../models/product')
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const { emit } = require('../app');
@@ -158,7 +159,8 @@ const logout = async(req,res)=>{
 //addproduct
 const addproduct =  async(req,res)=>{
     try {
-        res.render('addproduct')
+        const categorylist = await categories.find({})
+        res.render('addproduct',{categorylist})
         
     } catch (error) {
         console.log(error.message);
@@ -177,7 +179,7 @@ const category =  async(req,res)=>{
 }
 
 //product list
-const products = async(req,res)=>{
+const productList = async(req,res)=>{
     try {
         res.render('productlist')
         
@@ -190,10 +192,10 @@ const products = async(req,res)=>{
 const addcategory = async (req, res) => {
     try {
         const name = req.body.name.trim();
-        const description = req.body.description;
+        const description = req.body.description.trim();
         const lowercase = name.toLowerCase()
 
-        if (!name || /^\s*$/.test(name)) {
+        if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
             const categorylist = await categories.find({});
             return res.render('category', { categorylist, message: 'Invalid Name Provided' });
         }
@@ -205,10 +207,16 @@ const addcategory = async (req, res) => {
             const categorylist = await categories.find({});
             return res.render('category', { categorylist, message: 'Category already exists.' });
         }
+        if (!description || /^\s*$/.test(description)) {
+            const categorylist = await categories.find({});
+            return res.render('category', { categorylist, message: 'Invalid description Provided' });
+        }
+        
 
         const category = new categories({
             name: name,
             description: description
+        
         });
 
         const categoryData = await category.save();
@@ -223,15 +231,34 @@ const addcategory = async (req, res) => {
     }
 };
 
-//edit categoryload
+//unlist /list 
+const listCategory =  async (req, res) => {
+    try {
+        const Id = req.params.Id;
+        console.log(Id);
+        const user = await categories.findById(Id);
+        
+        if(user.is_listed === true){
+            await categories.updateOne({_id:Id},{is_listed:false})
+        }else{
+            await categories.updateOne({_id:Id},{is_listed:true})
+        }
+     
+        res.redirect('/admin/category')
+        
+    } catch (error) {
+        console.error(error.message);
+       
+    }
+};
 
+//edit categoryload
 const editCategoryLoad = async(req,res)=>{
     try {
 
-        const categorylist = await categories.find({});
+        
         const id = req.query.id;
         const categoryData = await categories.findById({_id:id})
-        console.log(categoryData);
         if(categoryData){
             res.render('editcategory',{categoryData})
         }else{
@@ -244,14 +271,74 @@ const editCategoryLoad = async(req,res)=>{
 }
 
 //editing
-const editcategory = async(req,res)=>{
-    try {
+    const editcategory = async (req, res) => {
+        try {
+            const id= req.body.id;
         
+            // console.log(id);
+            const categoryData = await categories.findOne({_id:id});
+            console.log(categoryData+'------------------------------------------------------');
+
+            const name = req.body.name.trim();
+            const description = req.body.description.trim();
+            const lowercase = name.toLowerCase();
+
+            if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
+                return res.render('editcategory', { categoryData, message: 'Invalid Name Provided' });
+            }
+            if (!description || /^\s*$/.test(description)) {
+                return res.render('editcategory', { categoryData, message: 'Invalid description Provided' });
+            }
+
+            const existingCategory = await categories.findOne({ name:{$regex:'^'+lowercase+'$',$options:'i'}});
+
+            if (existingCategory && existingCategory._id.toString() !== id) {
+                return res.render('editcategory', { categoryData, message: 'Category name already exists.' });
+            }
+
+            const updatedCategory = await categories.findByIdAndUpdate(id,{$set:{name:lowercase,description:description}})
+            res.redirect('/admin/category')
         
-    } catch (error) {
-        console.log(error.message);
+
+            
+        } catch (error) {
+            console.log(error.message);
+    
+        }
+    };
+
+    //add product
+
+    const productAdd = async(req,res)=>{
+        try {
+
+            const name = req.body.name;
+            const description = req.body.name;
+            const price = req.body.price;
+            const quantity = req.body.quantity;
+            const size = req.body.size;
+            const categorylist = await categories.find({})
+
+
+            const productDetail = new products({
+                name:name,
+                description:description,
+                price:price,
+                quantity:quantity,
+                // size:size
+
+            })
+            const productData = await productDetail.save()
+            if(productData){
+                res.render('addproduct',{categorylist,message:'added succesfully'})
+            }
+
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     }
-}
+
 
 
 
@@ -264,8 +351,11 @@ module.exports = {
     block,
     addproduct,
     category,
-    products,
+    productList,
     addcategory,
-    editCategoryLoad
+    editCategoryLoad,
+    editcategory,
+    listCategory,
+    productAdd
   
 }

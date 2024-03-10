@@ -27,8 +27,13 @@
             <h2 style="text-align: center;">Edit Category</h2>
             <!-- <p>Edit Category</p> -->
         </div>
-        <form action="">
+        <form method="post" action="">
+            <% if(typeof message!=='undefined' ){ %>
 
+                <p style="color: green;text-align: center;" class="message">
+                    <%= message %>
+                </p>
+                <% } %>
             <div class="card" style="width: 100%;">
                 <div class="card-body" style="width: 100%;">
                     <div class="row" style="width: 100%;">
@@ -47,9 +52,10 @@
                                            <td><b><input style="border: none; width: 100%; height: 40px;" class="input" type="name" name="name"
                                                         placeholder="Enter Your Name" value="<%= categoryData.name%>"
                                                         required></b></td>
-                                            <td><input style="border: none; width: 100%;height: 40px;" class="input" type="name" name="name"
+                                            <td><input style="border: none; width: 100%;height: 40px;" class="input" type="description" name="description"
                                                     placeholder="Enter Your Name" value="<%= categoryData.description%>"
                                                     required></td>
+                                                    <input class="input" type="hidden" name="id" value="<%= categoryData._id %>">
                                         </tr>
                                     </tbody>
                                 </table>

@@ -37,16 +37,20 @@ admin_route.get('/blockuser/:Id',auth.isLogin, adminController.block);
 
 //addproduct
 admin_route.get('/addproduct',auth.isLogin,adminController.addproduct)
+admin_route.post('/addproduct',auth.isLogin,adminController.productAdd)
 
 //category
 admin_route.get('/category',auth.isLogin,adminController.category)
 admin_route.post('/category',auth.isLogin,adminController.addcategory)
+admin_route.get('/listcategory/:Id',auth.isLogin, adminController.listCategory);
 
 //productlist
-admin_route.get('/products',auth.isLogin,adminController.products)
+admin_route.get('/products',auth.isLogin,adminController.productList)
+
 
 //edit category
 admin_route.get('/edit-category',auth.isLogin,adminController.editCategoryLoad)
+admin_route.post('/edit-category',adminController.editcategory)
 
 
 

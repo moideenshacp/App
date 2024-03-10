@@ -9,6 +9,10 @@ const categorySchema = mongoose.Schema({
     description:{
         type:String,
         required:true
+    },
+    is_listed:{
+        type:Boolean,
+        default:true
     }
 
 

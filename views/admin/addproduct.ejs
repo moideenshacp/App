@@ -156,10 +156,7 @@
                     <div class="col-9">
                         <div class="content-header">
                             <h2 class="content-title">Add New Product</h2>
-                            <div>
-                                <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
-                                <button class="btn btn-md rounded font-sm hover-up">Add Product</button>
-                            </div>
+                         
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -168,40 +165,54 @@
                                 <h4>Product</h4>
                             </div>
                             <div class="card-body">
-                                <form>
+                                <form method="post">
+                                    <% if(typeof message!=='undefined' ){ %>
+
+                                        <p style="color: green;text-align: center;" class="message">
+                                            <%= message %>
+                                        </p>
+                                        <% } %>
                                     <div class="mb-4">
-                                        <label for="product_name" class="form-label">Product title</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" />
+                                        <label  for="product_name" class="form-label">Product title</label>
+                                        <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" />
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Full description</label>
-                                        <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
+                                        <textarea name="description" placeholder="Type here" class="form-control" rows="4"></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="mb-4">
                                                 <label class="form-label">Price</label>
                                                 <div class="row gx-2">
-                                                    <input placeholder="$" type="text" class="form-control" />
+                                                    <input name="price" placeholder="$" type="text" class="form-control" />
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="mb-4">
                                                 <label class="form-label">Quantitiy</label>
-                                                <input type="text" class="form-control" />
+                                                <input name="quantity" type="text" class="form-control" />
                                             </div>
                                         </div>
+                                        
+
+                                        
                                         <div class="col-lg-4">
                                             <label class="form-label">Category</label>
                                             <select class="form-select">
-                                                <option>Gents</option>
-                                                <option>EUR</option>
-                                                <option>RUBL</option>
+                                                <% categorylist.forEach(category=>{%>
+                                                <option><%= category.name%></option>
+                                                <%})%>
                                             </select>
                                         </div>
+
+                                    
                                     </div>
-                              
+                                    <div>
+                                        <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+                                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Add Product</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
