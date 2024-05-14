@@ -4,8 +4,20 @@ const session = require('express-session');
 const config = require('../config/config');
 const bodyparser = require('body-parser');
 admin_route.use(session({secret:config.sessionsecret}))
+const multer= require('multer')
+
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,path.join(__dirname,'../public/productImages/productImages'))
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + '-' + file.originalname);
+    }
+  });
 
 
+const upload = multer({storage:storage})
 
 
 admin_route.use(bodyparser.json());
@@ -37,16 +49,22 @@ admin_route.get('/blockuser/:Id',auth.isLogin, adminController.block);
 
 //addproduct
 admin_route.get('/addproduct',auth.isLogin,adminController.addproduct)
-admin_route.post('/addproduct',auth.isLogin,adminController.productAdd)
+admin_route.post('/addproduct',auth.isLogin,upload.array('image'),adminController.productAdd)
+
+
+//productlist
+admin_route.get('/products',auth.isLogin,adminController.productList)
+admin_route.get('/listproduct/:Id',auth.isLogin,adminController.listProduct)
+
+//edit product
+admin_route.get('/edit-product',auth.isLogin,adminController.editProductLoad)
+admin_route.post('/edit-product',adminController.editProduct)
+
 
 //category
 admin_route.get('/category',auth.isLogin,adminController.category)
 admin_route.post('/category',auth.isLogin,adminController.addcategory)
 admin_route.get('/listcategory/:Id',auth.isLogin, adminController.listCategory);
-
-//productlist
-admin_route.get('/products',auth.isLogin,adminController.productList)
-
 
 //edit category
 admin_route.get('/edit-category',auth.isLogin,adminController.editCategoryLoad)

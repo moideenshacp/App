@@ -206,50 +206,76 @@
                     </header>
                     <!-- card-header end// -->
                     <div class="card-body">
-                        <article class="itemlist">
-                         
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <img src="/admincss/assets/imgs/items/2.jpg" class="img-sm img-thumbnail" alt="Item" />
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">All Natural Italian-Style Chicken</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-price"><span>$990.99</span></div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Category</th>
+                                        
+                                        <th>Quantity</th>
+                                        <th class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   
+    
+                                    <% productlist.forEach((product,index)=> { %>
+                                        <tr>
+                                            <td><%=index+1%></td>
+                                            <td width="40%">
+                                                <a href="#" class="itemside" data-src="/productImages/productImages/<%=product.image%>">
+                                                    <div class="left">
+                                                        <img src="/productImages/productImages/<%=product.image[0]%>"
+                                                            class="img-sm img-avatar" alt="Userpic" />
+                                                    </div>
+                                                    <div class="info pl-3">
+                                                        <h6 class="mb-0 title">
+                                                            <%= product.name %>
+                                                        </h6>
+                                                     
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <%= product.price %>
+                                            </td>
+                                            <td>
+                                                <%= product.category %>
+                                            </td>
+                                            <!-- <td><span class="badge rounded-pill alert-success">Active</span></td> -->
+                                            <td><%=product.quantity%></td>
+                                            <td class="text-end">
+                                                <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
+                                                    <a href="/admin/edit-product?id=<%=product._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Edit</a>
+                                                </button>
+                                                <%if(product.is_listed==false){%>
+                                                <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
+                                                    <a href="/admin/listproduct/<%=product._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">List</a>
+                                                </button>
+                                            <%}else{%>
+                                                <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
+                                                    <a href="/admin/listproduct/<%=product._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">UnList</a>
+                                                </button>
+                                                <%}%>
+                                                
+                                                
+                                            </td>
+                                           
+                                        </tr>
+                                        <% }) %>
+    
                                
-                              
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                        <a href="" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Edit</a>
-                                    </button>
-                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                        <a href="" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">List</a>
-                                    </button>
-
-                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                        <a href="" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">List</a>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        
-                        <!-- itemlist  .// -->
-
+                                    
+    
+    
+                                </tbody>
+                            </table>
+                            <!-- table-responsive.// -->
+                        </div>
                     </div>
-                    <!-- card-body end// -->
-                </div>
-                <!-- card end// -->
-       
             </section>
             <!-- content-main end// -->
 

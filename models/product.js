@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const category = require('./category')
 
 
 const productSchema = mongoose.Schema({
@@ -15,15 +16,19 @@ const productSchema = mongoose.Schema({
         type:Number,
         required:true
     },
-    Image:{
+    image:{
         type:Array,
-        // required:true
+        required:true
     },
     size:{
         type:Number,
         // required:true
     },
     description:{
+        type:String,
+        required:true
+    },
+    category:{
         type:String,
         required:true
     },

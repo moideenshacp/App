@@ -4,9 +4,25 @@ const products = require('../models/product')
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const { emit } = require('../app');
+const multer =  require ('multer')
+const path = require('path')
 const { TopologyClosedEvent } = require('mongodb');
 
 
+
+//multer
+
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,path.join(__dirname,'../public/productImages/productImages'))
+    },
+    filename:function(req,file,cb){
+        const name = Date.now()+ '-'+file.originalname;
+        cb(null,name)
+    }
+})
+
+const upload = multer({storage:storage}).array('image',4)
 
 
 
@@ -159,6 +175,7 @@ const logout = async(req,res)=>{
 //addproduct
 const addproduct =  async(req,res)=>{
     try {
+        
         const categorylist = await categories.find({})
         res.render('addproduct',{categorylist})
         
@@ -171,7 +188,7 @@ const addproduct =  async(req,res)=>{
 const category =  async(req,res)=>{
     try {
         const categorylist = await categories.find({})
-        res.render('category',{categorylist})
+        res.render('category',{categorylist:categorylist})
         
     } catch (error) {
         console.log(error.message);
@@ -181,7 +198,9 @@ const category =  async(req,res)=>{
 //product list
 const productList = async(req,res)=>{
     try {
-        res.render('productlist')
+        const productlist = await products.find({})
+        const categorylist = await categories.find({})
+        res.render('productlist',{productlist,categorylist})
         
     } catch (error) {
         console.log(error.message);
@@ -312,19 +331,54 @@ const editCategoryLoad = async(req,res)=>{
     const productAdd = async(req,res)=>{
         try {
 
-            const name = req.body.name;
-            const description = req.body.name;
-            const price = req.body.price;
-            const quantity = req.body.quantity;
+            upload(req, res, async function (err) {
+                if (err) {
+                  errorImage.innerHTML = "Only jpg/jpeg and png files are allowed!";
+          
+                  console.log(errorMsg);
+                  return res.redirect("/addproduct");
+                }
+                const name = req.body.name.trim();
+            const description = req.body.description.trim();
+            const price = parseFloat(req.body.price);
+            const quantity = parseFloat(req.body.quantity);
             const size = req.body.size;
+            const category=req.body.category;
+            
+            
             const categorylist = await categories.find({})
 
+            if (!req.body.image || req.body.image.some(image => !image)) {
+                const categorylist = await categories.find({});
+                return res.render('addproduct', { categorylist, message: 'Please select images 4 images' });
+            }
+            if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
+                const categorylist = await categories.find({});
+                return res.render('addproduct', { categorylist, message: 'Invalid Name Provided' });
+            }
 
+            if (!description || /^\s*$/.test(description)) {
+                const categorylist = await categories.find({});
+                return res.render('addproduct', { categorylist, message: 'Invalid description Provided' });
+            }
+
+            if (isNaN(price) || price <= 0) {
+                return res.render('addproduct', { categorylist, message: 'Price is not valid' });
+            }
+            if (isNaN(quantity) || quantity <= 0) {
+                return res.render('addproduct', { categorylist, message: 'quantity is not valid' });
+            }
+
+
+            
             const productDetail = new products({
                 name:name,
                 description:description,
                 price:price,
                 quantity:quantity,
+                category:category,
+                image:req.body.image
+                
                 // size:size
 
             })
@@ -332,6 +386,7 @@ const editCategoryLoad = async(req,res)=>{
             if(productData){
                 res.render('addproduct',{categorylist,message:'added succesfully'})
             }
+        })
 
             
         } catch (error) {
@@ -339,7 +394,76 @@ const editCategoryLoad = async(req,res)=>{
         }
     }
 
+    //list/unlist products
 
+    const listProduct =  async (req, res) => {
+        try {
+            const Id = req.params.Id;
+            console.log(Id);
+            const user = await products.findById(Id);
+            
+            if(user.is_listed === true){
+                await products.updateOne({_id:Id},{is_listed:false})
+            }else{
+                await products.updateOne({_id:Id},{is_listed:true})
+            }
+         
+            res.redirect('/admin/products')
+            
+        } catch (error) {
+            console.error(error.message);
+           
+        }
+    };
+    
+//edit productload
+const editProductLoad = async(req,res)=>{
+    try {
+
+        
+        const id = req.query.id;
+        const productData = await products.findById({_id:id})
+        const productImage = await products.findById({_id:id},{image:1,_id:0})
+        const productImageArr = await productImage.image.map(image=>`${image}`)
+        const categorylist = await categories.find({})
+        const productList = await products.find({})
+        if(productData){
+            res.render('editproduct',{productData,categorylist,productList,productImageArr})
+        }else{
+            res.redirect('/admin/products')
+        }
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//edit product
+const editProduct = async(req,res)=>{
+    try {
+
+        const id= req.body.id;
+        
+           
+            const productData = await products.findOne({_id:id});
+
+            const name = req.body.name.trim();
+            const description = req.body.description.trim();
+            const price = req.body.price;
+            const quantity = req.body.quantity;
+            const category=req.body.category;
+            const image = req.body.image;
+            const indexToUpdate = 0;
+         
+            
+
+            const updatedProduct = await products.findByIdAndUpdate(id,{$set:{name:name,description:description,price:price,quantity:quantity,[`image.${[i]}`]: image}})
+            res.redirect('/admin/products')
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 module.exports = {
@@ -356,6 +480,10 @@ module.exports = {
     editCategoryLoad,
     editcategory,
     listCategory,
-    productAdd
+    productAdd,
+    upload,
+    listProduct,
+    editProductLoad,
+    editProduct
   
 }

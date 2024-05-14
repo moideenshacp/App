@@ -230,6 +230,7 @@ const insertUser = async(req,res)=>{
             userdata  = await user; 
             req.session.user_id =userdata._id;
             req.session.email = userdata.email;
+            req.session.name = userdata.name;
             
             if(userdata){
                 await sendOtpMail(req.body.name,req.body.email,userdata._id)
