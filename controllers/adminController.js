@@ -443,6 +443,7 @@ const editProduct = async(req,res)=>{
     try {
 
         const id= req.body.id;
+        console.log(id+'-------------------------------------------------');
         
            
             const productData = await products.findOne({_id:id});
@@ -453,11 +454,40 @@ const editProduct = async(req,res)=>{
             const quantity = req.body.quantity;
             const category=req.body.category;
             const image = req.body.image;
-            const indexToUpdate = 0;
+
+            
+
+
+            const updatedImages = image.map((image, index) => {
+                return image || productData.image[index];
+            });
+            if (!name || /^\s*$/.test(name) || /\d/.test(name)) {
+                const productData = await products.findById({_id:id})
+                const categorylist = await categories.find({})
+                return res.render('editproduct', { productData,categorylist, message: 'Invalid Name Provided' });
+            }
+            if (!description || /^\s*$/.test(description)) {
+                const productData = await products.findById({_id:id})
+                const categorylist = await categories.find({})
+                return res.render('editproduct', { categorylist,productData, message: 'Invalid description Provided' });
+            }
+            if (isNaN(price) || price <= 0) {
+                const productData = await products.findById({_id:id})
+                const categorylist = await categories.find({})
+                return res.render('editproduct', { categorylist,productData, message: 'Price is not valid' });
+            }
+            if (isNaN(quantity) || quantity <= 0) {
+                const productData = await products.findById({_id:id})
+                const categorylist = await categories.find({})
+                return res.render('editproduct', { categorylist,productData, message: 'quantity is not valid' });
+            }
+            
          
             
 
-            const updatedProduct = await products.findByIdAndUpdate(id,{$set:{name:name,description:description,price:price,quantity:quantity,[`image.${[i]}`]: image}})
+            const updatedProduct = await products.findByIdAndUpdate(id,{$set:{name:name,description:description,price:price,quantity:quantity,category:category,image:updatedImages}})
+        
+
             res.redirect('/admin/products')
         
     } catch (error) {

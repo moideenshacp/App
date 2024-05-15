@@ -1,6 +1,8 @@
 // const { name } = require('ejs');
 const users = require('../models/userModel');
 const Otp = require('../models/otpModel')
+const categories =  require('../models/category')
+const products = require('../models/product')
 const bcrypt = require('bcrypt');
 const { use, emit } = require('../app');
 const nodemailer = require('nodemailer');
@@ -351,8 +353,8 @@ const loadOtp = async(req,res)=>{
 const userhome = async(req,res)=>{
 
     try {
-        // req.session.destroy()
-        res.render('userhome')
+        const productData = await products.find({})
+        res.render('userhome',{productData})
     } catch (error) {
         console.log(error.message);
     }
@@ -361,6 +363,7 @@ const userhome = async(req,res)=>{
 //load profile
 const loadprofile = async(req,res)=>{
     try {
+        
         res.render('profile')
     } catch (error) {
         console.log(error.message);
@@ -377,13 +380,30 @@ const loadproduct = async(req,res)=>{
     }
 }
 
-//load denim
-const denim = async(req,res)=>{
+//load product
+const productDetail = async(req,res)=>{
     try {
-        res.render('denimjacket')
+        const id = req.query.id;
+        const productData = await products.findById({_id:id})
+        const productDatas = await products.find({})
+        console.log(id+'-----------------------------------------');
+        res.render('productDetail',{productData,productDatas})
         
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+//load shop
+
+const shop = async(req,res)=>{
+    try {
+        const productData = await products.find({})
+        
+        res.render('shop',{productData})
+        console.log(productData);
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -422,7 +442,8 @@ module.exports= {
     loadproduct,
     googleInsert,
     failureLogin,
-    denim,
+    productDetail,
+    shop
     
    
   

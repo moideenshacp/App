@@ -211,7 +211,9 @@
                                             <label class="form-label">Category</label>
                                             <select class="form-select" name="category">
                                                 <% categorylist.forEach(category=>{%>
+                                                   <% if(category.is_listed === true){%>
                                                 <option><%= category.name%></option>
+                                                   <%}%>
                                                 <%})%>
                                             </select>
                                         </div>

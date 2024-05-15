@@ -200,7 +200,9 @@
                                             <label class="form-label">Category</label>
                                             <select class="form-select" name="category">
                                                 <% categorylist.forEach(category => { %>
+                                                    <%if(category.is_listed === true){%>
                                                     <option value="<%= category.name %>" <% if (productData.category === category.name) { %> selected <% } %>><%= category.name %></option>
+                                                    <%}%>
                                                 <% }) %>
                                             </select>
                                         </div>
@@ -237,7 +239,7 @@
                                    
                                     <div>
                                         <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
-                                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Add Product</button>
+                                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit Product</button>
                                     </div>
                                 </form>
                             </div>

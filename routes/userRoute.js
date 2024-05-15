@@ -79,8 +79,10 @@ user_route.get('/signout',auth.isLogin,userController.signout)
 
 //product
 user_route.get('/product',auth.isLogin,userController.loadproduct)
-user_route.get('/denim',auth.isLogin,userController.denim)
+user_route.get('/productDetail',auth.isLogin,userController.productDetail)
 
+//shop
+user_route.get('/shop',auth.isLogin,userController.shop)
 
 
 

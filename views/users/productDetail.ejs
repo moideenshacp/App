@@ -31,43 +31,104 @@
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
     <link rel="stylesheet" href="/usercss/assets/css/plugins/nouislider/nouislider.css">
 
-    <style>
-        .image-container {
-            overflow: hidden;
-            width: 270px; /* Adjust as per your design */
-            height: 500px; /* Adjust as per your design */
-        }
-    
-        .product-image {
-            width: 100%;
-            height: auto;
-            transition: transform 0.8s ease;
-        }
-    
-        .image-container:hover .product-image {
-            transform: scale(2.2); /* Adjust the scale factor for zoom effect */
-        }
-    </style>
+   
 </head>
 
 <body>
     <div class="page-wrapper">
-        <header class="header">
-         
-
-            <div class="header-middle sticky-header">
+        <header class="header header-6">
+            <div class="header-top">
                 <div class="container">
                     <div class="header-left">
-                        <button class="mobile-menu-toggler">
-                            <span class="sr-only">Toggle mobile menu</span>
-                            <i class="icon-bars"></i>
-                        </button>
+                        <ul class="top-menu top-link-menu d-none d-md-block">
+                            <li>
+                                <a href="#">Links</a>
+                                <!-- <ul>
+                                    <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
+                                </ul> -->
+                            </li>
+                        </ul><!-- End .top-menu -->
+                    </div><!-- End .header-left -->
 
-                        <a href="#" class="logo">
-                            <img src="/images/applogo.jpg" style="height: 120px;width: 120px;;" alt="marslogo">
-                            <!-- <img src="/usercss/assets/images/logo.png" alt="Molla Logo" width="105" height="25"> -->
+                    <div class="header-right">
+                        <!-- <div class="social-icons social-icons-color"> -->
+                            <!-- <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a> -->
+                            <!-- <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a> -->
+                            <!-- <a href="#" class="social-icon social-pinterest" title="Instagram" target="_blank"><i class="icon-pinterest-p"></i></a> -->
+                            <!-- <a href="#" class="social-icon social-instagram" title="Pinterest" target="_blank"><i class="icon-instagram"></i></a> -->
+                        <!-- </div>End .soial-icons -->
+                        <ul class="top-menu top-link-menu">
+                            <li>
+                                <a href="#">Links</a>
+                                <ul>
+                                    <!-- <li><a href="#signin-modal" data-toggle="modal"><i class="icon-user"></i>Login</a></li> -->
+                                    <!-- <li><a href="/login"><i class="icon-user"></i>Login</a></li> -->
+                                </ul>
+                            </li>
+                        </ul><!-- End .top-menu -->
+
+                       
+
+                        <div class="header-dropdown">
+                            <!-- <a href="#">Eng</a> -->
+                         
+                        </div><!-- End .header-dropdown -->
+                    </div><!-- End .header-right -->
+                </div>
+            </div>
+            <div class="header-middle">
+                <div class="container">
+                    <div class="header-left">
+                        <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <form action="#" method="get">
+                                <div class="header-search-wrapper search-wrapper-wide">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
+                    </div>
+               
+                        <!-- <a href="index-6.html   " class="logo">
+                            <img src="/usercss/assets/images/demos/demo-6/logo.png" alt="Molla Logo" width="82" height="20">
+                        </a> -->
+                        <!-- <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Mars</h3>
+                         -->
+                         <img src="/images/applogo.jpg" style="height: 120px;width: 180px;;" alt="marslogo">
+            
+
+                    <div class="header-right">
+
+                        <!-- <a href="/login"><i class="icon-user"></i>Login</a> -->
+                     
+                        <a href="wishlist.html" class="wishlist-link">
+                            <i class="icon-heart-o"></i>
+                            <!-- <span class="wishlist-txt"></span> -->
                         </a>
+                        
 
+                        <div class="dropdown cart-dropdown">
+                          
+                            <a href="cart.html" class="wishlist-link">
+                                <i class="icon-shopping-cart"></i>
+                                <!-- <span class="wishlist-txt"></span> -->
+                            </a>
+                            
+
+                            
+
+                        </div><!-- End .cart-dropdown -->
+                        
+                    </div>
+                    
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+
+            <div class="header-bottom sticky-header">
+                <div class="container">
+                    <div class="header-left">
                         <nav class="main-nav">
                             <ul class="menu">
                                 <li class="">  
@@ -77,14 +138,11 @@
                                 </li>
                                 
                                 <li>
-                                    <a href="category-fullwidth.html" class="sf">Shop</a>
+                                    <a href="/shop" class="sf">Shop</a>
 
                                     
                                 </li>
-                                <li>
-                                    <a href="product.html" class="sf">Product</a>
-
-                                </li>
+                               
                                 <li>
                                     <!-- <a href="#" class="sf-with-ul">Pages</a> -->
                                     <li><a href="about.html">About</a></li>
@@ -102,46 +160,26 @@
                      
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
+
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
                     </div><!-- End .header-left -->
 
-                    <div class="header-right">
-                        <div class="header-search">
-                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
-                        <div class="dropdown compare-dropdown">
-                            <a href="wishlist.html" class="wishlist-link">
-                                <i class="icon-heart-o"></i>
-                                <span class="wishlist-txt"></span>
-                            </a>
-                     
-                        </div><!-- End .compare-dropdown -->
-
-                        <div class="dropdown cart-dropdown">
-                            <a href="cart.html" class="wishlist-link">
-                                <i class="icon-shopping-cart"></i>
-                                <span class="wishlist-txt"></span>
-                            </a>
-
-                         
-                        </div><!-- End .cart-dropdown -->
-                    </div><!-- End .header-right -->
+                   
                 </div><!-- End .container -->
-            </div><!-- End .header-middle -->
+            </div><!-- End .header-bottom -->
         </header><!-- End .header -->
+
 
         <main class="main">
             <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                 <div class="container d-flex align-items-center">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Products</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Default</li>
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/productDetail?id=<%=productData._id%>">Products</a></li>
+                        
                     </ol>
 
                     <nav class="product-pager ml-auto" aria-label="Product">
@@ -165,32 +203,30 @@
                             <div class="col-md-6">
                                 <div class="product-gallery product-gallery-vertical">
                                     <div class="row">
+                                        <input class="input" type="hidden" name="id" value="<%= productData._id %>">
                                         <figure class="product-main-image">
-                                            <div class="image-container">
-                                                <img class="product-image" src="/usercss/assets/images/demos/demo-6/products/product-1-1.jpg" alt="Product Image">
-                                            </div>
+                                            <img id="product-zoom" src="/productImages/productImages/<%=productData.image[0]%>" data-zoom-image="/productImages/productImages/<%=productData.image[3]%>" alt="product image">
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
                                             </a>
                                         </figure><!-- End .product-main-image -->
-                                        
 
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item" href="#" data-image="/usercss/assets/images/demos/demo-6/products/product-1-1.jpg" data-zoom-image="/usercss/assets/images/demos/demo-6/products/product-1-1.jpg">
-                                                <img src="/usercss/assets/images/demos/demo-6/products/product-1-1.jpg" alt="product cross">
+                                            <a class="product-gallery-item active" href="#" data-image="/productImages/productImages/<%=productData.image[0]%>" data-zoom-image="/productImages/productImages/<%=productData.image[0]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[0]%>" alt="product side">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/usercss/assets/images/demos/demo-6/products/product-1-2.jpg" data-zoom-image="/usercss/assets/images/demos/demo-6/products/product-1-2.jpg">
-                                                <img src="/usercss/assets/images/demos/demo-6/products/product-1-2.jpg" alt="product cross">
+                                            <a class="product-gallery-item" href="#" data-image="/productImages/productImages/<%=productData.image[1]%>" data-zoom-image="/productImages/productImages/<%=productData.image[1]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[1]%>" alt="product cross">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/usercss/assets/images/products/single/3.jpg" data-zoom-image="/usercss/assets/images/products/single/3-big.jpg">
-                                                <img src="/usercss/assets/images/products/single/3-small.jpg" alt="product with model">
+                                            <a class="product-gallery-item" href="#" data-image="/productImages/productImages/<%=productData.image[2]%>" data-zoom-image="/productImages/productImages/<%=productData.image[2]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[2]%>" alt="product with model">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/usercss/assets/images/products/single/4.jpg" data-zoom-image="/usercss/assets/images/products/single/4-big.jpg">
-                                                <img src="/usercss/assets/images/products/single/4-small.jpg" alt="product back">
+                                            <a class="product-gallery-item" href="#" data-image="/productImages/productImages/<%=productData.image[3]%>" data-zoom-image="/productImages/productImages/<%=productData.image[3]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[3]%>" alt="product back">
                                             </a>
                                         </div><!-- End .product-image-gallery -->
                                     </div><!-- End .row -->
@@ -199,7 +235,7 @@
 
                             <div class="col-md-6">
                                 <div class="product-details">
-                                    <h1 class="product-title">Dark yellow lace cut out swing dress</h1><!-- End .product-title -->
+                                    <h1 class="product-title"><%=productData.name%></h1><!-- End .product-title -->
 
                                     <div class="ratings-container">
                                         <div class="ratings">
@@ -209,12 +245,10 @@
                                     </div><!-- End .rating-container -->
 
                                     <div class="product-price">
-                                        $84.00
+                                        ₹ <%=productData.price%>
                                     </div><!-- End .product-price -->
 
-                                    <div class="product-content">
-                                        <p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing. Sed lectus. </p>
-                                    </div><!-- End .product-content -->
+                                    
 
                                     <div class="details-filter-row details-row-size">
                                         <label>Color:</label>
@@ -241,7 +275,7 @@
                                             </select>
                                         </div><!-- End .select-custom -->
 
-                                        <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
+                                        
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="details-filter-row details-row-size">
@@ -263,9 +297,8 @@
                                     <div class="product-details-footer">
                                         <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="#">Women</a>,
-                                            <a href="#">Dresses</a>,
-                                            <a href="#">Yellow</a>
+                                            <a href="/productDetail?id=<%=productData._id%>"><%=productData.category%></a>
+                                            
                                         </div><!-- End .product-cat -->
 
                                         <div class="social-icons social-icons-sm">
@@ -286,9 +319,7 @@
                             <li class="nav-item">
                                 <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab" role="tab" aria-controls="product-info-tab" aria-selected="false">Additional information</a>
-                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Shipping & Returns</a>
                             </li>
@@ -300,35 +331,11 @@
                             <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
                                 <div class="product-desc-content">
                                     <h3>Product Information</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
-                                    <ul>
-                                        <li>Nunc nec porttitor turpis. In eu risus enim. In vitae mollis elit. </li>
-                                        <li>Vivamus finibus vel mauris ut vehicula.</li>
-                                        <li>Nullam a magna porttitor, dictum risus nec, faucibus sapien.</li>
-                                    </ul>
+                                    <p><%=productData.description%></p>                                    
 
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
-                            <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
-                                <div class="product-desc-content">
-                                    <h3>Information</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. </p>
-
-                                    <h3>Fabric & care</h3>
-                                    <ul>
-                                        <li>Faux suede fabric</li>
-                                        <li>Gold tone metal hoop handles.</li>
-                                        <li>RI branding</li>
-                                        <li>Snake print trim interior </li>
-                                        <li>Adjustable cross body strap</li>
-                                        <li> Height: 31cm; Width: 32cm; Depth: 12cm; Handle Drop: 61cm</li>
-                                    </ul>
-
-                                    <h3>Size</h3>
-                                    <p>one size</p>
-                                </div><!-- End .product-desc-content -->
-                            </div><!-- .End .tab-pane -->
+                           
                             <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
                                 <div class="product-desc-content">
                                     <h3>Delivery & returns</h3>
@@ -423,11 +430,14 @@
                                 }
                             }
                         }'>
+                        <% productDatas.forEach(product=>{%>
+
+                            <%if(product.is_listed===true){%>
                         <div class="product product-7 text-center">
                             <figure class="product-media">
                                 <span class="product-label label-new">New</span>
-                                <a href="product.html">
-                                    <img src="/usercss/assets/images/products/product-4.jpg" alt="Product image" class="product-image">
+                                <a href="/productDetail?id=<%=product._id%>">
+                                    <img src="/productImages/productImages/<%=product.image[0]%>" alt="Product image" class="product-image">
                                 </a>
 
                                 <div class="product-action-vertical">
@@ -443,11 +453,11 @@
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">Women</a>
+                                    <a href="#"><%=product.category%></a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Brown paperbag waist <br>pencil skirt</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="product.html"><%=product.name%></a></h3><!-- End .product-title -->
                                 <div class="product-price">
-                                    $60.00
+                                    ₹ <%=product.price%>
                                 </div><!-- End .product-price -->
                                 <div class="ratings-container">
                                     <div class="ratings">
@@ -457,174 +467,28 @@
                                 </div><!-- End .rating-container -->
 
                                 <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="/usercss/assets/images/products/product-4-thumb.jpg" alt="product desc">
+                                    <a href="/productDetail?id=<%=product._id%>" class="active">
+                                        <img src="/productImages/productImages/<%=product.image[1]%>" alt="product desc">
                                     </a>
-                                    <a href="#">
-                                        <img src="/usercss/assets/images/products/product-4-2-thumb.jpg" alt="product desc">
-                                    </a>
-
-                                    <a href="#">
-                                        <img src="/usercss/assets/images/products/product-4-3-thumb.jpg" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-
-                        <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-out">Out of Stock</span>
-                                <a href="product.html">
-                                    <img src="/usercss/assets/images/products/product-6.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jackets</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Khaki utility boiler jumpsuit</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    <span class="out-price">$120.00</span>
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 6 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-
-                        <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-top">Top</span>
-                                <a href="product.html">
-                                    <img src="/usercss/assets/images/products/product-11.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Shoes</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Light brown studded Wide fit wedges</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $110.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 1 Reviews )</span>
-                                </div><!-- End .rating-container -->
-
-                                <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="/usercss/assets/images/products/product-11-thumb.jpg" alt="product desc">
-                                    </a>
-                                    <a href="#">
-                                        <img src="/usercss/assets/images/products/product-11-2-thumb.jpg" alt="product desc">
+                                    <a href="/productDetail?id=<%=product._id%>">
+                                        <img src="/productImages/productImages/<%=product.image[2]%>" alt="product desc">
                                     </a>
 
-                                    <a href="#">
-                                        <img src="/usercss/assets/images/products/product-11-3-thumb.jpg" alt="product desc">
+                                    <a href="/productDetail?id=<%=product._id%>">
+                                        <img src="/productImages/productImages/<%=product.image[3]%>" alt="product desc">
                                     </a>
                                 </div><!-- End .product-nav -->
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
+                        <%}%>
 
-                        <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <a href="product.html">
-                                    <img src="/usercss/assets/images/products/product-10.jpg" alt="Product image" class="product-image">
-                                </a>
+                        <%})%>
 
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jumpers</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Yellow button front tea top</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $56.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 0 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-
-                        <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <a href="product.html">
-                                    <img src="/usercss/assets/images/products/product-7.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jeans</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Blue utility pinafore denim dress</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $76.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
                     </div><!-- End .owl-carousel -->
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
+
 
         <footer class="footer">
         	<div class="footer-middle">
