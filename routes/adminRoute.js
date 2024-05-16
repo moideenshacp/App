@@ -3,6 +3,7 @@ const admin_route = express();
 const session = require('express-session');
 const config = require('../config/config');
 const bodyparser = require('body-parser');
+const path = require('path')
 admin_route.use(session({secret:config.sessionsecret}))
 const multer= require('multer')
 
@@ -49,7 +50,7 @@ admin_route.get('/blockuser/:Id',auth.isLogin, adminController.block);
 
 //addproduct
 admin_route.get('/addproduct',auth.isLogin,adminController.addproduct)
-admin_route.post('/addproduct',auth.isLogin,upload.array('image'),adminController.productAdd)
+admin_route.post('/addproduct',auth.isLogin,upload.array('image',4),adminController.productAdd)
 
 
 //productlist
@@ -58,7 +59,7 @@ admin_route.get('/listproduct/:Id',auth.isLogin,adminController.listProduct)
 
 //edit product
 admin_route.get('/edit-product',auth.isLogin,adminController.editProductLoad)
-admin_route.post('/edit-product',adminController.editProduct)
+admin_route.post('/edit-product',auth.isLogin,upload.array('image',4),adminController.editProduct)
 
 
 //category

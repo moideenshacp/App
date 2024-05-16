@@ -165,22 +165,21 @@
                                 <h4>Product</h4>
                             </div>
                             <div class="card-body">
-                                <form method="post">
-                                    <% if(typeof message!=='undefined' ){ %>
-
+                                <form id="editProductForm" method="post" enctype="multipart/form-data">
+                                    <% if (typeof message !== 'undefined') { %>
                                         <p style="color: green;text-align: center;" class="message">
                                             <%= message %>
                                         </p>
-                                        <% } %>
+                                    <% } %>
                                     <div class="mb-4">
-                                        <label  for="product_name" class="form-label">Product title</label>
-                                        <input type="text" value="<%= productData.name %>" name="name" placeholder="Type here" class="form-control" id="product_name"  />
+                                        <label for="product_name" class="form-label">Product title</label>
+                                        <input type="text" value="<%= productData.name %>" name="name" placeholder="Type here" class="form-control" id="product_name" />
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Full description</label>
-                                        <input type="text" value="<%= productData.description %>" name="description" placeholder="Type here" class="form-control" id="product_name"  />
+                                        <input type="text" value="<%= productData.description %>" name="description" placeholder="Type here" class="form-control" id="product_name" />
                                     </div>
-                                    
+                                
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="mb-4">
@@ -192,7 +191,7 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="mb-4">
-                                                <label class="form-label">Quantitiy</label>
+                                                <label class="form-label">Quantity</label>
                                                 <input name="quantity" value="<%= productData.quantity %>" type="text" class="form-control" />
                                             </div>
                                         </div>
@@ -200,48 +199,38 @@
                                             <label class="form-label">Category</label>
                                             <select class="form-select" name="category">
                                                 <% categorylist.forEach(category => { %>
-                                                    <%if(category.is_listed === true){%>
-                                                    <option value="<%= category.name %>" <% if (productData.category === category.name) { %> selected <% } %>><%= category.name %></option>
-                                                    <%}%>
+                                                    <% if (category.is_listed === true) { %>
+                                                        <option value="<%= category.name %>" <% if (productData.category === category.name) { %> selected <% } %>><%= category.name %></option>
+                                                    <% } %>
                                                 <% }) %>
                                             </select>
                                         </div>
-                                        
-
-                                        
-                         
-                                    
                                     </div>
                                     <input class="input" type="hidden" name="id" value="<%= productData._id %>">
-
+                                
                                     <div class="card-body">
                                         <div class="input-upload">
                                             <% for (let i = 0; i <= 3; i++) { %>
                                                 <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
-                                                    <label for="imageInput<%= i %>" class="image-label">Image <%= i+1 %>
+                                                    <label for="imageInput<%= i %>" class="image-label">Image <%= i + 1 %>
                                                         <div class="rounded-image-preview">
                                                             <img id="imagePreview<%= i %>" src="/productImages/productImages/<%= productData.image[i] %>" alt="Preview">
                                                         </div>
-                                                        <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput"  onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                        
+                                                        <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" data-index="<%= i %>" onchange="previewImage(this, 'imagePreview<%= i %>')" value="<%= productData.image[i] %>">
                                                     </label>
                                                 </div>
-                                                
-                                                
                                             <% } %>
                                         </div>
-                                        
                                     </div>
-
-                                    
+                                
                                     <div class="col-lg-9">
-                                        
-                                      
-                                   
-                                    <div>
-                                        <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
-                                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit Product</button>
+                                        <div>
+                                            <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit Product</button>
+                                        </div>
                                     </div>
                                 </form>
+                                
                             </div>
                         </div>
                         <!-- card end// -->
@@ -279,6 +268,32 @@
                 preview.src = "";
             }
         }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+        let editedImageIndex;
+
+        
+        //event listener for clicking on image input
+        document.querySelectorAll('.imageInput').forEach((input) => {
+            input.addEventListener('change', function () {
+                // index of clicked image
+                editedImageIndex = parseInt(this.getAttribute('data-index'));
+                console.log('Index of clicked image:', editedImageIndex);
+            });
+        });
+
+        const form = document.getElementById('editProductForm');
+        form.addEventListener('submit', function () {
+            
+            const editedImageIndexInput = document.createElement('input');
+            editedImageIndexInput.setAttribute('type', 'hidden');
+            editedImageIndexInput.setAttribute('name', 'editedImageIndex');
+            editedImageIndexInput.setAttribute('value', editedImageIndex);
+            form.appendChild(editedImageIndexInput);
+        });
+    });
     </script>
 
 

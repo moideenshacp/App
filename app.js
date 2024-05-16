@@ -30,6 +30,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(nocache())
 
+app.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
+
 
 const port = process.env.PORT||3000;
 

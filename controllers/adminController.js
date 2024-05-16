@@ -1,28 +1,30 @@
-const users = require('../models/userModel');
-const categories =  require('../models/category')
-const products = require('../models/product')
-const bcrypt = require('bcrypt');
-const { query } = require('express');
-const { emit } = require('../app');
-const multer =  require ('multer')
-const path = require('path')
-const { TopologyClosedEvent } = require('mongodb');
+    const users = require('../models/userModel');
+    const categories =  require('../models/category')
+    const products = require('../models/product')
+    const bcrypt = require('bcrypt');
+    const { query } = require('express');
+    const { emit } = require('../app');
+    const path = require('path')
+
+    const multer =  require ('multer')
+
+    const { TopologyClosedEvent } = require('mongodb');
 
 
 
 //multer
 
 const storage = multer.diskStorage({
-    destination:function(req,file,cb){
-        cb(null,path.join(__dirname,'../public/productImages/productImages'))
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
     },
-    filename:function(req,file,cb){
-        const name = Date.now()+ '-'+file.originalname;
-        cb(null,name)
-    }
-})
+    destination: "../public/productImages/productImages",
+  });
+  
+  const upload = multer({ storage: storage, limits: { files: 4 } , preservePath: true}).array('image', 4);
 
-const upload = multer({storage:storage}).array('image',4)
+
+
 
 
 
@@ -328,72 +330,65 @@ const editCategoryLoad = async(req,res)=>{
 
     //add product
 
-    const productAdd = async(req,res)=>{
-        try {
-
-            upload(req, res, async function (err) {
-                if (err) {
-                  errorImage.innerHTML = "Only jpg/jpeg and png files are allowed!";
-          
-                  console.log(errorMsg);
-                  return res.redirect("/addproduct");
-                }
-                const name = req.body.name.trim();
-            const description = req.body.description.trim();
-            const price = parseFloat(req.body.price);
-            const quantity = parseFloat(req.body.quantity);
-            const size = req.body.size;
-            const category=req.body.category;
-            
-            
-            const categorylist = await categories.find({})
-
-            if (!req.body.image || req.body.image.some(image => !image)) {
-                const categorylist = await categories.find({});
-                return res.render('addproduct', { categorylist, message: 'Please select images 4 images' });
-            }
-            if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
-                const categorylist = await categories.find({});
-                return res.render('addproduct', { categorylist, message: 'Invalid Name Provided' });
-            }
-
-            if (!description || /^\s*$/.test(description)) {
-                const categorylist = await categories.find({});
-                return res.render('addproduct', { categorylist, message: 'Invalid description Provided' });
-            }
-
-            if (isNaN(price) || price <= 0) {
-                return res.render('addproduct', { categorylist, message: 'Price is not valid' });
-            }
-            if (isNaN(quantity) || quantity <= 0) {
-                return res.render('addproduct', { categorylist, message: 'quantity is not valid' });
-            }
-
+        const productAdd = async(req,res)=>{
+            try {
 
             
-            const productDetail = new products({
-                name:name,
-                description:description,
-                price:price,
-                quantity:quantity,
-                category:category,
-                image:req.body.image
+                const { name, description, price, quantity, category } = req.body;
+                const images = req.files;
                 
-                // size:size
+               const newImage =  images.map(images=>images.filename)
+                
+                
+                const categorylist = await categories.find({})
+                if (!req.files || req.files.length !== 4) {
+                    const categorylist = await categories.find({});
 
-            })
-            const productData = await productDetail.save()
-            if(productData){
-                res.render('addproduct',{categorylist,message:'added succesfully'})
+                    return res.render('addproduct', { categorylist, message: 'Select Exactly Four Images' });                  }
+              
+              
+                if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
+                    const categorylist = await categories.find({});
+                    return res.render('addproduct', { categorylist, message: 'Invalid Name Provided' });
+                }
+
+                if (!description || /^\s*$/.test(description)) {
+                    const categorylist = await categories.find({});
+                    return res.render('addproduct', { categorylist, message: 'Invalid description Provided' });
+                }
+
+                if (isNaN(price) || price <= 0) {
+                    return res.render('addproduct', { categorylist, message: 'Price is not valid' });
+                }
+                if (isNaN(quantity) || quantity <= 0) {
+                    return res.render('addproduct', { categorylist, message: 'quantity is not valid' });
+                }
+
+
+                
+                const productDetail = new products({
+                    name:name.trim(),
+                    description:description.trim(),
+                    price: parseFloat(price),
+                    quantity: parseFloat(quantity),
+                    category:category,
+                    image:newImage
+                    
+                    
+
+                })
+                const productData = await productDetail.save()
+                if(productData){
+                    res.render('addproduct',{categorylist,message:'added succesfully'})
+                }
             }
-        })
 
             
-        } catch (error) {
+        catch (error) {
             console.log(error.message);
         }
+    
     }
-
     //list/unlist products
 
     const listProduct =  async (req, res) => {
@@ -447,20 +442,24 @@ const editProduct = async(req,res)=>{
         
            
             const productData = await products.findOne({_id:id});
+            const images = req.files;
+            const newImageNames = images.map(image => image.filename);
+   
 
             const name = req.body.name.trim();
             const description = req.body.description.trim();
             const price = req.body.price;
             const quantity = req.body.quantity;
             const category=req.body.category;
-            const image = req.body.image;
+            const editedImageIndex = req.body.editedImageIndex; 
 
+            const updatedImages = [...productData.image];
+            if (editedImageIndex !== undefined) {
+                updatedImages[editedImageIndex] = newImageNames[0];
+            }
             
 
-
-            const updatedImages = image.map((image, index) => {
-                return image || productData.image[index];
-            });
+            
             if (!name || /^\s*$/.test(name) || /\d/.test(name)) {
                 const productData = await products.findById({_id:id})
                 const categorylist = await categories.find({})
@@ -511,7 +510,6 @@ module.exports = {
     editcategory,
     listCategory,
     productAdd,
-    upload,
     listProduct,
     editProductLoad,
     editProduct
