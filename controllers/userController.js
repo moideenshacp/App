@@ -7,7 +7,8 @@ const bcrypt = require('bcrypt');
 const { use, emit } = require('../app');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
-const passport = require('passport')
+const passport = require('passport');
+const category = require('../models/category');
 
 
 
@@ -386,8 +387,9 @@ const productDetail = async(req,res)=>{
         const id = req.query.id;
         const productData = await products.findById({_id:id})
         const productDatas = await products.find({})
-        console.log(id+'-----------------------------------------');
-        res.render('productDetail',{productData,productDatas})
+        const relatedProducts = await products.find({category:productData.category})
+        console.log(relatedProducts+'============================================================');
+        res.render('productDetail',{productData,productDatas,relatedProducts})
         
     } catch (error) {
         console.log(error.message);
