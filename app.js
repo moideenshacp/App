@@ -4,7 +4,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/App");
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+// const logger = require('morgan');
 const session = require('express-session')
 const config = require('./config/config')
 const bodyParser = require('body-parser')
@@ -23,12 +23,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(session({secret:config.sessionsecret}))
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(nocache())
+
 
 app.use(function(err, req, res, next) {
     console.error(err.stack);
@@ -39,6 +40,9 @@ app.use(function(err, req, res, next) {
 const port = process.env.PORT||3000;
 
 
+
+
+
 //for user routes
 const userRoute = require('./routes/userRoute')
 app.use('/',userRoute)
@@ -47,6 +51,7 @@ app.use('/',userRoute)
 const adminRoute = require('./routes/adminRoute');
 const { name } = require('ejs')
 ;
+const { error } = require('console');
 app.use('/admin',adminRoute)
 
 

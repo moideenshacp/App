@@ -200,7 +200,7 @@
                                             <select class="form-select" name="category">
                                                 <% categorylist.forEach(category => { %>
                                                     <% if (category.is_listed === true) { %>
-                                                        <option value="<%= category.name %>" <% if (productData.category === category.name) { %> selected <% } %>><%= category.name %></option>
+                                                        <option value="<%= category.name %>" <% if (productData.category.name === category.name) { %> selected <% } %>><%= category.name %></option>
                                                     <% } %>
                                                 <% }) %>
                                             </select>
@@ -217,7 +217,7 @@
                                                             <img id="imagePreview<%= i %>" src="/productImages/productImages/<%= productData.image[i] %>" alt="Preview">
                                                         </div>
                                                         
-                                                        <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" data-index="<%= i %>" onchange="previewImage(this, 'imagePreview<%= i %>')" value="<%= productData.image[i] %>">
+                                                        <input name="image" type="file" accept=".png, .jpeg, .jpg, .webp" id="imageInput<%= i %>" class="imageInput" data-index="<%= i %>" onchange="previewImage(this, 'imagePreview<%= i %>')" value="<%= productData.image[i] %>">
                                                     </label>
                                                 </div>
                                             <% } %>

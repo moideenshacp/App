@@ -264,10 +264,16 @@
                                 }
                             }'>
                           <% productData.forEach(product=>{%>
-                            <%if(product.is_listed===true){%>
+                            <%if(product.is_listed===true && product.category.is_listed===true){%>
                            
                             <div class="product product-7 text-center">
                                 <figure class="product-media">
+                                    <%if(product.quantity===0){%>
+                                    <span class="product-label label-new">Out of Stock</span>
+                                   <% }else{%>
+                                        <span class="product-label label-new">New</span>
+                                   <% }%>
+
                                     <a href="/productDetail?id=<%=product._id%>">
                                         <img src="/productImages/productImages/<%=product.image[0]%>" alt="Product image" class="product-image">
                                         <img src="/productImages/productImages/<%=product.image[1]%>" alt="Product image" class="product-image-hover">
@@ -284,7 +290,7 @@
 
                                 <div class="product-body">
                                     <div class="product-cat">
-                                        <a href="#"><%=product.category%></a>
+                                        <a href="#"><%=product.category.name%></a>
                                     </div><!-- End .product-cat -->
                                     <h3 class="product-title"><a href="product.html"><%=product.name%></a></h3><!-- End .product-title -->
                                     <div class="product-price">

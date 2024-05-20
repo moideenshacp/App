@@ -61,12 +61,18 @@
                                 <div class="tab-pane fade show active" id="register-2" role="tabpanel"
                                     aria-labelledby="register-tab-2">
                                     <form method="post" action="/home">
-                                        <% if(typeof message!=='undefined' ){ %>
+                                        <% if(typeof messages!=='undefined' ){ %>
 
                                             <p style="color: red;text-align: center;" class="message">
-                                                <%= message %>
+                                                <%= messages %>
                                             </p>
                                             <% } %>
+                                            <% if(typeof message!=='undefined' ){ %>
+
+                                                <p style="color: green;text-align: center;" class="message">
+                                                    <%= message %>
+                                                </p>
+                                                <% } %>
                                             <br>
                                                 <div class="form-group">
                                                     <label for="singin-email-2">Email address *</label>

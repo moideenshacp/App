@@ -63,10 +63,15 @@
                                     <form method="post" action="/signup">
 
                                         <% if(typeof messages !=='undefined' ){ %>
-                                            <p style="color: green;">
+                                            <p style="color: red;">
                                                 <%= messages %>
                                             </p>
                                             <% } %>
+                                            <% if(typeof message !=='undefined' ){ %>
+                                                <p style="color: green;">
+                                                    <%= message %>
+                                                </p>
+                                                <% } %>
                                             <br><br>
 
                                                 <div class="form-group">

@@ -205,6 +205,12 @@
                                     <div class="row">
                                         <input class="input" type="hidden" name="id" value="<%= productData._id %>">
                                         <figure class="product-main-image">
+                                            <%if(productData.quantity===0){%>
+                                                <span class="product-label label-new">Out of Stock</span>
+                                               <% }else{%>
+                                                    <span class="product-label label-new">New</span>
+                                               <% }%>
+
                                             <img id="product-zoom" src="/productImages/productImages/<%=productData.image[0]%>" data-zoom-image="/productImages/productImages/<%=productData.image[3]%>" alt="product image">
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
@@ -296,7 +302,7 @@
                                     <div class="product-details-footer">
                                         <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="/productDetail?id=<%=productData._id%>"><%=productData.category%></a>
+                                            <a href="/productDetail?id=<%=productData._id%>"><%=productData.category.name%></a>
                                             
                                         </div><!-- End .product-cat -->
 
@@ -431,10 +437,15 @@
                         }'>
                         <% relatedProducts.forEach(product=>{%>
 
-                            <%if(product.is_listed===true){%>
+                            <%if(product.is_listed===true && product.category.is_listed===true ){%>
                         <div class="product product-7 text-center">
                             <figure class="product-media">
-                                <span class="product-label label-new">New</span>
+                                <%if(product.quantity===0){%>
+                                    <span class="product-label label-new">Out of Stock</span>
+                                   <% }else{%>
+                                        <span class="product-label label-new">New</span>
+                                   <% }%>
+                                
                                 <a href="/productDetail?id=<%=product._id%>">
                                     <img src="/productImages/productImages/<%=product.image[0]%>" alt="Product image" class="product-image">
                                 </a>
@@ -452,7 +463,7 @@
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#"><%=product.category%></a>
+                                    <a href="#"><%=product.category.name%></a>
                                 </div><!-- End .product-cat -->
                                 <h3 class="product-title"><a href="product.html"><%=product.name%></a></h3><!-- End .product-title -->
                                 <div class="product-price">

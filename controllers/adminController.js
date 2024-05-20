@@ -9,6 +9,7 @@
     const multer =  require ('multer')
 
     const { TopologyClosedEvent } = require('mongodb');
+const { model } = require('mongoose');
 
 
 
@@ -200,9 +201,10 @@ const category =  async(req,res)=>{
 //product list
 const productList = async(req,res)=>{
     try {
-        const productlist = await products.find({})
+        const productlist = await products.find({}).populate('category');
+
         const categorylist = await categories.find({})
-        res.render('productlist',{productlist,categorylist})
+        res.render('productlist',{productlist})
         
     } catch (error) {
         console.log(error.message);
@@ -216,7 +218,7 @@ const addcategory = async (req, res) => {
         const description = req.body.description.trim();
         const lowercase = name.toLowerCase()
 
-        if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
+        if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name))  {
             const categorylist = await categories.find({});
             return res.render('category', { categorylist, message: 'Invalid Name Provided' });
         }
@@ -304,7 +306,7 @@ const editCategoryLoad = async(req,res)=>{
             const description = req.body.description.trim();
             const lowercase = name.toLowerCase();
 
-            if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
+            if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name))  {
                 return res.render('editcategory', { categoryData, message: 'Invalid Name Provided' });
             }
             if (!description || /^\s*$/.test(description)) {
@@ -344,24 +346,24 @@ const editCategoryLoad = async(req,res)=>{
                 if (!req.files || req.files.length !== 4) {
                     const categorylist = await categories.find({});
 
-                    return res.render('addproduct', { categorylist, message: 'Select Exactly Four Images' });                  }
+                    return res.render('addproduct', { categorylist, message: 'Select Exactly Four Images',name,description,price,quantity,category });                  }
               
               
-                if (!name || /^\s*$/.test(name) || /\d/.test(name))  {
+                if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name))  {
                     const categorylist = await categories.find({});
-                    return res.render('addproduct', { categorylist, message: 'Invalid Name Provided' });
+                    return res.render('addproduct', { categorylist, message: 'Invalid Name Provided',name,description,price,quantity,category });
                 }
 
                 if (!description || /^\s*$/.test(description)) {
                     const categorylist = await categories.find({});
-                    return res.render('addproduct', { categorylist, message: 'Invalid description Provided' });
+                    return res.render('addproduct', { categorylist, message: 'Invalid description Provided',name,description,price,quantity,category});
                 }
 
                 if (isNaN(price) || price <= 0) {
-                    return res.render('addproduct', { categorylist, message: 'Price is not valid' });
+                    return res.render('addproduct', { categorylist, message: 'Price is not valid',name,description,price,quantity,category });
                 }
                 if (isNaN(quantity) || quantity <= 0) {
-                    return res.render('addproduct', { categorylist, message: 'quantity is not valid' });
+                    return res.render('addproduct', { categorylist, message: 'quantity is not valid',name,description,price,quantity,category });
                 }
 
 
@@ -417,7 +419,7 @@ const editProductLoad = async(req,res)=>{
 
         
         const id = req.query.id;
-        const productData = await products.findById({_id:id})
+        const productData = await products.findById({_id:id}).populate('category');
         const productImage = await products.findById({_id:id},{image:1,_id:0})
         const productImageArr = await productImage.image.map(image=>`${image}`)
         const categorylist = await categories.find({})
@@ -451,7 +453,13 @@ const editProduct = async(req,res)=>{
             const price = req.body.price;
             const quantity = req.body.quantity;
             const category=req.body.category;
+            console.log(category);
             const editedImageIndex = req.body.editedImageIndex; 
+
+            const categoryDocument = await categories.findOne({name: category});
+            const categoryId = categoryDocument ? categoryDocument._id : null;
+            console.log(categoryId);
+            
 
             const updatedImages = [...productData.image];
             if (editedImageIndex !== undefined) {
@@ -460,7 +468,7 @@ const editProduct = async(req,res)=>{
             
 
             
-            if (!name || /^\s*$/.test(name) || /\d/.test(name)) {
+            if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
                 const productData = await products.findById({_id:id})
                 const categorylist = await categories.find({})
                 return res.render('editproduct', { productData,categorylist, message: 'Invalid Name Provided' });
@@ -475,7 +483,7 @@ const editProduct = async(req,res)=>{
                 const categorylist = await categories.find({})
                 return res.render('editproduct', { categorylist,productData, message: 'Price is not valid' });
             }
-            if (isNaN(quantity) || quantity <= 0) {
+            if (isNaN(quantity) || quantity < 0) {
                 const productData = await products.findById({_id:id})
                 const categorylist = await categories.find({})
                 return res.render('editproduct', { categorylist,productData, message: 'quantity is not valid' });
@@ -484,7 +492,7 @@ const editProduct = async(req,res)=>{
          
             
 
-            const updatedProduct = await products.findByIdAndUpdate(id,{$set:{name:name,description:description,price:price,quantity:quantity,category:category,image:updatedImages}})
+            const updatedProduct = await products.findByIdAndUpdate(id,{$set:{name:name,description:description,price:price,quantity:quantity,category:categoryId,image:updatedImages}})
         
 
             res.redirect('/admin/products')

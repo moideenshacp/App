@@ -184,25 +184,25 @@
                                         <% } %>
                                     <div class="mb-4">
                                         <label  for="product_name" class="form-label">Product title</label>
-                                        <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" />
+                                        <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" value="<%= typeof name !== 'undefined' ? name : '' %>" />
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Full description</label>
-                                        <textarea name="description" placeholder="Type here" class="form-control" rows="4"></textarea>
+                                        <textarea name="description" placeholder="Type here" class="form-control" rows="4"><%= typeof description !== 'undefined' ? description : '' %></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="mb-4">
                                                 <label class="form-label">Price</label>
                                                 <div class="row gx-2">
-                                                    <input name="price" placeholder="$" type="text" class="form-control" />
+                                                    <input name="price" placeholder="$" type="text" class="form-control" value="<%= typeof price !== 'undefined' ? price : '' %>" />
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="mb-4">
                                                 <label class="form-label">Quantitiy</label>
-                                                <input name="quantity" type="text" class="form-control" />
+                                                <input name="quantity" type="text" class="form-control" value="<%= typeof quantity !== 'undefined' ? quantity : '' %>"/>
                                             </div>
                                         </div>
                                         
@@ -211,12 +211,14 @@
                                         <div class="col-lg-4">
                                             <label class="form-label">Category</label>
                                             <select class="form-select" name="category">
-                                                <% categorylist.forEach(category=>{%>
-                                                   <% if(category.is_listed === true){%>
-                                                <option><%= category.name%></option>
-                                                   <%}%>
-                                                <%})%>
+                                                <% categorylist.forEach(category => { %>
+                                                    <% if (category.is_listed === true) { %>
+                                                        <option value="<%= category._id %>" <%= category._id.toString() === category.toString() ? 'selected' : '' %>><%= category.name %></option>
+                                                    <% } %>
+                                                <% }) %>
                                             </select>
+                                            
+                                            
                                         </div>
 
                                     
@@ -234,7 +236,7 @@
                                                                 <div class="rounded-image-preview">
                                                                     <img id="imagePreview<%= i %>" src="" alt="Preview">
                                                                 </div>
-                                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput"  onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                                <input name="image" type="file" accept=".png, .jpeg, .jpg, .webp" id="imageInput<%= i %>" class="imageInput"  onchange="previewImage(this, 'imagePreview<%= i %>')">
                                                             </label>
                                                         </div>
                                                         

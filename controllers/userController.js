@@ -71,7 +71,7 @@ const sendOtpMail = async(name,email)=>{
     }
 }
 
-// Otp.collection.createIndex({ "expiredAt": 1 }, { expireAfterSeconds: 180 });
+
 
 let userdata;
 
@@ -116,7 +116,7 @@ const verifyOtp = async (req, res) => {
       
         // Check if otp exists
         if (!otpData) {
-            return res.render('otp', { messages: 'OTP not found' });
+            return res.render('otp', { messages: ' Invalid OTP' });
         }
 
         // Check if otp has expired
@@ -203,11 +203,18 @@ const insertUser = async(req,res)=>{
         } else {
             const spassword  = await securePassword(req.body.password)
             const name = req.body.name.trim();
-            if (!name || !/^[a-zA-Z][a-zA-Z\s]*$/.test(name)) {
+            if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
                 return res.render('signup', { messages: 'Invalid name provided' });
             }
             const email =req.body.email;
             const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/;
+            const hasLowerCase = /[a-z]/;
+            const hasUpperCase = /[A-Z]/;
+            const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+            if (!req.body.password || !hasLowerCase.test(req.body.password) || !hasUpperCase.test(req.body.password) || !hasSpecialChar.test(req.body.password)) {
+                return res.render('signup', { messages: 'Password must contain at least one lowercase letter, one uppercase letter, and one special character' });
+            }
+
 
             const mobile = req.body.mobile;
             const mobileRegex = /^\d{10}$/;
@@ -226,7 +233,8 @@ const insertUser = async(req,res)=>{
                 email:req.body.email,
                 password:spassword,
                 mobile:req.body.mobile,
-                is_admin:0
+                is_admin:0,
+                is_blocked:false
     
             });
     
@@ -324,11 +332,11 @@ const verify = async(req,res)=>{
 
                 }
             }else{
-                res.render('login',{message:'Access Restricted'})
+                res.render('login',{messages:'Access Restricted'})
             }
 
             }else{
-               res.render('login',{message:'Email and Password is incorrect'})
+               res.render('login',{messages:'Email and Password is incorrect'})
             }
             
         
@@ -354,7 +362,7 @@ const loadOtp = async(req,res)=>{
 const userhome = async(req,res)=>{
 
     try {
-        const productData = await products.find({})
+        const productData = await products.find({}).populate('category')
         res.render('userhome',{productData})
     } catch (error) {
         console.log(error.message);
@@ -385,9 +393,9 @@ const loadproduct = async(req,res)=>{
 const productDetail = async(req,res)=>{
     try {
         const id = req.query.id;
-        const productData = await products.findById({_id:id})
+        const productData = await products.findById({_id:id}).populate('category')
         const productDatas = await products.find({})
-        const relatedProducts = await products.find({category:productData.category})
+        const relatedProducts = await products.find({category:productData.category}).populate('category')
         console.log(relatedProducts+'============================================================');
         res.render('productDetail',{productData,productDatas,relatedProducts})
         
