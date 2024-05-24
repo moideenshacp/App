@@ -181,10 +181,16 @@
                                 <form method="post" >
                                     <% if(typeof message!=='undefined' ){ %>
 
-                                        <p style="color: green;text-align: center;" class="message">
+                                        <p style="color: red;text-align: center;" class="message">
                                             <%= message %>
                                         </p>
                                         <% } %>
+                                        <% if(typeof messages!=='undefined' ){ %>
+
+                                            <p style="color: green;text-align: center;" class="message">
+                                                <%= messages %>
+                                            </p>
+                                            <% } %>
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Name</label>
                                         <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" required/>

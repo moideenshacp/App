@@ -27,7 +27,7 @@ user_route.use(bodyparser.json());
 user_route.use(bodyparser.urlencoded({extended:true}));
 
 //loadhome
-user_route.get('/',auth.isLogout,userController.loadHome)
+user_route.get('/',userController.loadHome)
 
 //signup
 user_route.get('/signup',auth.isLogout,userController.SignupHome)
@@ -45,10 +45,6 @@ user_route.post('/otp',userController.verifyOtp)
 //resend otp
 user_route.post('/resendotp',userController.resendotp)
 
-//google
-// user_route.get('/home',(req,res)=>{
-//     res.render('userhome')
-// })
 
 user_route.get('/google',passport.authenticate('google',{scope:['email','profile']}))
 
@@ -69,7 +65,7 @@ user_route.get('/google',auth.isLogin,passport.authenticate('google',{failureRed
 
 
 //profile
-user_route.get('/profile',auth.isLogin,userController.loadprofile)
+user_route.get('/profile',blockAuth.block,auth.isLogin,userController.loadprofile)
 
 //userhome
 user_route.get('/home', blockAuth.block,auth.isLogin, userController.userhome)
@@ -78,11 +74,11 @@ user_route.get('/home', blockAuth.block,auth.isLogin, userController.userhome)
 user_route.get('/signout',auth.isLogin,userController.signout)
 
 //product
-user_route.get('/product',auth.isLogin,userController.loadproduct)
-user_route.get('/productDetail',auth.isLogin,userController.productDetail)
+user_route.get('/product',blockAuth.block,auth.isLogin,userController.loadproduct)
+user_route.get('/productDetail',blockAuth.block,auth.isLogin,userController.productDetail)
 
 //shop
-user_route.get('/shop',auth.isLogin,userController.shop)
+user_route.get('/shop',blockAuth.block,auth.isLogin,userController.shop)
 
 
 

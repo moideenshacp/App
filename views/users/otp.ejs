@@ -83,7 +83,7 @@
                                     <form method="post" action="/otp">
 
                                         <% if(typeof messages !=='undefined' ){ %>
-                                            <p style="color: green; text-align: center;">
+                                            <p style="color: red; text-align: center;">
                                                 <%= messages %>
                                             </p>
                                             <% } %>
@@ -455,34 +455,63 @@
     <script src="/usercss/assets/js/main.js"></script>
 
     <script>
-        // Set the timer duration in seconds
-        var timerDuration = 60; // 60 seconds
-
-        // Function to update the timer
-        function updateTimer() {
-            var minutes = Math.floor(timerDuration / 60);
-            var seconds = timerDuration % 60;
-            document.getElementById("timer").textContent = "Expire After :" + minutes + "m " + seconds + "s";
-
-            // Decrement timer duration
-            timerDuration--;
-
-            // Check if timer has reached 0
-            if (timerDuration < 0) {
-                clearInterval(timerInterval); // Stop the timer
-                document.getElementById("timer").textContent = "Time expires resend the otp ";
-                // document.getElementById("resend-link").innerHTML = '<a href="/otp">Resend OTP</a>' // Show the resend link
-            }else{
-                
+        // Function to start the timer
+        function startTimer() {
+            var otpTimestamp = localStorage.getItem("otpTimestamp");
+            var otpExpiryDuration = localStorage.getItem("otpExpiryDuration");
+            if (!otpTimestamp || !otpExpiryDuration) {
+                // No OTP data found, start timer with default duration
+                localStorage.removeItem("otpTimestamp"); // Clear any existing data
+                localStorage.removeItem("otpExpiryDuration");
+                startTimerWithDuration(60); // Default expiry duration: 60 seconds
+                return;
+            }
+    
+            // Calculate remaining time
+            var currentTime = Date.now();
+            var elapsedTime = Math.floor((currentTime - otpTimestamp) / 1000);
+            var remainingTime = otpExpiryDuration - elapsedTime;
+    
+            if (remainingTime >= 0) {
+                startTimerWithDuration(remainingTime);
+            } else {
+                // Clear expired OTP data
+                localStorage.removeItem("otpTimestamp");
+                localStorage.removeItem("otpExpiryDuration");
+                document.getElementById("timer").textContent = "Time expires, please resend the OTP";
+                document.getElementById("resend").disabled = false; // Enable the resend button
             }
         }
-
-        // Call updateTimer function every second
-        var timerInterval = setInterval(updateTimer, 1000);
-
-        setTimeout(function() {
-    document.getElementById("resend").disabled = false;
-}, 1 * 60 * 1000);
+    
+        // Function to start the timer with a specific duration
+        function startTimerWithDuration(duration) {
+            var startTime = Date.now();
+    
+            function updateTimer() {
+                var elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                var remainingTime = duration - elapsedTime;
+    
+                if (remainingTime >= 0) {
+                    var minutes = Math.floor(remainingTime / 60);
+                    var seconds = remainingTime % 60;
+                    document.getElementById("timer").textContent = "Expire After: " + minutes + "m " + seconds + "s";
+                } else {
+                    clearInterval(timerInterval); // Stop the timer
+                    document.getElementById("timer").textContent = "Time expires, please resend the OTP";
+                    document.getElementById("resend").disabled = false; // Enable the resend button
+                }
+            }
+    
+            // Call updateTimer function every second
+            var timerInterval = setInterval(updateTimer, 1000);
+    
+            setTimeout(function() {
+                document.getElementById("resend").disabled = false;
+            }, duration * 1000);
+        }
+    
+        // Call startTimer when the page loads
+        window.onload = startTimer;
     </script>
 
 

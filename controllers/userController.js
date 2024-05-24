@@ -4,7 +4,6 @@ const Otp = require('../models/otpModel')
 const categories =  require('../models/category')
 const products = require('../models/product')
 const bcrypt = require('bcrypt');
-const { use, emit } = require('../app');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
 const passport = require('passport');
@@ -73,7 +72,6 @@ const sendOtpMail = async(name,email)=>{
 
 
 
-let userdata;
 
 
 //resend
@@ -124,12 +122,27 @@ const verifyOtp = async (req, res) => {
         if (currentTime > otpData.expiredAt) {
             return res.render('otp', { messages: 'OTP has expired' });
         }
+        
 
         // Compare otp
         if (otpData && otpData.otp === otp) {
-          await userdata.save();
+            const user = new users({
+                name: req.session.name,
+                email: req.session.email,
+                password: req.session.password,
+                mobile: req.session.mobile,
+                is_admin: 0,
+            });
+            const userDatas = await user.save();
+
+            
+            req.session.user_id = null;
+            req.session.email = null;
+            req.session.name = null;
+            req.session.mobile = null;
+            req.session.password=null;
           
-          if(userdata){
+          if(userDatas){
                   return res.render('login', { message: 'registered successfully,Login in now' });
           }
         } else {
@@ -234,7 +247,7 @@ const insertUser = async(req,res)=>{
                 password:spassword,
                 mobile:req.body.mobile,
                 is_admin:0,
-                is_blocked:false
+                
     
             });
     
@@ -242,9 +255,11 @@ const insertUser = async(req,res)=>{
             req.session.user_id =userdata._id;
             req.session.email = userdata.email;
             req.session.name = userdata.name;
+            req.session.mobile = req.body.mobile;
+            req.session.password=userdata.password
             
             if(userdata){
-                await sendOtpMail(req.body.name,req.body.email,userdata._id)
+                await sendOtpMail(req.body.name,req.body.email)
                 res.render('otp',{messages:'Check your email for the OTP and enter it below'})
             }else{
                 res.render('signup',{messages:'failed to register'})
@@ -318,6 +333,7 @@ const verify = async(req,res)=>{
         const userData = await users.findOne({email:email});
 
         if(userData){
+            console.log('-------------------------',userData)
             if(userData.is_blocked===false){
             const passwordMatch = await bcrypt.compare(password,userData.password);
             if(passwordMatch){
@@ -328,7 +344,7 @@ const verify = async(req,res)=>{
                 
                     
                 }else{
-                    res.render('login',{message:'Please verify your mail.'});
+                    res.render('login',{message:'incorrect email or password'});
 
                 }
             }else{
@@ -362,6 +378,7 @@ const loadOtp = async(req,res)=>{
 const userhome = async(req,res)=>{
 
     try {
+        
         const productData = await products.find({}).populate('category')
         res.render('userhome',{productData})
     } catch (error) {

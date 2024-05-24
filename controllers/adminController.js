@@ -3,7 +3,6 @@
     const products = require('../models/product')
     const bcrypt = require('bcrypt');
     const { query } = require('express');
-    const { emit } = require('../app');
     const path = require('path')
 
     const multer =  require ('multer')
@@ -246,7 +245,7 @@ const addcategory = async (req, res) => {
 
         if (categoryData) {
             const categorylist = await categories.find({});
-            return res.render('category', { categorylist, message: 'Category added successfully.' });
+            return res.render('category', { categorylist, messages: 'Category added successfully.' });
         }
     } catch (error) {
         console.log(error.message);
@@ -381,7 +380,7 @@ const editCategoryLoad = async(req,res)=>{
                 })
                 const productData = await productDetail.save()
                 if(productData){
-                    res.render('addproduct',{categorylist,message:'added succesfully'})
+                    res.render('addproduct',{categorylist,messages:'added succesfully'})
                 }
             }
 
