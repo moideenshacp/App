@@ -11,7 +11,7 @@ const block = async(req,res,next)=>{
         }
         
     } catch (error) {
-        console.log(error.message);
+        console.log("---------------",error.message);
     }
 }
 

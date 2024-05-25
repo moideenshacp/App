@@ -3,6 +3,7 @@ const users = require('../models/userModel');
 const Otp = require('../models/otpModel')
 const categories =  require('../models/category')
 const products = require('../models/product')
+const cart = require('../models/cart')
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
@@ -434,6 +435,16 @@ const shop = async(req,res)=>{
     }
 }
 
+//load cart
+
+const cartLoad = async(req,res)=>{
+    try {
+        res.render('cart')
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 
@@ -470,7 +481,8 @@ module.exports= {
     googleInsert,
     failureLogin,
     productDetail,
-    shop
+    shop,
+    cartLoad
     
    
   

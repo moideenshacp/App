@@ -1,13 +1,14 @@
     const users = require('../models/userModel');
     const categories =  require('../models/category')
     const products = require('../models/product')
+    const cart = require('../models/cart')
     const bcrypt = require('bcrypt');
     const { query } = require('express');
     const path = require('path')
 
     const multer =  require ('multer')
 
-    const { TopologyClosedEvent } = require('mongodb');
+const { TopologyClosedEvent } = require('mongodb');
 const { model } = require('mongoose');
 
 
@@ -120,27 +121,7 @@ const customers = async(req,res)=>{
     }
 }
 
-//block
-// const block = async(req,res)=>{
-//     try {
-//         const userId = req.params.userId;
-        
-//         const user = await users.findById(userId);
-//         console.log(user);
-//         if(!user){
-//             res.status(404).json({success:false,message:'User not found'})
-//         }
-//         const userData = await users.findByIdAndUpdate({_id:req.params.id},{$set:{is_blocked:true}})
-//         await userData.save();
-//         // res.redirect('/admin/customers')
-//         // user.is_blocked = !user.is_blocked;
-        
 
-        
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 const block =  async (req, res) => {
     try {

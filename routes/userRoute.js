@@ -15,6 +15,7 @@ user_route.set('views','./views/users');
 
 //controllers
 const userController = require('../controllers/userController');
+const cartController = require('../controllers/cartController')
 const passport = require('passport');
 
 
@@ -65,22 +66,23 @@ user_route.get('/google',auth.isLogin,passport.authenticate('google',{failureRed
 
 
 //profile
-user_route.get('/profile',blockAuth.block,auth.isLogin,userController.loadprofile)
+user_route.get('/profile',auth.isLogin,blockAuth.block,userController.loadprofile)
 
 //userhome
-user_route.get('/home', blockAuth.block,auth.isLogin, userController.userhome)
+user_route.get('/home', auth.isLogin,blockAuth.block, userController.userhome)
 
 //signout
 user_route.get('/signout',auth.isLogin,userController.signout)
 
 //product
-user_route.get('/product',blockAuth.block,auth.isLogin,userController.loadproduct)
-user_route.get('/productDetail',blockAuth.block,auth.isLogin,userController.productDetail)
+user_route.get('/product',auth.isLogin,blockAuth.block,userController.loadproduct)
+user_route.get('/productDetail',auth.isLogin,blockAuth.block,userController.productDetail)
 
 //shop
-user_route.get('/shop',blockAuth.block,auth.isLogin,userController.shop)
+user_route.get('/shop',auth.isLogin,blockAuth.block,userController.shop)
 
-
+//cart
+user_route.get('/cart',cartController.addCart)
 
 
 module.exports = user_route;
