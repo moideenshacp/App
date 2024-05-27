@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
     <link rel="stylesheet" href="/usercss/assets/css/plugins/nouislider/nouislider.css">
 
-   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -292,8 +292,13 @@
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                        <a href="/cart?id=<%=productData._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                       <%if(productData.quantity===0){%>
+                                        <button class=" btn-out-of-stock" disabled><span>Out of Stock</span></button>                                    
 
+                                       
+                                       <%}else{%>
+                                        <a onclick="Addcart('<%=productData._id%>',document.getElementById('qty').value)"   class="btn-product btn-cart" id="addToCart"><span>add to cart</span></a>
+                                           <%}%>
                                         <div class="details-action-wrapper">
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                                         </div><!-- End .details-action-wrapper -->
@@ -879,6 +884,44 @@
     <script src="/usercss/assets/js/jquery.magnific-popup.min.js"></script>
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        function Addcart(productId, qty) {
+            fetch('/cart', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, qty })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.message == 'succes') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Product added to cart successfully.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    console.log('Error:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+    
+    
 </body>
 
 

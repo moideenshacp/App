@@ -82,7 +82,9 @@ user_route.get('/productDetail',auth.isLogin,blockAuth.block,userController.prod
 user_route.get('/shop',auth.isLogin,blockAuth.block,userController.shop)
 
 //cart
-user_route.get('/cart',cartController.addCart)
+user_route.get('/cart',cartController.loadCart)
+user_route.post('/cart',cartController.addCart)
+user_route.post('/removeProduct',cartController.removeProduct)
 
 
 module.exports = user_route;

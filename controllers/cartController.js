@@ -1,36 +1,70 @@
 const users = require('../models/userModel');
 const categories =  require('../models/category')
 const products = require('../models/product')
-const cart = require('../models/cart');
+const Cart = require('../models/cart');
+const product = require('../models/product');
+
+
 
 
 const addCart = async(req,res)=>{
     try {
-        const id = req.query.id;
-        const productData = await products.findById({_id:id})
-        console.log((productData+"productttttttttttttttttttttttttttttttttttttttttttt"));
+
+        const { productId, qty } = req.body;
+        console.log(productId+'userrhome');
         const userId = req.session.user_id;
-        if(productData){
-            const cartData = new cart({
-                user:userId,
-                products:[{product:productData._id,quantity:1}]
-            })
-            const cartDb = await cartData.save()
-            res.render('cart')
-        }else{
-            res.status(404).send('product not found')
+        console.log(userId+'11111111111111');
+        const quantity = qty && qty >= 1 ? qty : 1;
+        const userCart = await Cart.findOne({ user: userId });
+
+        if (!userCart) {
+            const cart = new Cart({
+                user: userId,
+                products: [{ product: productId, quantity: quantity }]
+            });
+            await cart.save();
+        } else {
+            userCart.products.push({ product: productId, quantity: quantity });
+            await userCart.save();
+        }
+        console.log(addCart);
+        
+        // res.redirect('/productDetail')
+        res.status(200).json({message:'succes'})
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+const loadCart = async(req,res)=>{
+    try {
+            const cartPoducts = await Cart.find({}).populate('products.product')
+            console.log(cartPoducts);
+            res.render('cart',{cartPoducts})
         }
        
-        
+    catch (error) {
+        console.log(error);
+    }
+}
+
+const removeProduct = async(req,res)=>{
+    try {
+        const id =req.body.cartId;
+        await Cart.deleteOne({_id:id})
+        console.log(id+'ddddddddddddddddddddddddddddddddddddddddddcartId');  
+        res.status(200).json({message:'succes'})
+
         
     } catch (error) {
         console.log(error);
     }
 }
 
-
 module.exports={
-    addCart
+    loadCart,
+    addCart,
+    removeProduct
 }
 
 

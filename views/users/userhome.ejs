@@ -32,6 +32,10 @@
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
     <link rel="stylesheet" href="/usercss/assets/css/skins/skin-demo-6.css">
     <link rel="stylesheet" href="/usercss/assets/css/demos/demo-6.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
@@ -284,7 +288,15 @@
                                     </div><!-- End .product-action-vertical -->
 
                                     <div class="product-action">
-                                        <a href="/cart" class="btn-product btn-cart"><span>add to cart</span></a>
+                                       <% if(product.quantity===0){%>
+                                        <a class="btn-product " disabled><span>Out of Stock</span></a>
+
+
+                                        <%}else{%>
+                                            <a onclick="Addcart('<%=product._id%>')"  class="btn-product btn-cart" id="addToCart"><span>add to cart</span></a>
+
+
+                                        <%}%>
                                     </div><!-- End .product-action -->
                                 </figure><!-- End .product-media -->
 
@@ -916,6 +928,45 @@
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
     <script src="/usercss/assets/js/demos/demo-6.js"></script>
+    <script>
+        function Addcart(productId) {
+    const qty = 1; 
+
+    fetch('/cart', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId, qty })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.message == 'succes') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Product added to cart successfully.',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.reload();
+            });
+        } else {
+            console.log('Error:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+    </script>
+    
+    
 </body>
 
 
