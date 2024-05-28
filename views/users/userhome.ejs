@@ -940,28 +940,36 @@
         body: JSON.stringify({ productId, qty })
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.message == 'succes') {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Product added to cart successfully.',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.reload();
-            });
-        } else {
-            console.log('Error:', data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Product added to cart successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (data.fail) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Product is already in cart!',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                    else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
 }
 
     </script>

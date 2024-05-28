@@ -334,12 +334,10 @@ const verify = async(req,res)=>{
         const userData = await users.findOne({email:email});
 
         if(userData){
-            console.log('-------------------------',userData)
             if(userData.is_blocked===false){
             const passwordMatch = await bcrypt.compare(password,userData.password);
             if(passwordMatch){
                     req.session.user_id =userData._id;
-                    console.log(req.session.user_id+'---------------');
                     
                     res.redirect('/home');
                 
@@ -414,7 +412,6 @@ const productDetail = async(req,res)=>{
         const productData = await products.findById({_id:id}).populate('category')
         const productDatas = await products.find({})
         const relatedProducts = await products.find({category:productData.category}).populate('category')
-        console.log(relatedProducts+'============================================================');
         res.render('productDetail',{productData,productDatas,relatedProducts})
         
     } catch (error) {
@@ -426,10 +423,9 @@ const productDetail = async(req,res)=>{
 
 const shop = async(req,res)=>{
     try {
-        const productData = await products.find({})
+        const productData = await products.find({}).populate('category')
         
         res.render('shop',{productData})
-        console.log(productData);
     } catch (error) {
         console.log(error);
     }

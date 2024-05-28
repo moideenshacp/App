@@ -85,6 +85,7 @@ user_route.get('/shop',auth.isLogin,blockAuth.block,userController.shop)
 user_route.get('/cart',cartController.loadCart)
 user_route.post('/cart',cartController.addCart)
 user_route.post('/removeProduct',cartController.removeProduct)
+user_route.post('/totalPrice',cartController.totalPrice)
 
 
 module.exports = user_route;

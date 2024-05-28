@@ -3,6 +3,7 @@
 
 
 <!-- molla/product.html  22 Nov 2019 09:54:50 GMT -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,10 +53,10 @@
 
                     <div class="header-right">
                         <!-- <div class="social-icons social-icons-color"> -->
-                            <!-- <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a> -->
-                            <!-- <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a> -->
-                            <!-- <a href="#" class="social-icon social-pinterest" title="Instagram" target="_blank"><i class="icon-pinterest-p"></i></a> -->
-                            <!-- <a href="#" class="social-icon social-instagram" title="Pinterest" target="_blank"><i class="icon-instagram"></i></a> -->
+                        <!-- <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a> -->
+                        <!-- <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a> -->
+                        <!-- <a href="#" class="social-icon social-pinterest" title="Instagram" target="_blank"><i class="icon-pinterest-p"></i></a> -->
+                        <!-- <a href="#" class="social-icon social-instagram" title="Pinterest" target="_blank"><i class="icon-instagram"></i></a> -->
                         <!-- </div>End .soial-icons -->
                         <ul class="top-menu top-link-menu">
                             <li>
@@ -67,11 +68,11 @@
                             </li>
                         </ul><!-- End .top-menu -->
 
-                       
+
 
                         <div class="header-dropdown">
                             <!-- <a href="#">Eng</a> -->
-                         
+
                         </div><!-- End .header-dropdown -->
                     </div><!-- End .header-right -->
                 </div>
@@ -85,44 +86,45 @@
                                 <div class="header-search-wrapper search-wrapper-wide">
                                     <label for="q" class="sr-only">Search</label>
                                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
+                                    <input type="search" class="form-control" name="q" id="q"
+                                        placeholder="Search product ..." required>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
                     </div>
-               
-                        <!-- <a href="index-6.html   " class="logo">
+
+                    <!-- <a href="index-6.html   " class="logo">
                             <img src="/usercss/assets/images/demos/demo-6/logo.png" alt="Molla Logo" width="82" height="20">
                         </a> -->
-                        <!-- <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Mars</h3>
+                    <!-- <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Mars</h3>
                          -->
-                         <img src="/images/applogo.jpg" style="height: 120px;width: 180px;;" alt="marslogo">
-            
+                    <img src="/images/applogo.jpg" style="height: 120px;width: 180px;;" alt="marslogo">
+
 
                     <div class="header-right">
 
                         <!-- <a href="/login"><i class="icon-user"></i>Login</a> -->
-                     
+
                         <a href="wishlist.html" class="wishlist-link">
                             <i class="icon-heart-o"></i>
                             <!-- <span class="wishlist-txt"></span> -->
                         </a>
-                        
+
 
                         <div class="dropdown cart-dropdown">
-                          
+
                             <a href="/cart" class="wishlist-link">
                                 <i class="icon-shopping-cart"></i>
                                 <!-- <span class="wishlist-txt"></span> -->
                             </a>
-                            
 
-                            
+
+
 
                         </div><!-- End .cart-dropdown -->
-                        
+
                     </div>
-                    
+
                 </div><!-- End .container -->
             </div><!-- End .header-middle -->
 
@@ -131,33 +133,33 @@
                     <div class="header-left">
                         <nav class="main-nav">
                             <ul class="menu">
-                                <li class="">  
+                                <li class="">
                                     <a href="/home" class="">Home</a>
 
-                                 
+
                                 </li>
-                                
+
                                 <li>
                                     <a href="/shop" class="sf">Shop</a>
 
-                                    
+
                                 </li>
-                               
+
                                 <li>
                                     <!-- <a href="#" class="sf-with-ul">Pages</a> -->
-                                    <li><a href="about.html">About</a></li>
+                                <li><a href="about.html">About</a></li>
 
-                            
+
                                 </li>
                                 <li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                <li><a href="contact.html">Contact</a></li>
 
-                                    
+
                                 </li>
                                 <li>
-                                    <li><a href="/profile">Profile</a></li>
+                                <li><a href="/profile">Profile</a></li>
                                 </li>
-                     
+
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
 
@@ -167,7 +169,7 @@
                         </button>
                     </div><!-- End .header-left -->
 
-                   
+
                 </div><!-- End .container -->
             </div><!-- End .header-bottom -->
         </header><!-- End .header -->
@@ -179,7 +181,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/home">Home</a></li>
                         <li class="breadcrumb-item"><a href="/productDetail?id=<%=productData._id%>">Products</a></li>
-                        
+
                     </ol>
 
                     <nav class="product-pager ml-auto" aria-label="Product">
@@ -207,32 +209,48 @@
                                         <figure class="product-main-image">
                                             <%if(productData.quantity===0){%>
                                                 <span class="product-label label-new">Out of Stock</span>
-                                               <% }else{%>
+                                                <% }else{%>
                                                     <span class="product-label label-new">New</span>
-                                               <% }%>
+                                                    <% }%>
 
-                                            <img id="product-zoom" src="/productImages/productImages/<%=productData.image[0]%>" data-zoom-image="/productImages/productImages/<%=productData.image[3]%>" alt="product image">
+                                                        <img id="product-zoom"
+                                                            src="/productImages/productImages/<%=productData.image[0]%>"
+                                                            data-zoom-image="/productImages/productImages/<%=productData.image[3]%>"
+                                                            alt="product image">
 
-                                            <a href="#" id="btn-product-gallery" class="btn-product-gallery">
-                                                <i class="icon-arrows"></i>
-                                            </a>
+                                                        <a href="#" id="btn-product-gallery"
+                                                            class="btn-product-gallery">
+                                                            <i class="icon-arrows"></i>
+                                                        </a>
                                         </figure><!-- End .product-main-image -->
 
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item active" href="#" data-image="/productImages/productImages/<%=productData.image[0]%>" data-zoom-image="/productImages/productImages/<%=productData.image[0]%>">
-                                                <img src="/productImages/productImages/<%=productData.image[0]%>" alt="product side">
+                                            <a class="product-gallery-item active" href="#"
+                                                data-image="/productImages/productImages/<%=productData.image[0]%>"
+                                                data-zoom-image="/productImages/productImages/<%=productData.image[0]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[0]%>"
+                                                    alt="product side">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/productImages/productImages/<%=productData.image[1]%>" data-zoom-image="/productImages/productImages/<%=productData.image[1]%>">
-                                                <img src="/productImages/productImages/<%=productData.image[1]%>" alt="product cross">
+                                            <a class="product-gallery-item" href="#"
+                                                data-image="/productImages/productImages/<%=productData.image[1]%>"
+                                                data-zoom-image="/productImages/productImages/<%=productData.image[1]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[1]%>"
+                                                    alt="product cross">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/productImages/productImages/<%=productData.image[2]%>" data-zoom-image="/productImages/productImages/<%=productData.image[2]%>">
-                                                <img src="/productImages/productImages/<%=productData.image[2]%>" alt="product with model">
+                                            <a class="product-gallery-item" href="#"
+                                                data-image="/productImages/productImages/<%=productData.image[2]%>"
+                                                data-zoom-image="/productImages/productImages/<%=productData.image[2]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[2]%>"
+                                                    alt="product with model">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/productImages/productImages/<%=productData.image[3]%>" data-zoom-image="/productImages/productImages/<%=productData.image[3]%>">
-                                                <img src="/productImages/productImages/<%=productData.image[3]%>" alt="product back">
+                                            <a class="product-gallery-item" href="#"
+                                                data-image="/productImages/productImages/<%=productData.image[3]%>"
+                                                data-zoom-image="/productImages/productImages/<%=productData.image[3]%>">
+                                                <img src="/productImages/productImages/<%=productData.image[3]%>"
+                                                    alt="product back">
                                             </a>
                                         </div><!-- End .product-image-gallery -->
                                     </div><!-- End .row -->
@@ -241,30 +259,35 @@
 
                             <div class="col-md-6">
                                 <div class="product-details">
-                                    <h1 class="product-title"><%=productData.name%></h1><!-- End .product-title -->
+                                    <h1 class="product-title">
+                                        <%=productData.name%>
+                                    </h1><!-- End .product-title -->
 
                                     <div class="ratings-container">
                                         <div class="ratings">
                                             <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
                                         </div><!-- End .ratings -->
-                                        <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
+                                        <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews
+                                            )</a>
                                     </div><!-- End .rating-container -->
 
                                     <div class="product-price">
                                         ₹ <%=productData.price%>
                                     </div><!-- End .product-price -->
 
-                                    
+
 
                                     <div class="details-filter-row details-row-size">
                                         <label>Color:</label>
 
                                         <div class="product-nav product-nav-thumbs">
                                             <a href="#" class="active">
-                                                <img src="/usercss/assets/images/products/single/1-thumb.jpg" alt="product desc">
+                                                <img src="/usercss/assets/images/products/single/1-thumb.jpg"
+                                                    alt="product desc">
                                             </a>
                                             <a href="#">
-                                                <img src="/usercss/assets/images/products/single/2-thumb.jpg" alt="product desc">
+                                                <img src="/usercss/assets/images/products/single/2-thumb.jpg"
+                                                    alt="product desc">
                                             </a>
                                         </div><!-- End .product-nav -->
                                     </div><!-- End .details-filter-row -->
@@ -281,42 +304,53 @@
                                             </select>
                                         </div><!-- End .select-custom -->
 
-                                        
+
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="details-filter-row details-row-size">
                                         <label for="qty">Qty:</label>
                                         <div class="product-details-quantity">
-                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                            <input type="number" id="qty" class="form-control" value="1" min="1"
+                                                max="<%=productData.quantity%>" step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                       <%if(productData.quantity===0){%>
-                                        <button class=" btn-out-of-stock" disabled><span>Out of Stock</span></button>                                    
+                                        <%if(productData.quantity===0){%>
+                                            <button class=" btn-out-of-stock" disabled><span>Out of
+                                                    Stock</span></button>
 
-                                       
-                                       <%}else{%>
-                                        <a onclick="Addcart('<%=productData._id%>',document.getElementById('qty').value)"   class="btn-product btn-cart" id="addToCart"><span>add to cart</span></a>
-                                           <%}%>
-                                        <div class="details-action-wrapper">
-                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
-                                        </div><!-- End .details-action-wrapper -->
+
+                                            <%}else{%>
+                                                <a onclick="Addcart('<%=productData._id%>',document.getElementById('qty').value)"
+                                                    class="btn-product btn-cart" id="addToCart"><span>add to
+                                                        cart</span></a>
+                                                <%}%>
+                                                    <div class="details-action-wrapper">
+                                                        <a href="#" class="btn-product btn-wishlist"
+                                                            title="Wishlist"><span>Add to Wishlist</span></a>
+                                                    </div><!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
 
                                     <div class="product-details-footer">
                                         <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="/productDetail?id=<%=productData._id%>"><%=productData.category.name%></a>
-                                            
+                                            <a href="/productDetail?id=<%=productData._id%>">
+                                                <%=productData.category.name%>
+                                            </a>
+
                                         </div><!-- End .product-cat -->
 
                                         <div class="social-icons social-icons-sm">
                                             <span class="social-label">Share:</span>
-                                            <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                                            <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                                            <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                                            <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                                            <a href="#" class="social-icon" title="Facebook" target="_blank"><i
+                                                    class="icon-facebook-f"></i></a>
+                                            <a href="#" class="social-icon" title="Twitter" target="_blank"><i
+                                                    class="icon-twitter"></i></a>
+                                            <a href="#" class="social-icon" title="Instagram" target="_blank"><i
+                                                    class="icon-instagram"></i></a>
+                                            <a href="#" class="social-icon" title="Pinterest" target="_blank"><i
+                                                    class="icon-pinterest"></i></a>
                                         </div>
                                     </div><!-- End .product-details-footer -->
                                 </div><!-- End .product-details -->
@@ -327,33 +361,48 @@
                     <div class="product-details-tab">
                         <ul class="nav nav-pills justify-content-center" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
+                                <a class="nav-link active" id="product-desc-link" data-toggle="tab"
+                                    href="#product-desc-tab" role="tab" aria-controls="product-desc-tab"
+                                    aria-selected="true">Description</a>
                             </li>
-                            
+
                             <li class="nav-item">
-                                <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Shipping & Returns</a>
+                                <a class="nav-link" id="product-shipping-link" data-toggle="tab"
+                                    href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab"
+                                    aria-selected="false">Shipping & Returns</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews (2)</a>
+                                <a class="nav-link" id="product-review-link" data-toggle="tab"
+                                    href="#product-review-tab" role="tab" aria-controls="product-review-tab"
+                                    aria-selected="false">Reviews (2)</a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
+                            <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel"
+                                aria-labelledby="product-desc-link">
                                 <div class="product-desc-content">
                                     <h3>Product Information</h3>
-                                    <p><%=productData.description%></p>                                    
+                                    <p>
+                                        <%=productData.description%>
+                                    </p>
 
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
-                           
-                            <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
+
+                            <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel"
+                                aria-labelledby="product-shipping-link">
                                 <div class="product-desc-content">
                                     <h3>Delivery & returns</h3>
-                                    <p>We deliver to over 100 countries around the world. For full details of the delivery options we offer, please view our <a href="#">Delivery information</a><br>
-                                    We hope you’ll love every purchase, but if you ever need to return an item you can do so within a month of receipt. For full details of how to make a return, please view our <a href="#">Returns information</a></p>
+                                    <p>We deliver to over 100 countries around the world. For full details of the
+                                        delivery options we offer, please view our <a href="#">Delivery
+                                            information</a><br>
+                                        We hope you’ll love every purchase, but if you ever need to return an item you
+                                        can do so within a month of receipt. For full details of how to make a return,
+                                        please view our <a href="#">Returns information</a></p>
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
-                            <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
+                            <div class="tab-pane fade" id="product-review-tab" role="tabpanel"
+                                aria-labelledby="product-review-link">
                                 <div class="reviews">
                                     <h3>Reviews (2)</h3>
                                     <div class="review">
@@ -362,7 +411,8 @@
                                                 <h4><a href="#">Samanta J.</a></h4>
                                                 <div class="ratings-container">
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: 80%;"></div>
+                                                        <!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
                                                 </div><!-- End .rating-container -->
                                                 <span class="review-date">6 days ago</span>
@@ -371,7 +421,10 @@
                                                 <h4>Good, perfect size</h4>
 
                                                 <div class="review-content">
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus cum dolores assumenda asperiores facilis porro reprehenderit animi culpa atque blanditiis commodi perspiciatis doloremque, possimus, explicabo, autem fugit beatae quae voluptas!</p>
+                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus
+                                                        cum dolores assumenda asperiores facilis porro reprehenderit
+                                                        animi culpa atque blanditiis commodi perspiciatis doloremque,
+                                                        possimus, explicabo, autem fugit beatae quae voluptas!</p>
                                                 </div><!-- End .review-content -->
 
                                                 <div class="review-action">
@@ -388,7 +441,8 @@
                                                 <h4><a href="#">John Doe</a></h4>
                                                 <div class="ratings-container">
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: 100%;"></div>
+                                                        <!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
                                                 </div><!-- End .rating-container -->
                                                 <span class="review-date">5 days ago</span>
@@ -397,7 +451,10 @@
                                                 <h4>Very good</h4>
 
                                                 <div class="review-content">
-                                                    <p>Sed, molestias, tempore? Ex dolor esse iure hic veniam laborum blanditiis laudantium iste amet. Cum non voluptate eos enim, ab cumque nam, modi, quas iure illum repellendus, blanditiis perspiciatis beatae!</p>
+                                                    <p>Sed, molestias, tempore? Ex dolor esse iure hic veniam laborum
+                                                        blanditiis laudantium iste amet. Cum non voluptate eos enim, ab
+                                                        cumque nam, modi, quas iure illum repellendus, blanditiis
+                                                        perspiciatis beatae!</p>
                                                 </div><!-- End .review-content -->
 
                                                 <div class="review-action">
@@ -414,7 +471,7 @@
 
                     <h2 class="title text-center mb-4">Related Products</h2><!-- End .title text-center -->
 
-                    <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                    <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
                         data-owl-options='{
                             "nav": false, 
                             "dots": true,
@@ -443,61 +500,76 @@
                         <% relatedProducts.forEach(product=>{%>
 
                             <%if(product.is_listed===true && product.category.is_listed===true ){%>
-                        <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <%if(product.quantity===0){%>
-                                    <span class="product-label label-new">Out of Stock</span>
-                                   <% }else{%>
-                                        <span class="product-label label-new">New</span>
-                                   <% }%>
-                                
-                                <a href="/productDetail?id=<%=product._id%>">
-                                    <img src="/productImages/productImages/<%=product.image[0]%>" alt="Product image" class="product-image">
-                                </a>
+                                <div class="product product-7 text-center">
+                                    <figure class="product-media">
+                                        <%if(product.quantity===0){%>
+                                            <span class="product-label label-new">Out of Stock</span>
+                                            <% }else{%>
+                                                <span class="product-label label-new">New</span>
+                                                <% }%>
 
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
+                                                    <a href="/productDetail?id=<%=product._id%>">
+                                                        <img src="/productImages/productImages/<%=product.image[0]%>"
+                                                            alt="Product image" class="product-image">
+                                                    </a>
 
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
+                                                    <div class="product-action-vertical">
+                                                        <a href="#"
+                                                            class="btn-product-icon btn-wishlist btn-expandable"><span>add
+                                                                to wishlist</span></a>
+                                                        <a href="popup/quickView.html"
+                                                            class="btn-product-icon btn-quickview"
+                                                            title="Quick view"><span>Quick view</span></a>
+                                                        <a href="#" class="btn-product-icon btn-compare"
+                                                            title="Compare"><span>Compare</span></a>
+                                                    </div><!-- End .product-action-vertical -->
 
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#"><%=product.category.name%></a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html"><%=product.name%></a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    ₹ <%=product.price%>
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container -->
+                                                    <div class="product-action">
+                                                        <a href="#" class="btn-product btn-cart"><span>add to
+                                                                cart</span></a>
+                                                    </div><!-- End .product-action -->
+                                    </figure><!-- End .product-media -->
 
-                                <div class="product-nav product-nav-thumbs">
-                                    <a href="/productDetail?id=<%=product._id%>" class="active">
-                                        <img src="/productImages/productImages/<%=product.image[1]%>" alt="product desc">
-                                    </a>
-                                    <a href="/productDetail?id=<%=product._id%>">
-                                        <img src="/productImages/productImages/<%=product.image[2]%>" alt="product desc">
-                                    </a>
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            <a href="#">
+                                                <%=product.category.name%>
+                                            </a>
+                                        </div><!-- End .product-cat -->
+                                        <h3 class="product-title"><a href="product.html">
+                                                <%=product.name%>
+                                            </a></h3><!-- End .product-title -->
+                                        <div class="product-price">
+                                            ₹ <%=product.price%>
+                                        </div><!-- End .product-price -->
+                                        <div class="ratings-container">
+                                            <div class="ratings">
+                                                <div class="ratings-val" style="width: 20%;"></div>
+                                                <!-- End .ratings-val -->
+                                            </div><!-- End .ratings -->
+                                            <span class="ratings-text">( 2 Reviews )</span>
+                                        </div><!-- End .rating-container -->
 
-                                    <a href="/productDetail?id=<%=product._id%>">
-                                        <img src="/productImages/productImages/<%=product.image[3]%>" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-                        <%}%>
+                                        <div class="product-nav product-nav-thumbs">
+                                            <a href="/productDetail?id=<%=product._id%>" class="active">
+                                                <img src="/productImages/productImages/<%=product.image[1]%>"
+                                                    alt="product desc">
+                                            </a>
+                                            <a href="/productDetail?id=<%=product._id%>">
+                                                <img src="/productImages/productImages/<%=product.image[2]%>"
+                                                    alt="product desc">
+                                            </a>
 
-                        <%})%>
+                                            <a href="/productDetail?id=<%=product._id%>">
+                                                <img src="/productImages/productImages/<%=product.image[3]%>"
+                                                    alt="product desc">
+                                            </a>
+                                        </div><!-- End .product-nav -->
+                                    </div><!-- End .product-body -->
+                                </div><!-- End .product -->
+                                <%}%>
+
+                                    <%})%>
 
                     </div><!-- End .owl-carousel -->
                 </div><!-- End .container -->
@@ -506,84 +578,92 @@
 
 
         <footer class="footer">
-        	<div class="footer-middle">
-	            <div class="container">
-	            	<div class="row">
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget widget-about">
-	            				<!-- <img src="/usercss/assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25"> -->
-                                <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">MARS</h3>
-	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+            <div class="footer-middle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget widget-about">
+                                <!-- <img src="/usercss/assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25"> -->
+                                <h3 style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">MARS
+                                </h3>
+                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
+                                    magna eros eu erat. </p>
 
-	            				<div class="social-icons">
-	            					<a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-	            					<a href="#" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
-	            				</div><!-- End .soial-icons -->
-	            			</div><!-- End .widget about-widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
+                                <div class="social-icons">
+                                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                            class="icon-facebook-f"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                            class="icon-twitter"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                            class="icon-instagram"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                            class="icon-youtube"></i></a>
+                                    <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                            class="icon-pinterest"></i></a>
+                                </div><!-- End .soial-icons -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="about.html">About MARS</a></li>
-	            					<li><a href="#">How to shop on MARS</a></li>
-	            					<li><a href="#">FAQ</a></li>
-	            					<li><a href="contact.html">Contact us</a></li>
-	            					<li><a href="login.html">Log in</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
+                                <ul class="widget-list">
+                                    <li><a href="about.html">About MARS</a></li>
+                                    <li><a href="#">How to shop on MARS</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="login.html">Log in</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="#">Payment Methods</a></li>
-	            					<li><a href="#">Money-back guarantee!</a></li>
-	            					<li><a href="#">Returns</a></li>
-	            					<li><a href="#">Shipping</a></li>
-	            					<li><a href="#">Terms and conditions</a></li>
-	            					<li><a href="#">Privacy Policy</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
+                                <ul class="widget-list">
+                                    <li><a href="#">Payment Methods</a></li>
+                                    <li><a href="#">Money-back guarantee!</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="#">Terms and conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-	            		<div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="#">Sign In</a></li>
-	            					<li><a href="cart.html">View Cart</a></li>
-	            					<li><a href="#">My Wishlist</a></li>
-	            					<li><a href="#">Track My Order</a></li>
-	            					<li><a href="#">Help</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-6 col-lg-3 -->
-	            	</div><!-- End .row -->
-	            </div><!-- End .container -->
-	        </div><!-- End .footer-middle -->
+                                <ul class="widget-list">
+                                    <li><a href="#">Sign In</a></li>
+                                    <li><a href="cart.html">View Cart</a></li>
+                                    <li><a href="#">My Wishlist</a></li>
+                                    <li><a href="#">Track My Order</a></li>
+                                    <li><a href="#">Help</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-middle -->
 
-	        <div class="footer-bottom">
-	        	<div class="container">
-	        		<p class="footer-copyright">Copyright © 2019 MARS Store. All Rights Reserved.</p><!-- End .footer-copyright -->
-	        		<figure class="footer-payments">
-	        			<img src="/usercss/assets/images/payments.png" alt="Payment methods" width="272" height="20">
-	        		</figure><!-- End .footer-payments -->
-	        	</div><!-- End .container -->
-	        </div><!-- End .footer-bottom -->
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">Copyright © 2019 MARS Store. All Rights Reserved.</p>
+                    <!-- End .footer-copyright -->
+                    <figure class="footer-payments">
+                        <img src="/usercss/assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                    </figure><!-- End .footer-payments -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
         </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
-  
+
 
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
@@ -594,10 +674,11 @@
 
             <form action="#" method="get" class="mobile-search">
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
+                    placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
-            
+
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li class="active">
@@ -637,10 +718,12 @@
                             <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
                             <li><a href="category.html">Shop Grid 3 Columns</a></li>
                             <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
+                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span
+                                            class="tip tip-hot">Hot</span></span></a></li>
                             <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>
                             <li><a href="product-category-boxed.html">Product Category Boxed</a></li>
-                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span
+                                            class="tip tip-new">New</span></span></a></li>
                             <li><a href="cart.html">Cart</a></li>
                             <li><a href="checkout.html">Checkout</a></li>
                             <li><a href="wishlist.html">Wishlist</a></li>
@@ -652,7 +735,8 @@
                         <ul>
                             <li><a href="product.html">Default</a></li>
                             <li><a href="product-centered.html">Centered</a></li>
-                            <li><a href="product-extended.html"><span>Extended Info<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-extended.html"><span>Extended Info<span
+                                            class="tip tip-new">New</span></span></a></li>
                             <li><a href="product-gallery.html">Gallery</a></li>
                             <li><a href="product-sticky.html">Sticky Info</a></li>
                             <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
@@ -770,23 +854,28 @@
                         <div class="form-tab">
                             <ul class="nav nav-pills nav-fill" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
+                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin"
+                                        role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                                        aria-controls="register" aria-selected="false">Register</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="tab-content-5">
-                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                                <div class="tab-pane fade show active" id="signin" role="tabpanel"
+                                    aria-labelledby="signin-tab">
                                     <form action="#">
                                         <div class="form-group">
                                             <label for="singin-email">Username or email address *</label>
-                                            <input type="text" class="form-control" id="singin-email" name="singin-email" required>
+                                            <input type="text" class="form-control" id="singin-email"
+                                                name="singin-email" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
                                             <label for="singin-password">Password *</label>
-                                            <input type="password" class="form-control" id="singin-password" name="singin-password" required>
+                                            <input type="password" class="form-control" id="singin-password"
+                                                name="singin-password" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
@@ -796,8 +885,10 @@
                                             </button>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
-                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
+                                                <input type="checkbox" class="custom-control-input"
+                                                    id="signin-remember">
+                                                <label class="custom-control-label" for="signin-remember">Remember
+                                                    Me</label>
                                             </div><!-- End .custom-checkbox -->
 
                                             <a href="#" class="forgot-link">Forgot Your Password?</a>
@@ -825,12 +916,14 @@
                                     <form action="#">
                                         <div class="form-group">
                                             <label for="register-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="register-email" name="register-email" required>
+                                            <input type="email" class="form-control" id="register-email"
+                                                name="register-email" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
                                             <label for="register-password">Password *</label>
-                                            <input type="password" class="form-control" id="register-password" name="register-password" required>
+                                            <input type="password" class="form-control" id="register-password"
+                                                name="register-password" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
@@ -840,8 +933,10 @@
                                             </button>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                                <input type="checkbox" class="custom-control-input" id="register-policy"
+                                                    required>
+                                                <label class="custom-control-label" for="register-policy">I agree to the
+                                                    <a href="#">privacy policy</a> *</label>
                                             </div><!-- End .custom-checkbox -->
                                         </div><!-- End .form-footer -->
                                     </form>
@@ -895,35 +990,44 @@
                 },
                 body: JSON.stringify({ productId, qty })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.message == 'succes') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Product added to cart successfully.',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                } else {
-                    console.log('Error:', data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Product added to cart successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (data.fail) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Product is already in cart!',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                    else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
     </script>
-    
-    
+
+
 </body>
 
 
 <!-- molla/product.html  22 Nov 2019 09:55:05 GMT -->
+
 </html>
