@@ -44,10 +44,12 @@ const loadCart = async(req,res)=>{
         console.log(req.session);
             const cartPoducts = await Cart.find({user:req.session.user_id}).populate('products.product')
             console.log(cartPoducts);
-        // console.log(cartPoducts.products[0].product);
-        const subtotal = cartPoducts[0].products.reduce((acc, val) => {
+            let subtotal = 0;
+            if(cartPoducts.length>0){
+         subtotal = cartPoducts[0].products.reduce((acc, val) => {
             return acc += val.product.price * val.quantity;
         }, 0);
+    }
             res.render('cart',{cartPoducts,subtotal})
         }
        

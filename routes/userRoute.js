@@ -87,5 +87,9 @@ user_route.post('/cart',cartController.addCart)
 user_route.post('/removeProduct',cartController.removeProduct)
 user_route.post('/totalPrice',cartController.totalPrice)
 
+//create adress
+user_route.get('/addAdress',userController.loadNewAdress)
+user_route.post('/addAdress',userController.addAddress)
+user_route.post('/removeAddress',userController.removeAddress)
 
 module.exports = user_route;

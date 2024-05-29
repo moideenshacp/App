@@ -4,6 +4,7 @@ const Otp = require('../models/otpModel')
 const categories =  require('../models/category')
 const products = require('../models/product')
 const cart = require('../models/cart')
+const Address = require('../models/address')
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
@@ -343,7 +344,7 @@ const verify = async(req,res)=>{
                 
                     
                 }else{
-                    res.render('login',{message:'incorrect email or password'});
+                    res.render('login',{messages:'incorrect email or password'});
 
                 }
             }else{
@@ -389,7 +390,8 @@ const userhome = async(req,res)=>{
 const loadprofile = async(req,res)=>{
     try {
         
-        res.render('profile')
+        const address = await Address.findOne({user:req.session.user_id})
+        res.render('profile',{address})
     } catch (error) {
         console.log(error.message);
     }
@@ -441,6 +443,126 @@ const cartLoad = async(req,res)=>{
     }
 }
 
+//load newAdress
+const loadNewAdress = async(req,res)=>{
+    try {
+        res.render('addAdress')
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//add address
+const addAddress =  async(req,res)=>{
+    try {
+
+        const userId = req.session.user_id;
+        const userAddress = await Address.findOne({user:userId})
+        if(!userAddress){
+            const name =req.body.name.trim()
+            const address = req.body.address.trim();
+            const city = req.body.city.trim();
+            const state = req.body.state.trim();
+            const pincode  =  req.body.pincode.trim();
+            const phone = req.body.phone.trim();
+            const email = req.body.email.trim();
+            if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
+                return res.render('addAdress', { messages: 'Invalid name provided',name,address,city,state,pincode,phone,email });
+            }
+            if (!address) {
+                return res.render('addAdress', { messages: 'Invalid address provided',name,address,city,state,pincode,phone,email });
+            }
+            if (!city || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(city)) {
+                return res.render('addAdress', { messages: 'Invalid city provided',name,address,city,state,pincode,phone,email });
+            }
+            if (!state || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(state)) {
+                return res.render('addAdress', { messages: 'Invalid state provided',name,address,city,state,pincode,phone,email });
+            }
+            const mobileRegex = /^\d{10}$/;
+            if(!mobileRegex.test(phone)){
+               return res.render('addAdress',{messages:'invalid mobilenumber',name,address,city,state,pincode,phone,email})
+            }
+            const pincodeRegex = /^\d{6}$/;
+            if(!pincodeRegex.test(pincode)){
+                return res.render('addAdress',{messages:'invalid pincode,pincode must be 6 digits',name,address,city,state,pincode,phone,email})
+             }
+            const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/;
+            if(!emailRegex.test(email)){
+                return res.render('addAdress',{messages:'invalid email provided',name,address,city,state,pincode,phone,email})
+             }
+
+            const addressAdd = new Address({
+                user : userId,
+                addresses:[{name:name,address:address,city:city,state:state,pincode:pincode,phone:phone,email:email}]
+
+            });
+            await addressAdd.save()
+
+        }else{
+            const name =req.body.name.trim()
+            const address = req.body.address.trim();
+            const city = req.body.city.trim();
+            const state = req.body.state.trim();
+            const pincode  =  req.body.pincode.trim();
+            const phone = req.body.phone.trim();
+            const email = req.body.email.trim();
+            if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
+                return res.render('addAdress', { messages: 'Invalid name provided',name,address,city,state,pincode,phone,email });
+            }
+            if (!address) {
+                return res.render('addAdress', { messages: 'Invalid address provided',name,address,city,state,pincode,phone,email });
+            }
+            if (!city || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(city)) {
+                return res.render('addAdress', { messages: 'Invalid city provided',name,address,city,state,pincode,phone,email });
+            }
+            if (!state || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(state)) {
+                return res.render('addAdress', { messages: 'Invalid state provided',name,address,city,state,pincode,phone,email });
+            }
+            const mobileRegex = /^\d{10}$/;
+            if(!mobileRegex.test(phone)){
+               return res.render('addAdress',{messages:'invalid mobilenumber',name,address,city,state,pincode,phone,email})
+            }
+            const pincodeRegex = /^\d{6}$/;
+            if(!pincodeRegex.test(pincode)){
+                return res.render('addAdress',{messages:'invalid pincode,pincode must be 6 digits',name,address,city,state,pincode,phone,email})
+             }
+            const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/;
+            if(!emailRegex.test(email)){
+                return res.render('addAdress',{messages:'invalid email provided',name,address,city,state,pincode,phone,email})
+             }
+
+            userAddress.addresses.push({name:name,address:address,city:city,state:state,pincode:pincode,phone:phone,email:email})
+            await userAddress.save()
+        }
+        const address = await Address.findOne({user:req.session.user_id})
+
+        res.redirect('/profile')
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+const removeAddress = async(req,res)=>{
+    try {
+        
+        const addressId = req.body.addressId;
+        console.log(addressId+'========================;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
+        const addressData = await Address.findOne({user:req.session.user_id})
+        const index = addressData.addresses.find((value)=>{
+            console.log(value);
+        })
+        const addresses = await Address.updateOne({addresses:addressId},{$pull:{}})
+
+
+
+        res.status(200).json({message:'succes'})
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -478,7 +600,11 @@ module.exports= {
     failureLogin,
     productDetail,
     shop,
-    cartLoad
+    cartLoad,
+    //user adress*******************************
+    loadNewAdress,
+    addAddress,
+    removeAddress
     
    
   
