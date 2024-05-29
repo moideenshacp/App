@@ -535,7 +535,6 @@ const addAddress =  async(req,res)=>{
             userAddress.addresses.push({name:name,address:address,city:city,state:state,pincode:pincode,phone:phone,email:email})
             await userAddress.save()
         }
-        const address = await Address.findOne({user:req.session.user_id})
 
         res.redirect('/profile')
         
@@ -549,11 +548,12 @@ const removeAddress = async(req,res)=>{
         const addressId = req.body.addressId;
         console.log(addressId+'========================;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
         const addressData = await Address.findOne({user:req.session.user_id})
-        const index = addressData.addresses.find((value)=>{
-            console.log(value);
-        })
-        const addresses = await Address.updateOne({addresses:addressId},{$pull:{}})
-
+        const index = addressData.addresses.find((value)=>value._id.toString()===addressId)
+        console.log(index+'gooooooooooooooooooooooooooo');
+        if (index) {
+            addressData.addresses.splice(index, 1);
+            await addressData.save();
+        }
 
 
         res.status(200).json({message:'succes'})
@@ -563,6 +563,26 @@ const removeAddress = async(req,res)=>{
         console.log(error);
     }
 }
+
+//edit address load
+const loadEditAddress = async(req,res)=>{
+    try {
+        const addressId = req.query.id;
+        const addressData = await Address.findOne({user:req.session.user_id})
+        const index = addressData.addresses.find((value)=>value._id.toString()===addressId)
+        if(index){
+        res.render('editAddress',{index})
+        }else{
+            res.redirect('/profile')
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
 
 
 
@@ -604,7 +624,9 @@ module.exports= {
     //user adress*******************************
     loadNewAdress,
     addAddress,
-    removeAddress
+    removeAddress,
+    loadEditAddress,
+    
     
    
   

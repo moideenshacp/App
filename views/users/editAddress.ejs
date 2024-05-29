@@ -206,41 +206,41 @@
 		                				<div class="row">
 		                					<div class="col-sm-6">
 		                						<label> Name *</label>
-		                						<input type="text" class="form-control" name="name" value="<%= typeof name !== 'undefined' ? name : '' %>" required>
+		                						<input type="text" class="form-control" value="<%=index.name%>" name="name"  required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                				
 		                				</div><!-- End .row -->
 
 	            						<label>Street address *</label>
-	            						<input type="text" class="form-control" name="address" value="<%= typeof address !== 'undefined' ? address : '' %>"  placeholder="House number ,Street name,Appartments, suite, unit etc ..." required>
+	            						<input type="text" class="form-control" name="address"  value="<%=index.address%>"  placeholder="House number ,Street name,Appartments, suite, unit etc ..." required>
 
 	            						<div class="row">
 		                					<div class="col-sm-6">
 		                						<label>Town / City *</label>
-		                						<input type="text" class="form-control" name="city" value="<%= typeof city !== 'undefined' ? city : '' %>" required>
+		                						<input type="text" class="form-control" name="city" value="<%=index.city%>" required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                					<div class="col-sm-6">
 		                						<label>State *</label>
-		                						<input type="text" class="form-control" name="state" value="<%= typeof state !== 'undefined' ? state : '' %>" required>
+		                						<input type="text" class="form-control" name="state" value="<%=index.state%>" required>
 		                					</div><!-- End .col-sm-6 -->
 		                				</div><!-- End .row -->
 
 		                				<div class="row">
 		                					<div class="col-sm-6">
 		                						<label>Postcode / ZIP *</label>
-		                						<input type="text" class="form-control" name="pincode" value="<%= typeof pincode !== 'undefined' ? pincode : '' %>" required>
+		                						<input type="text" class="form-control" name="pincode" value="<%=index.pincode%>" required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                					<div class="col-sm-6">
 		                						<label>Phone *</label>
-		                						<input type="tel" class="form-control" name="phone" value="<%= typeof phone !== 'undefined' ? phone : '' %>" required>
+		                						<input type="tel" class="form-control" name="phone" value="<%=index.phone%>"  required>
 		                					</div><!-- End .col-sm-6 -->
 		                				</div><!-- End .row -->
 
 	                					<label>Email address *</label>
-	        							<input type="email" class="form-control" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+	        							<input type="email" class="form-control" name="email" value="<%=index.email%>"  required>
 
 	        							<button type="submit" class="btn btn-outline-primary-2">
                                             <span>Submit</span>

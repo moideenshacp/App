@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
@@ -253,8 +256,8 @@
                                                                 <%=address.state%><br>
                                                                 <%=address.phone%><br>
                                                                 <%=address.email%><br>
-                                                            <a href="#">Edit <i class="icon-edit"></i></a></p>
-                                                            <a onclick="removeAddress('<%=address._id%>')">Delete</a>
+                                                            <a href="/edit-Address?id=<%=address._id%>">Edit <i class="icon-edit"></i></a></p>
+                                                            <a style="cursor: pointer;" onclick="removeAddress('<%= address._id %>')">Delete</a>
 
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
@@ -688,9 +691,10 @@
     <script src="/usercss/assets/js/main.js"></script>
     <script>
         function removeAddress(addressId) {
-            Swal.fire({
+        
+         Swal.fire({
                 title: 'Are you sure?',
-                text: 'You are about to remove this address.',
+                text: 'You are about to remove this Address.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, remove it!',
@@ -722,8 +726,10 @@
                         });
                 }
             });
+    };
 
-        }
+
+    
     </script>
 </body>
 

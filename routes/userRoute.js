@@ -92,4 +92,8 @@ user_route.get('/addAdress',userController.loadNewAdress)
 user_route.post('/addAdress',userController.addAddress)
 user_route.post('/removeAddress',userController.removeAddress)
 
+//edit address
+user_route.get('/edit-Address',userController.loadEditAddress)
+user_route.post('/editAddress',userController.loadEditAddress)
+
 module.exports = user_route;
