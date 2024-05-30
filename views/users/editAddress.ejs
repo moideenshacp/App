@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
@@ -170,14 +173,16 @@
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('/usercss/assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">Add Address</h1>
+        			<h1 class="page-title">Edit Address</h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Address</li>
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/home">Address</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Update Address</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -186,7 +191,7 @@
             	<div class="checkout">
 	                <div class="container">
             			
-            			<form method="post" action="/addAdress">
+            			<form id="form">
                             <% if(typeof messages !=='undefined' ){ %>
                                 <p style="color: red;">
                                     <%= messages %>
@@ -202,9 +207,10 @@
                                 
 		                	<div class="row">
 		                		<div class="col-lg-9">
-		                			<h2 class="checkout-title">Add Address</h2><!-- End .checkout-title -->
-		                				<div class="row">
-		                					<div class="col-sm-6">
+                                        <h2 class="checkout-title">Edit Address</h2><!-- End .checkout-title -->
+                                        <div class="row">
+
+                                        <div class="col-sm-6">
 		                						<label> Name *</label>
 		                						<input type="text" class="form-control" value="<%=index.name%>" name="name"  required>
 		                					</div><!-- End .col-sm-6 -->
@@ -242,7 +248,7 @@
 	                					<label>Email address *</label>
 	        							<input type="email" class="form-control" name="email" value="<%=index.email%>"  required>
 
-	        							<button type="submit" class="btn btn-outline-primary-2">
+	        							<button type="button" onclick="updateAddress('<%=index._id%>')" class="btn btn-outline-primary-2">
                                             <span>Submit</span>
                                             <i class="icon-long-arrow-right"></i>
                                         </button>
@@ -637,6 +643,78 @@
     <script src="/usercss/assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
+
+
+    <script>
+        function updateAddress(addressId) {
+            const form = document.getElementById('form')
+
+            const name = form.elements['name'].value
+            const address = form.elements['address'].value
+            const city = form.elements['city'].value
+            const state = form.elements['state'].value
+            const pincode = form.elements['pincode'].value
+            const phone = form.elements['phone'].value
+            const email = form.elements['email'].value
+            console.log(name,address);
+
+
+            let datas = {
+                name,
+                address,
+                city,
+                state,
+                pincode,
+                phone,
+                email,
+                addressId
+            }
+
+            console.log(datas);
+            if (!name.trim() || !address.trim() || !city.trim() || !pincode.trim() || !state.trim() || !phone.trim() || !email.trim()) {
+        // Display error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'All fields are required.',
+            confirmButtonText: 'OK'
+        });
+        return; // Exit the function
+    }
+            fetch('/edit-Address', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Address updated successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/profile'; 
+                        });
+                    }
+                    else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+
     
     
 </body>

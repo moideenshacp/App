@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
@@ -170,14 +173,16 @@
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('/usercss/assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">Add Address</h1>
+        			<h1 class="page-title">Edit Address</h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Address</li>
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/profile">Address</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Update Address</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -186,7 +191,7 @@
             	<div class="checkout">
 	                <div class="container">
             			
-            			<form method="post" action="">
+            			<form id="form">
                             <% if(typeof messages !=='undefined' ){ %>
                                 <p style="color: red;">
                                     <%= messages %>
@@ -202,47 +207,48 @@
                                 
 		                	<div class="row">
 		                		<div class="col-lg-9">
-		                			<h2 class="checkout-title">Add Address</h2><!-- End .checkout-title -->
-		                				<div class="row">
-		                					<div class="col-sm-6">
+                                        <h2 class="checkout-title">Edit Address</h2><!-- End .checkout-title -->
+                                        <div class="row">
+
+                                        <div class="col-sm-6">
 		                						<label> Name *</label>
-		                						<input type="text" class="form-control" name="name" value="<%= typeof name !== 'undefined' ? name : '' %>" required>
+		                						<input type="text" class="form-control" value="<%=index.name%>" name="name"  required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                				
 		                				</div><!-- End .row -->
 
 	            						<label>Street address *</label>
-	            						<input type="text" class="form-control" name="address" value="<%= typeof address !== 'undefined' ? address : '' %>"  placeholder="House number ,Street name,Appartments, suite, unit etc ..." required>
+	            						<input type="text" class="form-control" name="address"  value="<%=index.address%>"  placeholder="House number ,Street name,Appartments, suite, unit etc ..." required>
 
 	            						<div class="row">
 		                					<div class="col-sm-6">
 		                						<label>Town / City *</label>
-		                						<input type="text" class="form-control" name="city" value="<%= typeof city !== 'undefined' ? city : '' %>" required>
+		                						<input type="text" class="form-control" name="city" value="<%=index.city%>" required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                					<div class="col-sm-6">
 		                						<label>State *</label>
-		                						<input type="text" class="form-control" name="state" value="<%= typeof state !== 'undefined' ? state : '' %>" required>
+		                						<input type="text" class="form-control" name="state" value="<%=index.state%>" required>
 		                					</div><!-- End .col-sm-6 -->
 		                				</div><!-- End .row -->
 
 		                				<div class="row">
 		                					<div class="col-sm-6">
 		                						<label>Postcode / ZIP *</label>
-		                						<input type="text" class="form-control" name="pincode" value="<%= typeof pincode !== 'undefined' ? pincode : '' %>" required>
+		                						<input type="text" class="form-control" name="pincode" value="<%=index.pincode%>" required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                					<div class="col-sm-6">
 		                						<label>Phone *</label>
-		                						<input type="tel" class="form-control" name="phone" value="<%= typeof phone !== 'undefined' ? phone : '' %>" required>
+		                						<input type="tel" class="form-control" name="phone" value="<%=index.phone%>"  required>
 		                					</div><!-- End .col-sm-6 -->
 		                				</div><!-- End .row -->
 
 	                					<label>Email address *</label>
-	        							<input type="email" class="form-control" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+	        							<input type="email" class="form-control" name="email" value="<%=index.email%>"  required>
 
-	        							<button type="submit" class="btn btn-outline-primary-2">
+	        							<button type="button" onclick="EditAddress('<%=index._id%>')" class="btn btn-outline-primary-2">
                                             <span>Submit</span>
                                             <i class="icon-long-arrow-right"></i>
                                         </button>
@@ -637,6 +643,77 @@
     <script src="/usercss/assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
+
+
+    <script>
+        function EditAddress(addressId) {
+    const form = document.getElementById('form');
+
+    const name = form.elements['name'].value;
+    const address = form.elements['address'].value;
+    const city = form.elements['city'].value;
+    const state = form.elements['state'].value;
+    const pincode = form.elements['pincode'].value;
+    const phone = form.elements['phone'].value;
+    const email = form.elements['email'].value;
+
+    let datas = {
+        name,
+        address,
+        city,
+        state,
+        pincode,
+        phone,
+        email,
+        addressId
+    };
+
+    if (!name.trim() || !address.trim() || !city.trim() || !pincode.trim() || !state.trim() || !phone.trim() || !email.trim()) {
+        // Display error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'All fields are required.',
+            confirmButtonText: 'OK'
+        });
+        return; 
+    }
+
+    fetch('/checkoutEditAddress', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datas)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Your Address updated successfully.',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = '/checkout';
+            });
+        }
+        else {
+            console.log('Error:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+    </script>
+
     
     
 </body>

@@ -7,21 +7,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>Mars -eCommerce </title>
     <meta name="keywords" content="HTML5 Template">
-    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="description" content="Mars -eCommerce ">
     <meta name="author" content="p-themes">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
-    <link rel="manifest" href="assets/images/icons/site.html">
-    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666">
-    <link rel="shortcut icon" href="assets/images/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/applogo.jpg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/applogo.jpg">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/applogo.jpg">
+    <link rel="manifest" href="/images/applogo.jpg">
+    <link rel="mask-icon" href="/images/applogo.jpg" color="#666666">
+    <link rel="shortcut icon" href="/images/applogo.jpg">
     <meta name="apple-mobile-web-app-title" content="Molla">
     <meta name="application-name" content="Molla">
     <meta name="msapplication-TileColor" content="#cc9966">
-    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="msapplication-config" content="/images/applogo.jpg">
     <meta name="theme-color" content="#ffffff">
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
@@ -168,16 +168,17 @@
         </header><!-- End .header -->
 
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('/usercss/assets/images/page-header-bg.jpg')">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">Add Address</h1>
+        			<h1 class="page-title">Checkout<span>Shop</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Address</li>
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/cart">Cart</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -185,70 +186,181 @@
             <div class="page-content">
             	<div class="checkout">
 	                <div class="container">
-            			
-            			<form method="post" action="">
-                            <% if(typeof messages !=='undefined' ){ %>
-                                <p style="color: red;">
-                                    <%= messages %>
-                                </p>
-                                <% } %>
-                                <% if(typeof message !=='undefined' ){ %>
-                                    <p style="color: green;">
-                                        <%= message %>
-                                    </p>
-                                    <% } %>
-                                <br><br>
-                                
-                                
+            			<div class="checkout-discount">
+            				<form action="#">
+        						<input type="text" class="form-control" required id="checkout-discount-input">
+            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+            				</form>
+            			</div><!-- End .checkout-discount -->
+                        
+                        <a href="/checkoutAddress"><button type="submit" class="btn btn-outline-primary-2">
+                            <span>Create New Address</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </button></a> 
+                        
+            			<form action="#">
 		                	<div class="row">
+                                <%if(addressescount<=0){%>
+
 		                		<div class="col-lg-9">
-		                			<h2 class="checkout-title">Add Address</h2><!-- End .checkout-title -->
-		                				<div class="row">
-		                					<div class="col-sm-6">
-		                						<label> Name *</label>
-		                						<input type="text" class="form-control" name="name" value="<%= typeof name !== 'undefined' ? name : '' %>" required>
-		                					</div><!-- End .col-sm-6 -->
-
-		                				
-		                				</div><!-- End .row -->
-
-	            						<label>Street address *</label>
-	            						<input type="text" class="form-control" name="address" value="<%= typeof address !== 'undefined' ? address : '' %>"  placeholder="House number ,Street name,Appartments, suite, unit etc ..." required>
-
-	            						<div class="row">
-		                					<div class="col-sm-6">
-		                						<label>Town / City *</label>
-		                						<input type="text" class="form-control" name="city" value="<%= typeof city !== 'undefined' ? city : '' %>" required>
-		                					</div><!-- End .col-sm-6 -->
-
-		                					<div class="col-sm-6">
-		                						<label>State *</label>
-		                						<input type="text" class="form-control" name="state" value="<%= typeof state !== 'undefined' ? state : '' %>" required>
-		                					</div><!-- End .col-sm-6 -->
-		                				</div><!-- End .row -->
-
-		                				<div class="row">
-		                					<div class="col-sm-6">
-		                						<label>Postcode / ZIP *</label>
-		                						<input type="text" class="form-control" name="pincode" value="<%= typeof pincode !== 'undefined' ? pincode : '' %>" required>
-		                					</div><!-- End .col-sm-6 -->
-
-		                					<div class="col-sm-6">
-		                						<label>Phone *</label>
-		                						<input type="tel" class="form-control" name="phone" value="<%= typeof phone !== 'undefined' ? phone : '' %>" required>
-		                					</div><!-- End .col-sm-6 -->
-		                				</div><!-- End .row -->
-
-	                					<label>Email address *</label>
-	        							<input type="email" class="form-control" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
-
-	        							<button type="submit" class="btn btn-outline-primary-2">
-                                            <span>Submit</span>
-                                            <i class="icon-long-arrow-right"></i>
-                                        </button>
-
+		                			
 		                		</div><!-- End .col-lg-9 -->
-		                		
+                                <%}else{%>
+                                    
+                                    <div class="col-lg-9">
+                                        
+                                        <br><br>
+                                        <% address.addresses.forEach(address => { %>
+                                            
+                                        <div class="card card-dashboard" style="width: 500px; margin-bottom: 20px;">
+                                            
+                                            <div class="card-body">
+                                                
+                                                
+                                                <h3 class="card-title"> Address</h3><!-- End .card-title -->
+
+                                                <p>
+                                                    
+                                                    <%= address.name %><br>
+                                                    <%= address.address %><br>
+                                                    <%= address.state + ',' + address.pincode %><br>
+                                                    <%= address.phone %><br>
+                                                    <%= address.email %><br>
+                                                    <a href="/checkoutEditAddress?id=<%=address._id%>">Edit <i class="icon-edit"></i></a></p>
+                                                    <input type="radio" name="selectedAddress"  value="<%= address._id %>" style="position: absolute; top: 5px; right: 5px;">
+                                                    <label for="" style="position: absolute; top: 5px; right: 25px;"></label>
+                                                </p>
+                                            </div><!-- End .card-body -->
+                                        </div><!-- End .card-dashboard -->
+                                        <% }) %>
+                                    </div><!-- End .col-lg-6 -->
+                                    
+                                    <%}%>
+
+
+		                		<aside class="col-lg-3">
+		                			<div class="summary">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+                                                <% cartPoducts.forEach(cart=> { %>
+                                                    <% cart.products.forEach(cartProduct=> { %>                                                    <tr>
+                                                        <td><a href="#"><%=cartProduct.product.name%></a></td>
+                                                        <td><%=cartProduct.product.price*cartProduct.quantity%></td>
+
+                                                    </tr>
+                                                    <%})%>
+                                                <%})%>
+		                						
+
+		                						
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td><%=subtotal%></td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Shipping:</td>
+		                							<td>Free shipping</td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td><%=subtotal%></td>
+		                						</tr><!-- End .summary-total -->
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
+
+		                				<div class="accordion-summary" id="accordion-payment">
+                                            <div class="card">
+                                                <div class="card-header" id="heading-1">
+                                                    <h2 class="card-title">
+                                                        <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                            Direct bank transfer
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                            
+                                            <div class="card">
+                                                <div class="card-header" id="heading-2">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+                                                            Check payments
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. 
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        
+                                            <div class="card">
+                                                <div class="card-header" id="heading-3">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                            Cash on delivery
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                                    <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        
+                                            <div class="card">
+                                                <div class="card-header" id="heading-4">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                            PayPal <small class="float-right paypal-link">What is PayPal?</small>
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        
+                                            <div class="card">
+                                                <div class="card-header" id="heading-5">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                                            Credit Card (Stripe)
+                                                            <img src="/usercss/assets/images/payments-summary.png" alt="payments cards">
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                                    <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        </div><!-- End .accordion-summary -->
+                                                                          
+                                        
+
+		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                					<span class="btn-text">Place Order</span>
+		                					<span class="btn-hover-text">Proceed to Checkout</span>
+		                				</button>
+		                			</div><!-- End .summary -->
+		                		</aside><!-- End .col-lg-3 -->
 		                	</div><!-- End .row -->
             			</form>
 	                </div><!-- End .container -->
@@ -627,18 +739,27 @@
             </div><!-- End .modal-content -->
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $('.card-header a').click(function(){
+                var targetCollapse = $(this).attr('href');
+                $('.collapse.show').collapse('hide');
+                $(targetCollapse).collapse('show');
+            });
+        });
+    </script>
     <!-- Plugins JS File -->
-    <script src="/usercss/assets/js/jquery.min.js"></script>
-    <script src="/usercss/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/usercss/assets/js/jquery.hoverIntent.min.js"></script>
-    <script src="/usercss/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/usercss/assets/js/superfish.min.js"></script>
-    <script src="/usercss/assets/js/owl.carousel.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
-    <script src="/usercss/assets/js/main.js"></script>
-    
-    
+    <script src="assets/js/main.js"></script>
 </body>
 
 

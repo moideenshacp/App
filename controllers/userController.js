@@ -389,9 +389,9 @@ const userhome = async(req,res)=>{
 //load profile
 const loadprofile = async(req,res)=>{
     try {
-        
+        const user = await users.find({_id:req.session.user_id})
         const address = await Address.findOne({user:req.session.user_id})
-        res.render('profile',{address})
+        res.render('profile',{address,user})
     } catch (error) {
         console.log(error.message);
     }
@@ -535,6 +535,7 @@ const addAddress =  async(req,res)=>{
             userAddress.addresses.push({name:name,address:address,city:city,state:state,pincode:pincode,phone:phone,email:email})
             await userAddress.save()
         }
+        
 
         res.redirect('/profile')
         
@@ -546,10 +547,8 @@ const removeAddress = async(req,res)=>{
     try {
         
         const addressId = req.body.addressId;
-        console.log(addressId+'========================;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
         const addressData = await Address.findOne({user:req.session.user_id})
         const index = addressData.addresses.find((value)=>value._id.toString()===addressId)
-        console.log(index+'gooooooooooooooooooooooooooo');
         if (index) {
             addressData.addresses.splice(index, 1);
             await addressData.save();
@@ -572,8 +571,6 @@ const loadEditAddress = async(req,res)=>{
         const index = addressData.addresses.find((value)=>value._id.toString()===addressId)
         if(index){
         res.render('editAddress',{index})
-        }else{
-            res.redirect('/profile')
         }
         
     } catch (error) {
@@ -581,6 +578,35 @@ const loadEditAddress = async(req,res)=>{
     }
 }
 
+
+const updateAddress = async(req,res)=>{
+    try {
+
+        const {name,address,city,pincode,state,phone,email,addressId} = req.body;
+        
+
+        const addressData = await Address.findOne({user:req.session.user_id})
+        const got = await Address.findOne({"addresses._id": addressId })        
+        const updateAddress = await Address.findOneAndUpdate(  {
+            "addresses._id": addressId 
+        },{ 
+            $set:{
+                "addresses.$.name": name,
+                "addresses.$.address": address,
+                "addresses.$.city": city,
+                "addresses.$.pincode": pincode,
+                "addresses.$.state": state,
+                "addresses.$.phone": phone,
+                "addresses.$.email": email
+
+            }
+        })
+        res.status(200).json({message:'success'})
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -626,6 +652,8 @@ module.exports= {
     addAddress,
     removeAddress,
     loadEditAddress,
+    updateAddress,
+    
     
     
    

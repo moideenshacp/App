@@ -94,6 +94,18 @@ user_route.post('/removeAddress',userController.removeAddress)
 
 //edit address
 user_route.get('/edit-Address',userController.loadEditAddress)
-user_route.post('/editAddress',userController.loadEditAddress)
+user_route.post('/edit-Address',userController.updateAddress)
+
+//load checkout
+user_route.get('/checkout',cartController.loadCheckout)
+//------------adddress add
+user_route.get('/checkoutAddress',cartController.checkoutAddressLoad)
+user_route.post('/checkoutAddress',cartController.checkoutAddress)
+//-------------------edit adit
+user_route.get('/checkoutEditAddress',cartController.checkoutEditAddressLoad)
+user_route.post('/checkoutEditAddress',cartController.checkoutEditAddress)
+
+
+
 
 module.exports = user_route;
