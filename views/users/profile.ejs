@@ -25,6 +25,7 @@
     <meta name="theme-color" content="#ffffff">
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
 
@@ -218,7 +219,7 @@
 								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
 								    	<p>Hello <span class="font-weight-normal text-dark"><%=user[0].name%>!!!!</span> </a> 
 								    	<br>
-								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
+								    	<h4 style="font-size: larger; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: brown;">Have a great day,shop and Enjoy</h4>
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
@@ -273,39 +274,56 @@
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
-			                				<div class="row">
-			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
+								    	<div class="card mx-auto" style="max-width: 400px;">
+                                            <br>
+                                            <img class="rounded-circle" src="/admincss/assets/imgs/people/appperson.png" alt="User" style="width: 80px; height: 80px; border-radius: 5px;">
+                                            <br>                                                 <div class="card-body">
+                                                <p class="card-text">Email: <%=user[0].name%></p> 
+                                                <p class="card-text">Email: <%=user[0].email%></p> 
+                                              <p class="card-text">Phone: <%=user[0].mobile%></p> 
+                                              <button  type="button" class="btn btn-outline-primary-2" data-toggle="modal" data-target="#editModal">
+                                                <span>Edit</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+                                            
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editModalLabel">Edit User Details</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- Form for editing user details -->
+                                                            <form id="form">
+                                                                <div class="form-group">
+                                                                    <label for="name">Name</label>
+                                                                    <input type="text" class="form-control" id="name" name="name" value="<%=user[0].name%>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="email">Email</label>
+                                                                    <input type="email" class="form-control" id="email" name="email" value="<%=user[0].email%>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="phone">Phone</label>
+                                                                    <input type="tel" class="form-control" id="phone" name="mobile" value="<%=user[0].mobile%>">
+                                                                </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button onclick="editProfile('<%=user[0]._id%>')" type="button" class="btn btn-primary">Save Changes</button>
+                                                        </div>
+                                                    </form>
 
-			                					<div class="col-sm-6">
-			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                          </div>
 
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
-		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
-
-		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
-
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
-
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
-
-		                					<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>SAVE CHANGES</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
+		                					
 			                			</form>
 								    </div><!-- .End .tab-pane -->
 								</div>
@@ -689,6 +707,9 @@
     <script src="/usercss/assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="/usercss/assets/js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function removeAddress(addressId) {
         
@@ -728,7 +749,78 @@
             });
     };
 
+ function editProfile(userId) {
+            const form = document.getElementById('form')
+            const name = form.elements['name'].value
+            const email = form.elements['email'].value
+            const mobile = form.elements['mobile'].value
 
+            let datas = {
+                name,
+                email,
+                mobile,
+                userId
+            }
+        if (!name.trim() || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Name is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    if (!email.trim() || !/^[A-Za-z0-9.%+-]+@gmail\.com$/.test(email)) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Email is invalid',
+        confirmButtonText: 'OK'
+    });
+    return;
+}
+    if (!mobile.trim() || !/^\d{10}$/.test(mobile)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Mobile is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+   
+            fetch('/editProfile', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Profile edit successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/profile'; 
+                        });
+                    } 
+                    else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     
     </script>
 </body>

@@ -105,7 +105,8 @@ user_route.post('/checkoutAddress',cartController.checkoutAddress)
 user_route.get('/checkoutEditAddress',cartController.checkoutEditAddressLoad)
 user_route.post('/checkoutEditAddress',cartController.checkoutEditAddress)
 
-
+//editprofile
+user_route.post('/editProfile',userController.editProfile)
 
 
 module.exports = user_route;

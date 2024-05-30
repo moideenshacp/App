@@ -678,6 +678,59 @@
         });
         return; 
     }
+    if (!name.trim() ||!/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Name is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    } if (!city.trim() ||!/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(city)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'City is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    if (!state.trim() ||!/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(state)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'State is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    if (!phone.trim() || !/^\d{10}$/.test(phone)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Phone is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    if (!pincode.trim() || !/^\d{6}$/.test(pincode)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Pincode is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }   
+    if (!email.trim() || !/^[A-Za-z0-9.%+-]+@gmail\.com$/.test(email)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'email is invalid',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }  
 
     fetch('/checkoutEditAddress', {
         method: 'post',

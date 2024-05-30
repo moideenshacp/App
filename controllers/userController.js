@@ -398,6 +398,8 @@ const loadprofile = async(req,res)=>{
 }
 
 
+
+
 ////load product
 const loadproduct = async(req,res)=>{
     try {
@@ -608,6 +610,20 @@ const updateAddress = async(req,res)=>{
     }
 }
 
+//edit profile
+
+const editProfile = async(req,res)=>{
+    try {
+        const {name,email,mobile,userId}=req.body;
+        const existingProfile = await users.findOne({ email: email });
+        
+        console.log('----------------'+existingProfile+'-------');
+        const editProfile = await users.findByIdAndUpdate({_id:req.body.userId},{$set:{name:req.body.name,email:req.body.email,mobile:req.body.mobile}})
+        res.status(200).json({message:'success'})
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -653,6 +669,8 @@ module.exports= {
     removeAddress,
     loadEditAddress,
     updateAddress,
+    //edit profile===================
+    editProfile
     
     
     
