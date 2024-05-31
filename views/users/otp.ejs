@@ -494,7 +494,7 @@
                 if (remainingTime >= 0) {
                     var minutes = Math.floor(remainingTime / 60);
                     var seconds = remainingTime % 60;
-                    document.getElementById("timer").textContent = "Expire After: " + minutes + "m " + seconds + "s";
+                    document.getElementById("timer").textContent = "Resend otp After: " + minutes + "m " + seconds + "s";
                 } else {
                     clearInterval(timerInterval); // Stop the timer
                     document.getElementById("timer").textContent = "Time expires, please resend the OTP";

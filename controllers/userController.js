@@ -71,6 +71,52 @@ const sendOtpMail = async(name,email)=>{
         console.log(error.message);
     }
 }
+const sendOtpMailPassword = async(email)=>{
+    try {
+        const otp = generateOtp();
+        
+      // Store OTP in the database
+      const newOtp = new Otp({
+        email: email,
+        otp: otp,
+        createdAt: new Date(), // Set the current date
+        expiredAt: new Date(new Date().getTime() + 1 * 60 * 1000) // Set the expiry time
+    });
+    await newOtp.save(); 
+    
+
+      const transporter =   nodemailer.createTransport({
+            host:'smtp.gmail.com',
+            port:587,
+            secure:false,
+            requireTLS:true,
+            auth:{
+                user:'moideenshacp28@gmail.com',
+                pass:'fcnk qnbj fqpj pmuz'
+            }
+        });
+       
+        const mailOptions = {
+            from :'moideenshacp28@gmail.com',
+            to:email,
+            subject:'OTP Verification',
+            html:` <p>Hi, please verify this OTP: ${otp}</p>`
+        }
+        transporter.sendMail(mailOptions,function(error){
+            if (error) {
+                console.log(error.message);
+            } else {
+                console.log('otp send successfully');
+                
+            }
+        })
+        
+        
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -625,7 +671,102 @@ const editProfile = async(req,res)=>{
     }
 }
 
+    const forgetpasswordLoad = async(req,res)=>{
+        try {
+            res.render('forgetPassword')
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const forgetPassword = async(req,res)=>{
+        try {
+            const checkmail = await users.findOne({email:req.body.email})
+            if (checkmail) {
+                await sendOtpMailPassword(req.body.email)
+                req.session.user_email = req.body.email;
 
+                res.render('otpPassword',{messages:'Check your email for the OTP and enter it below'})
+            } else {
+                res.render('forgetPassword',{messages:'This email is not Registered yet,please Register First'})
+            }
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const verifyOtpPassword = async (req, res) => {
+        try {
+            const { email, otp  } = req.body;
+            const otpData = await Otp.findOne({otp:otp});
+    
+            if (!otpData) {
+                return res.render('otpPassword', { messages: ' Invalid OTP' });
+            }
+
+            // Check if otp has expired
+            const currentTime = new Date();
+            if (currentTime > otpData.expiredAt) {
+                return res.render('otpPassword', { messages: 'OTP has expired' });
+            }
+            
+
+            // Compare otp
+            if (otpData && otpData.otp === otp) {
+                const userMail = req.session.user_email
+                res.render('forgetPasswordEnter')           
+                };    
+
+        } catch (error) {
+            console.log(error.message);
+            return res.render('otpPassword', { messages: 'An error occurred during OTP verification' });
+        }
+    };
+const updatePassword = async(req,res)=>{
+    try {
+        const password = req.body.password;
+        console.log('pass'+password);
+        const spassword  = await securePassword(req.body.password)
+        const hasLowerCase = /[a-z]/;
+        const hasUpperCase = /[A-Z]/;
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        if (!req.body.password || !hasLowerCase.test(req.body.password) || !hasUpperCase.test(req.body.password) || !hasSpecialChar.test(req.body.password)) {
+                return res.render('forgetPasswordEnter', { messages: 'Password must contain at least one lowercase letter, one uppercase letter, and one special character' });
+        }
+
+        const checkmail = await users.findOne({email:req.session.user_email})
+        const update = await users.findOneAndUpdate({email:req.session.user_email},{password:spassword})
+        if(update){
+            res.render('login', { message: 'Password updated successfully. Please login with your new password.' });
+
+        }
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const resendotpPassword  = async(req,res,email)=>{
+    
+    try {
+    const existingOTP = await Otp.findOne({ email:req.session.user_email });
+    
+ 
+    if (existingOTP) {
+     await Otp.deleteOne({email:req.session.user_email})
+        await sendOtpMailPassword(req.session.user_email)
+        
+  
+    }
+    res.render('otpPassword')
+     
+ 
+    } catch (error) {
+     console.log(error.message);
+    }
+ 
+ }
 
 
 //signout
@@ -670,7 +811,15 @@ module.exports= {
     loadEditAddress,
     updateAddress,
     //edit profile===================
-    editProfile
+    editProfile,
+    //foret password
+    forgetpasswordLoad,
+    forgetPassword,
+    verifyOtpPassword,
+    resendotpPassword,
+    updatePassword
+
+
     
     
     

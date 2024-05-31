@@ -31,6 +31,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+
 </head>
 
 <body>
@@ -174,7 +175,7 @@
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('/usercss/assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">My Account<span>Shop</span></h1>
+        			<h1 class="page-title">My Account</h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
@@ -209,7 +210,7 @@
 								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" href="/signout">Sign Out</a>
+								        <a class="nav-link" onclick="confirmSignOut()">Sign Out</a>
 								    </li>
 								</ul>
 	                		</aside><!-- End .col-lg-3 -->
@@ -821,6 +822,25 @@
                     console.error('Error:', error);
                 });
         }
+
+
+
+        //signout
+    function confirmSignOut() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will be signed out',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, sign me out!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/signout';
+            }
+        });
+    }
     
     </script>
 </body>

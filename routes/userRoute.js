@@ -108,5 +108,13 @@ user_route.post('/checkoutEditAddress',cartController.checkoutEditAddress)
 //editprofile
 user_route.post('/editProfile',userController.editProfile)
 
+//forrgetpassword
+user_route.get('/forgetPassword',userController.forgetpasswordLoad)
+user_route.post('/forgetPassword',userController.forgetPassword)
+user_route.post('/verifyOtpPassword',userController.verifyOtpPassword)
+user_route.post('/resendotpPassword',userController.resendotpPassword)
+user_route.post('/updatePassword',userController.updatePassword)
+
+
 
 module.exports = user_route;

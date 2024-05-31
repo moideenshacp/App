@@ -20,10 +20,7 @@ const productSchema = mongoose.Schema({
         type:Array,
         required:true
     },
-    size:{
-        type:Number,
-        // required:true
-    },
+   
     description:{
         type:String,
         required:true
