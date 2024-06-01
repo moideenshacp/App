@@ -14,7 +14,11 @@ const addCart = async(req,res)=>{
         const { productId, qty } = req.body;
         const userId = req.session.user_id;
         const quantity = qty && qty >= 1 ? qty : 1;
+        const products = await product.findById(productId);
+        const productPrice = products.price
+        
         const userCart = await Cart.findOne({ user: userId })
+        
 
             const existingCartproduct = await Cart.findOne({user:req.session.user_id,'products.product':productId})
         if(existingCartproduct){
@@ -25,11 +29,11 @@ const addCart = async(req,res)=>{
         if (!userCart) {
             const cart = new Cart({
                 user: userId,
-                products: [{ product: productId, quantity: quantity }]
+                products: [{ product: productId, quantity: quantity}]
             });
             await cart.save();
         } else {
-            userCart.products.push({ product: productId, quantity: quantity });
+            userCart.products.push({ product: productId, quantity: quantity});
             await userCart.save();
         }
 

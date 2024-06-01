@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="/usercss/assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -198,7 +200,7 @@
                             <i class="icon-long-arrow-right"></i>
                         </button></a> 
                         
-            			<form action="#">
+            			<form id="form">
 		                	<div class="row">
                                 <%if(addressescount<=0){%>
 
@@ -276,86 +278,30 @@
 		                						</tr><!-- End .summary-total -->
 		                					</tbody>
 		                				</table><!-- End .table table-summary -->
+                                        <div>
+                                            <br>
+                                            <h6>*payment Methods</h6>
+                                        </div>
+                                        <br>
 
-		                				<div class="accordion-summary" id="accordion-payment">
-                                            <div class="card">
-                                                <div class="card-header" id="heading-1">
-                                                    <h2 class="card-title">
-                                                        <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                                                            Direct bank transfer
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
-                                                    <div class="card-body">
-                                                        Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
-                                            
-                                            <div class="card">
-                                                <div class="card-header" id="heading-2">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                                                            Check payments
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
-                                                    <div class="card-body">
-                                                        Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. 
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
-                                        
-                                            <div class="card">
-                                                <div class="card-header" id="heading-3">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                            Cash on delivery
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-                                                    <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
-                                        
-                                            <div class="card">
-                                                <div class="card-header" id="heading-4">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                                                            PayPal <small class="float-right paypal-link">What is PayPal?</small>
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-                                                    <div class="card-body">
-                                                        Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
-                                        
-                                            <div class="card">
-                                                <div class="card-header" id="heading-5">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                                            Credit Card (Stripe)
-                                                            <img src="/usercss/assets/images/payments-summary.png" alt="payments cards">
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-                                                    <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
-                                        </div><!-- End .accordion-summary -->
+                                        <div>
+                                            <label>
+                                                <input type="radio" name="paymentMethod" value="bankTransfer">
+                                                     bank transfer
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <label>
+                                                <input type="radio" name="paymentMethod" value="cashOnDelivery">
+                                                Cash on delivery
+                                            </label>
+                                        </div>
+
                                                                           
                                         
 
-		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                				<button onclick="order()" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
 		                					<span class="btn-text">Place Order</span>
 		                					<span class="btn-hover-text">Proceed to Checkout</span>
 		                				</button>
@@ -760,6 +706,50 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    <script>
+         function order() {
+    const form = document.getElementById('form');
+    const selectedAddress = form.elements['selectedAddress'].value;
+    const paymentMethod = form.elements['paymentMethod'].value;
+    const subtotal =" <%=subtotal%>";
+
+
+    let datas = {
+        selectedAddress,
+        paymentMethod,
+        subtotal
+    };
+
+
+    fetch('/order', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datas)
+    })
+    .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.message == 'succes') {
+                                window.location.href = '/profile';
+                            } else {
+                                console.log('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+
+    </script>
+
+
 </body>
 
 

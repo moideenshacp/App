@@ -15,13 +15,10 @@ const cartSchema = mongoose.Schema({
         quantity: {
             type: Number,
             required: true
-        },
+        }
         
-    }],
-    total_price: {
-        type: Number,
-        // required: true
-    }
+    }]
+    
 });
 
 module.exports = mongoose.model('Cart', cartSchema);

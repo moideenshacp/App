@@ -30,6 +30,17 @@
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        .product-thumbnail {
+    width: 80px; /* Adjust as needed */
+    height: 80px; /* Adjust as needed */
+}
+
+.product-thumbnail img {
+    width: 100%;
+    height: 100%;
+}
+    </style>
 
 
 </head>
@@ -222,11 +233,70 @@
 								    	<br>
 								    	<h4 style="font-size: larger; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: brown;">Have a great day,shop and Enjoy</h4>
 								    </div><!-- .End .tab-pane -->
-
+                                    <% orderPoducts.forEach(order=> { %>
+                                        <% order.products.forEach(orderProduct=> { %>
 								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+                                        <table class="table table-cart table-mobile">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <% orderPoducts.forEach(order=> { %>
+                                                <% order.products.forEach(orderProduct=> { %>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="product-col">
+                                                                <div class="product">
+                                                                    <figure class="product-media">
+                                                                        <a
+                                                                            href="/productDetail?id=<%=orderProduct.product._id%>">
+                                                                            <img src="/productImages/productImages/<%=orderProduct.product.image[0]%>"
+                                                                                alt="Product image">
+                                                                        </a>
+                                                                    </figure>
+                                                                    <h3 class="product-title">
+                                                                        <a
+                                                                            href="/productDetail?id=<%=orderProduct.product._id%>">
+                                                                            <%= orderProduct.product.name %>
+                                                                        </a>
+                                                                    </h3><!-- End .product-title -->
+                                                                </div><!-- End .product -->
+                                                            </td>
+    
+                                                            <td class="total-col">
+                                                                ₹<%=orderProduct.product.price%>
+                                                            </td>
+                                                            <td class="total-col">
+                                                                <%=orderProduct.quantity%>
+                                                            </td>
+                                                            <td class="total-col">
+                                                                ₹<%=orderProduct.quantity*orderProduct.product.price %>
+                                                            </td>
+                                                          
+                                                            <td>
+                                                                <a href="/orderDetails"><button class="btn btn-primary show-details-btn">Show Details</button></a>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        
+    
+                                                        
+                                                    </tbody>
+                                                    <% }) %>
+                                                        <% }) %>
+                                        </table><!-- End .table table-wishlist -->
+                                        
+                                       
+                                    </div>
+                                    <% }) %>
+                                    <% }) %>
+
+                                    
 
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
@@ -711,6 +781,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
     <script>
         function removeAddress(addressId) {
         

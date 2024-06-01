@@ -5,11 +5,13 @@ const categories =  require('../models/category')
 const products = require('../models/product')
 const cart = require('../models/cart')
 const Address = require('../models/address')
+const Order = require('../models/order')
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
 const passport = require('passport');
 const category = require('../models/category');
+const order = require('../models/order');
 
 
 
@@ -437,12 +439,24 @@ const loadprofile = async(req,res)=>{
     try {
         const user = await users.find({_id:req.session.user_id})
         const address = await Address.findOne({user:req.session.user_id})
-        res.render('profile',{address,user})
+        const orderPoducts = await Order.find({user:req.session.user_id}).populate('products.product')
+        const orderAddress = await Order.findOne().populate('address')
+        console.log(orderAddress+'0000000');
+
+        res.render('profile',{address,user,orderPoducts})
     } catch (error) {
         console.log(error.message);
     }
 }
 
+//load orderDetails
+const loadOrderDetails = async(req,res)=>{
+    try {
+        res.render('orderDetails')
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -817,7 +831,10 @@ module.exports= {
     forgetPassword,
     verifyOtpPassword,
     resendotpPassword,
-    updatePassword
+    updatePassword,
+    ///order*************************
+    loadOrderDetails
+
 
 
     

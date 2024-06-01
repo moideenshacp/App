@@ -16,6 +16,7 @@ user_route.set('views','./views/users');
 //controllers
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController')
+const orderController = require('../controllers/orderController')
 const passport = require('passport');
 
 
@@ -115,6 +116,9 @@ user_route.post('/verifyOtpPassword',userController.verifyOtpPassword)
 user_route.post('/resendotpPassword',userController.resendotpPassword)
 user_route.post('/updatePassword',userController.updatePassword)
 
+//cash on delivery
 
+user_route.post('/order',orderController.order)
+user_route.get('/orderDetails',userController.loadOrderDetails)
 
 module.exports = user_route;
