@@ -243,6 +243,7 @@
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Total</th>
+                                                    <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -277,10 +278,16 @@
                                                             <td class="total-col">
                                                                 ₹<%=orderProduct.quantity*orderProduct.product.price %>
                                                             </td>
-                                                          
-                                                            <td>
-                                                                <a href="/orderDetails"><button class="btn btn-primary show-details-btn">Show Details</button></a>
+                                                            <td class="total-col">
+                                                                <%=order.status %>
                                                             </td>
+                                                            <td>
+                                                                <a href="/orderDetails?id='<%=orderProduct.product._id%>"><button class="btn btn-primary show-details-btn">Cancel Order</button></a>
+                                                            </td>
+                                                          
+                                                            <!-- <td>
+                                                                <a href="/orderDetails?id='<%=orderProduct.product._id%>"><button class="btn btn-primary show-details-btn">Show Details</button></a>
+                                                            </td> -->
                                                         </tr>
                                                         
                                                         

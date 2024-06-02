@@ -255,7 +255,7 @@
 		                					<tbody>
                                                 <% cartPoducts.forEach(cart=> { %>
                                                     <% cart.products.forEach(cartProduct=> { %>                                                    <tr>
-                                                        <td><a href="#"><%=cartProduct.product.name%></a></td>
+                                                        <td><%=cartProduct.product.name%></td>
                                                         <td><%=cartProduct.product.price*cartProduct.quantity%></td>
 
                                                     </tr>
@@ -301,7 +301,7 @@
                                                                           
                                         
 
-		                				<button onclick="order()" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                				<button onclick="order()"  class="btn btn-outline-primary-2 btn-order btn-block">
 		                					<span class="btn-text">Place Order</span>
 		                					<span class="btn-hover-text">Proceed to Checkout</span>
 		                				</button>
@@ -713,7 +713,16 @@
     const selectedAddress = form.elements['selectedAddress'].value;
     const paymentMethod = form.elements['paymentMethod'].value;
     const subtotal =" <%=subtotal%>";
-
+    if (!selectedAddress || !paymentMethod) {
+        // Display SweetAlert error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select both address and payment method before placing the order.',
+            confirmButtonText: 'OK'
+        });
+        return; 
+    }
 
     let datas = {
         selectedAddress,

@@ -21,7 +21,7 @@
         <aside class="navbar-aside" id="offcanvas_aside">
             <div class="aside-top">
                 <a href="index.html" class="brand-wrap">
-                    <!-- <img src="/admincss/assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
+                    <!-- <img src="assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
                     <img src="/admincss/assets/imgs/theme/applogo.jpg" style="height: 120px;width: 130px;;" alt="marslogo">
                 </a>
                 <div>
@@ -154,7 +154,7 @@
                                 <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                                 <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                                <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
                             </div>
                         </li>
                     </ul>
@@ -163,114 +163,116 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Categories</h2>
-                        <p>Add, edit or delete a category</p>
+                        <h2 class="content-title card-title">Order List</h2>
                     </div>
                     <div>
-                        <input type="text" placeholder="Search Categories" class="form-control bg-white" />
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <form method="post" >
-                                    <% if(typeof message!=='undefined' ){ %>
-
-                                        <p style="color: red;text-align: center;" class="message">
-                                            <%= message %>
-                                        </p>
-                                        <% } %>
-                                        <% if(typeof messages!=='undefined' ){ %>
-
-                                            <p style="color: green;text-align: center;" class="message">
-                                                <%= messages %>
-                                            </p>
-                                            <% } %>
-                                    <div class="mb-4">
-                                        <label for="product_name" class="form-label">Name</label>
-                                        <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" required/>
-                                    </div>
-                                 
-                               
-                                    <div class="mb-4">
-                                        <label class="form-label">Description</label>
-                                        <input type="text" placeholder="Type here" class="form-control" name="description" required />
-                                    </div>
-                                    <div class="d-grid">
-                                        <button class="btn btn-primary" type="submit">Create category</button>
-                                    </div>
-                                </form>
+                <div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input type="text" placeholder="Search..." class="form-control" />
                             </div>
-                            <div class="col-md-9">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                               
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Description</th>
-                                                
-                                                <th class="text-end">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-
-                                            
-                                            <% categorylist.forEach((category,index)=>{%>
-                                           
-                                            <tr>
-                                               
-                                                <td><%=index+1%></td>
-                                                <td><b><%=category.name%></b></td>
-                                                <td><%= category.description%></td>
-                                                <td class="text-end">
-                                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                        <a href="/admin/edit-category?id=<%=category._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Edit</a>
-                                                    </button>
-                                                    <%if(category.is_listed==false){%>
-                                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                        <a href="/admin/listcategory/<%=category._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">List</a>
-                                                    </button>
-                                                <%}else{%>
-                                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                        <a href="/admin/listcategory/<%=category._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">UnList</a>
-                                                    </button>
-                                                    <%}%>
-                                                    
-                                                    
-                                                </td>
-                                               
-                                          
-                                            </tr>
-                                       <% })%>
-                                         
-                                 
-                                       
-                                       
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Status</option>
+                                    <option>Active</option>
+                                    <option>Disabled</option>
+                                    <option>Show all</option>
+                                </select>
                             </div>
-                            <!-- .col// -->
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Show 20</option>
+                                    <option>Show 30</option>
+                                    <option>Show 40</option>
+                                </select>
+                            </div>
                         </div>
-                        <!-- .row // -->
+                    </header>
+                    <!-- card-header end// -->
+
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">quantity</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col" class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <%orderlist.forEach(order=>{%>
+                                       <% order.products.forEach(product=>{%>
+
+
+                                    <tr>
+                                        <td><%=order._id%></td>
+                                        <td><b><%=product.product.name%></b></td>
+                                        <td><%=product.quantity%></td>
+                                        <td>₹<%=product.quantity*product.product.price %></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%=order.status%></span></td>
+                                        <td><%=order.date%></td>
+                                        <td class="text-end">
+                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                            <div class="dropdown">
+                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">View detail</a>
+                                                    <a class="dropdown-item" href="#">Edit info</a>
+                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                            <!-- dropdown //end -->
+                                        </td>
+                                    </tr>
+                                    <%})%>
+
+
+                                    <%})%>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
                     </div>
-                    <!-- card body .// -->
+                    <!-- card-body end// -->
                 </div>
-                <!-- card .// -->
+                <!-- card end// -->
+              
             </section>
             <!-- content-main end// -->
-       
+            <footer class="main-footer font-xs">
+                <div class="row pb-30 pt-15">
+                    <div class="col-sm-6">
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        &copy; Nest - HTML Ecommerce Template .
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end">All rights reserved</div>
+                    </div>
+                </div>
+            </footer>
         </main>
-        <script src="/admincss/assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="/admincss/assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="/admincss/assets/js/vendors/select2.min.js"></script>
-        <script src="/admincss/assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="/admincss/assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
-        <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
     </body>
 </html>

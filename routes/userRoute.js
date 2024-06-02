@@ -119,6 +119,6 @@ user_route.post('/updatePassword',userController.updatePassword)
 //cash on delivery
 
 user_route.post('/order',orderController.order)
-user_route.get('/orderDetails',userController.loadOrderDetails)
+user_route.get('/orderDetails',orderController.loadOrderDetails)
 
 module.exports = user_route;

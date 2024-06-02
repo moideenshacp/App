@@ -5,6 +5,8 @@
     const bcrypt = require('bcrypt');
     const { query } = require('express');
     const path = require('path')
+const Address = require('../models/address');
+const Order = require('../models/order')
 
     const multer =  require ('multer')
 
@@ -481,6 +483,17 @@ const editProduct = async(req,res)=>{
     }
 }
 
+//order
+const loadOrder = async(req,res)=>{
+    try {
+        const orderlist = await Order.find().populate('products.product')
+        console.log(orderlist);
+        res.render('order',{orderlist})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 module.exports = {
     loadLogin,
@@ -499,6 +512,7 @@ module.exports = {
     productAdd,
     listProduct,
     editProductLoad,
-    editProduct
+    editProduct,
+    loadOrder
   
 }

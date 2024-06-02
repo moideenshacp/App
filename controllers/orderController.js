@@ -16,6 +16,7 @@ const order = async(req,res)=>{
 
         const product = await Cart.findOne({user:userId}).populate('products.product')
        console.log(product.products+'000000');
+       
         const order = new Order({
             user:userId,
             products:product.products,
@@ -34,11 +35,45 @@ const order = async(req,res)=>{
     }
 }
 
+//load orderDetails
+const loadOrderDetails = async(req,res)=>{
+    try {
+        const id = req.query.id;
+        console.log(id+'111111111111');
+        const orderProducts = await Order.find({user:req.session.user_id}).populate('products.product')
+        
+        let orderProductDetail = null;
+
+        // Iterate through each order
+        orderProducts.forEach(order => {
+           
+            order.products.forEach(product => {
+                console.log(product.product._id.toString() === id.toString());
+console.log("product.product._id:", product.product._id.toString());
+                if (product.product._id == id) {
+                    orderProductDetail = {
+                        order: order,
+                        product: product
+                    };
+                }
+            });
+        });
+
+        console.log("Order Product Detail:", orderProductDetail); // Log order product detail
+    
+        
+
+        res.render('orderDetails')
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
 
 
 module.exports={
-    order
+    order,
+    loadOrderDetails
 }

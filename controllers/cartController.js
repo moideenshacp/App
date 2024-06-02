@@ -46,7 +46,8 @@ const addCart = async(req,res)=>{
 }
 const loadCart = async(req,res)=>{
     try {
-       
+        const cartData = await Cart.find({user:req.session.user_id})
+        const cartcount = cartData.map(cartDoc => cartDoc.products.length);
             const cartPoducts = await Cart.find({user:req.session.user_id}).populate('products.product')
             let subtotal = 0;
             if(cartPoducts.length>0){
@@ -54,7 +55,7 @@ const loadCart = async(req,res)=>{
             return acc += val.product.price * val.quantity;
         }, 0);
     }
-            res.render('cart',{cartPoducts,subtotal})
+            res.render('cart',{cartPoducts,subtotal,cartcount})
         }
        
     catch (error) {

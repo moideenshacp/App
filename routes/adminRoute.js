@@ -71,6 +71,7 @@ admin_route.get('/listcategory/:Id',auth.isLogin, adminController.listCategory);
 admin_route.get('/edit-category',auth.isLogin,adminController.editCategoryLoad)
 admin_route.post('/edit-category',adminController.editcategory)
 
-
+//order
+admin_route.get('/order',adminController.loadOrder)
 
 module.exports = admin_route;

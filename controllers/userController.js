@@ -449,14 +449,7 @@ const loadprofile = async(req,res)=>{
     }
 }
 
-//load orderDetails
-const loadOrderDetails = async(req,res)=>{
-    try {
-        res.render('orderDetails')
-    } catch (error) {
-        console.log(error);
-    }
-}
+
 
 
 
@@ -499,6 +492,9 @@ const shop = async(req,res)=>{
 
 const cartLoad = async(req,res)=>{
     try {
+       
+
+
         res.render('cart')
     } catch (error) {
         console.log(error);
@@ -832,8 +828,7 @@ module.exports= {
     verifyOtpPassword,
     resendotpPassword,
     updatePassword,
-    ///order*************************
-    loadOrderDetails
+   
 
 
 
