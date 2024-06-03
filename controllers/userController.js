@@ -672,6 +672,7 @@ const editProfile = async(req,res)=>{
     try {
         const {name,email,mobile,userId}=req.body;
         const existingProfile = await users.findOne({ email: email });
+
         
         console.log('----------------'+existingProfile+'-------');
         const editProfile = await users.findByIdAndUpdate({_id:req.body.userId},{$set:{name:req.body.name,email:req.body.email,mobile:req.body.mobile}})

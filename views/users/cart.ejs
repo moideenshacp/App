@@ -195,7 +195,13 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-9">
-                                <table class="table table-cart table-mobile">
+                                <%if(cartcount<=0){%>
+                                    <div class="container">
+                                        <img src="/images/cartempty2.png" alt="empty cart">
+                                    </div>
+
+                                    
+                                        <%}else{%> <table class="table table-cart table-mobile">
                                     <thead>
                                         <tr>
                                             <th>Product</th>
@@ -269,11 +275,8 @@
                                 </div><!-- End .cart-bottom -->
                             </div><!-- End .col-lg-9 -->
                             <aside class="col-lg-3">
-                                <%if(cartcount<=0){%>
-                                    <div  class="summary summary-cart">
-                                        </div>
-                                    
-                                <%}else{%>
+                                
+                                
 
                                 
                                 <div class="summary summary-cart">
