@@ -214,54 +214,61 @@ padding-top: 15px;
                 <p class="lead fw-bold mb-5" style="color: #f37a27;">Order Details</p>
       
                 <div class="row">
-                  <div class="col mb-3">
-                    <p class="small text-muted mb-1">Date</p>
-                    <p>10 April 2021</p>
-                  </div>
-                  <div class="col mb-3">
-                    <p class="small text-muted mb-1">Order No.</p>
-                    <p>012j1gvs356c</p>
-                  </div>
-                  <div class="col mb-3">
-                    <p class="small text-muted mb-1">Order Status</p>
-                    <p>Pending</p>
-                  </div>
-                  <div class="col mb-3">
-                    <p class="small text-muted mb-1">Payment Method</p>
-                    <p>cash On Delivery</p>
-                  </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Date: <b><%=formattedDate%></b></p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Order No.: <b><%=orderData._id%></b></p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Order Status: <b><%= orderProduct.status %></b></p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Payment Method: <b><%=orderData.paymentMethod%></b></p>
+                    </div>
                 </div>
+                
       
                 <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
                   <div class="row align-items-center"> <!-- Modified this line -->
                     <div class="col-md-2 col-lg-2"> <!-- Added this line -->
-                      <img src="product_image.jpg" alt="Product Image" class="img-fluid"> <!-- Added this line -->
+                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                      <img src="/productImages/productImages/<%=orderProduct.product.image[0]%>" alt="Product Image" class="img-fluid"> </a><!-- Added this line -->
                     </div> <!-- Added this line -->
-                    <div class="col-md-6 col-lg-7"> <!-- Modified this line -->
-                      <p>BEATS Solo 3 Wireless Headphones</p>
+                    
+                    <div class="col-md-3 col-lg-7"> <!-- Modified this line -->
+                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                      <p><b><%=orderProduct.product.name%></b></p></a>
                     </div>
+                    
                     <div class="col-md-4 col-lg-3">
-                      <p>£299.99</p>
+                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                      <p><b>₹<%=orderProduct.product.price%></b></p></a>
                     </div>
                   </div>
                
                 </div>
       
                 <div class="row my-4">
-                  <div class="col-md-4 offset-md-8 col-lg-3 offset-lg-9">
-                    <p class="lead fw-bold mb-0" style="color: #f37a27;">£262.99</p>
-                  </div>
+                    <div class="col-md-12">
+                        <p class="lead fw-bold mb-0 text-end" style="color: #f37a27;">
+                            Total Price: ₹<%=orderProduct.product.price %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.price * orderProduct.quantity %>
+                        </p>
+                    </div>
                 </div>
+                
+                
       
                 <!-- Address Details Section -->
                 <p class="lead fw-bold mb-4 pb-2" style="color: #f37a27;">Address Details</p>
       
                 <div class="row">
                   <div class="col-md-12">
-                    <p><strong>Name:</strong> John Doe</p>
-                    <p><strong>Address:</strong> 123 Main Street, City, Country, ZIP</p>
-                    <p><strong>Email:</strong> john.doe@example.com</p>
-                    <p><strong>Phone:</strong> +1234567890</p>
+                    <p><strong>Name: </strong>   <%=orderAddress.name%></p>
+                    <p><strong>Address:</strong>  <%=orderAddress.address%>,<%=orderAddress.city%>,<%=orderAddress.pincode%></p>
+                    <p><strong>State:</strong>  <%=orderAddress.state%></p>
+                    <p><strong>Email:</strong>  <%=orderAddress.email%></p>
+                    <p><strong>Phone:</strong>  +91 <%=orderAddress.phone%></p>
                   </div>
                 </div>
       

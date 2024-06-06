@@ -421,7 +421,7 @@ const editProduct = async(req,res)=>{
     try {
 
         const id= req.body.id;
-        console.log(id+'-------------------------------------------------');
+        console.log(id+'editttttttttttttttttttttttttttttttttttpr');
         
            
             const productData = await products.findOne({_id:id});
@@ -513,6 +513,7 @@ module.exports = {
     listProduct,
     editProductLoad,
     editProduct,
+    //order------------------------------------------------------------------------
     loadOrder
   
 }

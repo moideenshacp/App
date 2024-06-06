@@ -441,7 +441,6 @@ const loadprofile = async(req,res)=>{
         const address = await Address.findOne({user:req.session.user_id})
         const orderPoducts = await Order.find({user:req.session.user_id}).populate('products.product')
         const orderAddress = await Order.findOne().populate('address')
-        console.log(orderAddress+'0000000');
 
         res.render('profile',{address,user,orderPoducts})
     } catch (error) {

@@ -203,10 +203,10 @@
                                     <tr>
                                         <th>Order ID</th>
                                         <th scope="col">Product Name</th>
+                                        <th scope="col">Price</th>
                                         <th scope="col">quantity</th>
                                         <th scope="col">Total</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Date</th>
                                         <th scope="col" class="text-end">Action</th>
                                     </tr>
                                 </thead>
@@ -219,16 +219,16 @@
                                     <tr>
                                         <td><%=order._id%></td>
                                         <td><b><%=product.product.name%></b></td>
+                                        <td><%=product.product.price%></td>
                                         <td><%=product.quantity%></td>
                                         <td>₹<%=product.quantity*product.product.price %></td>
-                                        <td><span class="badge rounded-pill alert-warning"><%=order.status%></span></td>
-                                        <td><%=order.date%></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%=product.status%></span></td>
                                         <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                            <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= product.product._id%>" class="btn btn-md rounded font-sm">Detail</a>
                                             <div class="dropdown">
                                                 <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
+                                                    <a class="dropdown-item" href="/orderDetails?orderId=<%= order._id %>&productId=<%= product.product._id%>">View detail</a>
                                                     <a class="dropdown-item" href="#">Edit info</a>
                                                     <a class="dropdown-item text-danger" href="#">Delete</a>
                                                 </div>

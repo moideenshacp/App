@@ -244,7 +244,11 @@
                                                     <th>Quantity</th>
                                                     <th>Total</th>
                                                     <th>Status</th>
+                                                    <th>Details</th>
+
+                                                    <%if(orderProduct.status==='pending'){%>
                                                     <th>Action</th>
+                                                    <%}%>
                                                 </tr>
                                             </thead>
                                             <% orderPoducts.forEach(order=> { %>
@@ -279,20 +283,22 @@
                                                                 ₹<%=orderProduct.quantity*orderProduct.product.price %>
                                                             </td>
                                                             <td class="total-col">
-                                                                <%=order.status %>
+                                                                <%=orderProduct.status %>
                                                             </td>
                                                             <td>
-                                                                <a href="/orderDetails?id='<%=orderProduct.product._id%>"><button class="btn btn-primary show-details-btn">Cancel Order</button></a>
-                                                            </td>
-                                                          
-                                                            <!-- <td>
-                                                                <a href="/orderDetails?id='<%=orderProduct.product._id%>"><button class="btn btn-primary show-details-btn">Show Details</button></a>
-                                                            </td> -->
+                                                                <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= orderProduct.product._id%>"><button class="btn btn-primary show-details-btn">Show Details</button></a>
+                                                            </td>   
+                                                            <td>
+                                                            <%if(orderProduct.status==='pending'){%>
+                                                                
+                                                                <a onclick="cancelOrder('<%=orderProduct.product._id%>')"><button class="btn btn-primary show-details-btn">Cancel Order</button></a>
+                                                                
+                                                            <%}%>
+
+                                                                </td>
+
                                                         </tr>
-                                                        
-                                                        
-    
-                                                        
+      
                                                     </tbody>
                                                     <% }) %>
                                                         <% }) %>
@@ -793,6 +799,49 @@
 
 
     <script>
+        function cancelOrder(productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to cancel this ordered product.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/cancelOrder', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ productId })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.message == 'succes') {
+                                window.location.reload();
+                            } else {
+                                console.log('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+
+        }
+
+
+
+
+
+
         function removeAddress(addressId) {
         
          Swal.fire({
