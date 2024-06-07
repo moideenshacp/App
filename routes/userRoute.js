@@ -17,6 +17,7 @@ user_route.set('views','./views/users');
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController')
+const wishlistController = require('../controllers/wishlistcontroller')
 const passport = require('passport');
 
 
@@ -121,5 +122,11 @@ user_route.post('/updatePassword',userController.updatePassword)
 user_route.post('/order',orderController.order)
 user_route.post('/cancelOrder',orderController.cancelOrder)
 user_route.get('/orderDetails',orderController.orderDetails)
+
+
+//wishlist
+user_route.get('/wishlist',wishlistController.wishlistLoad)
+user_route.post('/wishlist',wishlistController.addWishlist)
+user_route.post('/removeProductWishlist',wishlistController.removeProductWishlist)
 
 module.exports = user_route;

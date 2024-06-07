@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+        <title>Mars -eCommerce</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/images/applogo.jpg" />
+        <!-- Template CSS -->
+        <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    <style>
+        @media (min-width: 1025px) {
+.h-custom {
+height: 100vh !important;
+}
+}
+
+.horizontal-timeline .items {
+border-top: 2px solid #ddd;
+}
+
+.horizontal-timeline .items .items-list {
+position: relative;
+margin-right: 0;
+}
+
+.horizontal-timeline .items .items-list:before {
+content: "";
+position: absolute;
+height: 8px;
+width: 8px;
+border-radius: 50%;
+background-color: #ddd;
+top: 0;
+margin-top: -5px;
+}
+
+.horizontal-timeline .items .items-list {
+padding-top: 15px;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="screen-overlay"></div>
+        <aside class="navbar-aside" id="offcanvas_aside">
+            <div class="aside-top">
+                <a href="index.html" class="brand-wrap">
+                    <!-- <img src="/admincss/assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
+                    <img src="/admincss/assets/imgs/theme/applogo.jpg" style="height: 120px;width: 130px;;" alt="marslogo">
+                </a>
+                <div>
+                    <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+                </div>
+            </div>
+            <nav>
+                <ul class="menu-aside">
+                    <li class="menu-item ">
+                        <a class="menu-link" href="/admin/home">
+                            <i class="icon material-icons md-home"></i>
+                            <span class="text">Dashboard</span>
+                        </a>
+                    </li>
+             
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/products">
+                            <i class="icon material-icons md-shopping_bag"></i>
+                            <span class="text">Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu-link" href="/admin/category">
+                            <i class="icon material-icons md-shopping_bag"></i>
+                            <span class="text">Categories</span>
+                        </a>
+
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/order">
+                            <i class="icon material-icons md-shopping_cart"></i>
+                            <span class="text">Orders</span>
+                        </a>
+                       
+                    </li>
+                    <li class="menu-item ">
+                        <a class="menu-link" href="/admin/customers">
+                            <i class="icon material-icons md-store"></i>
+                            <span class="text">Customers</span>
+                        </a>
+                    </li>
+                    <li class="menu-item ">
+                        <a class="menu-link" href="/admin/addproduct">
+                            <i class="icon material-icons md-add_box"></i>
+                            <span class="text">Add product</span>
+                        </a>
+                    </li>
+            
+         
+                  
+                    <li class="menu-item">
+                        <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
+                    </li>
+                        <!-- <li class="menu-item">
+                            <a class="menu-link" disabled href="#">
+                                <i class="icon material-icons md-pie_chart"></i>
+                                <span class="text">Statistics</span>
+                            </a>
+                        </li> -->
+                </ul>
+                <hr />
+                <!-- <ul class="menu-aside">
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="#">
+                            <i class="icon material-icons md-settings"></i>
+                            <span class="text">Settings</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-settings-1.html">Setting sample 1</a>
+                            <a href="page-settings-2.html">Setting sample 2</a>
+                        </div>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="page-blank.html">
+                            <i class="icon material-icons md-local_offer"></i>
+                            <span class="text"> Starter page </span>
+                        </a>
+                    </li>
+                </ul> -->
+                <br />
+                <br />
+            </nav>
+        </aside>
+        <main class="main-wrap">
+            
+    
+    <section class="h-100 h-custom" style="background-color: #eee;">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-lg-8 col-xl-6">
+            <div class="card border-top border-bottom border-3" style="border-color: #f37a27 !important;">
+              <div class="card-body p-5">
+      
+                <p class="lead fw-bold mb-5" style="color: #f37a27;">Order Details</p>
+      
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Date: <b><%=formattedDate%></b></p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Order No.: <b><%=orderData._id%></b></p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Order Status: <b><%= orderProduct.status %></b></p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <p class="small text-muted mb-1">Payment Method: <b><%=orderData.paymentMethod%></b></p>
+                    </div>
+                </div>
+                
+      
+                <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
+                  <div class="row align-items-center"> <!-- Modified this line -->
+                    <div class="col-md-2 col-lg-2"> <!-- Added this line -->
+                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                      <img src="/productImages/productImages/<%=orderProduct.product.image[0]%>" alt="Product Image" class="img-fluid"> </a><!-- Added this line -->
+                    </div> <!-- Added this line -->
+                    
+                    <div class="col-md-3 col-lg-7"> <!-- Modified this line -->
+                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                      <p><b><%=orderProduct.product.name%></b></p></a>
+                    </div>
+                    
+                    <div class="col-md-4 col-lg-3">
+                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                      <p><b>₹<%=orderProduct.product.price%></b></p></a>
+                    </div>
+                  </div>
+               
+                </div>
+      
+                <div class="row my-4">
+                    <div class="col-md-12">
+                        <p class="lead fw-bold mb-0 text-end" style="color: #f37a27;">
+                            Total Price: ₹<%=orderProduct.product.price %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.price * orderProduct.quantity %>
+                        </p>
+                    </div>
+                </div>
+                
+                
+      
+                <!-- Address Details Section -->
+                <p class="lead fw-bold mb-4 pb-2" style="color: #f37a27;">Address Details</p>
+      
+                <div class="row">
+                  <div class="col-md-12">
+                    <p><strong>Name: </strong>   <%=orderAddress.name%></p>
+                    <p><strong>Address:</strong>  <%=orderAddress.address%>,<%=orderAddress.city%>,<%=orderAddress.pincode%></p>
+                    <p><strong>State:</strong>  <%=orderAddress.state%></p>
+                    <p><strong>Email:</strong>  <%=orderAddress.email%></p>
+                    <p><strong>Phone:</strong>  +91 <%=orderAddress.phone%></p>
+                  </div>
+                </div>
+      
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+
+      </section>
+</body>
+</html>

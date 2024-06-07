@@ -487,8 +487,103 @@ const editProduct = async(req,res)=>{
 const loadOrder = async(req,res)=>{
     try {
         const orderlist = await Order.find().populate('products.product')
-        console.log(orderlist);
         res.render('order',{orderlist})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//load order detail
+const orderDetail = async(req,res)=>{
+    try {
+        const userId = req.session.user_id;
+        const productId = req.query.productId;
+        const orderId = req.query.orderId;
+        const orderData = await Order.findOne({_id:orderId}).populate('address.addresses')   
+        const orders = await Order.find({user:userId}).populate('products.product')
+        const address = await Address.findOne({user:userId})
+        let orderProduct = null;
+        orders.forEach(order => {
+            order.products.forEach(product => {
+                if (product.product._id.toString() === productId) {
+                    orderProduct = product;
+                }
+            });
+        });
+        let orderAddress = null;
+        address.addresses.forEach(add=>{
+            if(add._id.toString()===orderData.address.toString()){
+                orderAddress=add
+            }
+        })
+        const formattedDate = orderData.date.toLocaleString('en-US', { timeZone: 'UTC' });
+        
+        res.render('orderDetail',{orderProduct,orders,orderData,formattedDate,orderAddress})
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const statusDelivered= async(req,res)=>{
+    try {
+        let dataIndex=0
+        const productId = req.body.productId;
+        const userId = req.body.userId;
+        console.log(productId+'1111111111111111111111');
+        const orderData = await Order.find({user:userId})
+        for(i=0;i<orderData.length;i++){
+        if(orderData[i].products.find(product => product.product.toString() === productId)){
+            var orderProduct = orderData[i].products.find(product => product.product.toString() === productId)
+            dataIndex=i;
+        };
+
+        }
+        if (orderProduct) {
+            orderProduct.status = 'delivered';
+
+            await orderData[dataIndex].save();
+                        
+        }
+        res.status(200).json({ message: 'succes' });
+        
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const statusCancelled= async(req,res)=>{
+    try {
+        let dataIndex=0
+        const productId = req.body.productId;
+        const userId = req.body.userId;
+        console.log(productId+'1111111111111111111111');
+        const orderData = await Order.find({user:userId})
+        for(i=0;i<orderData.length;i++){
+        if(orderData[i].products.find(product => product.product.toString() === productId)){
+            var orderProduct = orderData[i].products.find(product => product.product.toString() === productId)
+            dataIndex=i;
+        };
+
+        }
+        if (orderProduct) {
+            orderProduct.status = 'cancelled';
+
+            await orderData[dataIndex].save();
+            const productData = await products.findById(orderProduct.product);
+
+
+            productData.quantity += orderProduct.quantity;
+
+            await productData.save();
+            
+        }
+        res.status(200).json({ message: 'succes' });
+        
+
+        
     } catch (error) {
         console.log(error);
     }
@@ -514,6 +609,9 @@ module.exports = {
     editProductLoad,
     editProduct,
     //order------------------------------------------------------------------------
-    loadOrder
+    loadOrder,
+    orderDetail,
+    statusDelivered,
+    statusCancelled
   
 }

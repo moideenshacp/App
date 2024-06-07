@@ -828,6 +828,7 @@ module.exports= {
     verifyOtpPassword,
     resendotpPassword,
     updatePassword,
+    
    
 
 

@@ -1,89 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Mars -eCommerce</title>
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content="" />
-        <meta property="og:type" content="" />
-        <meta property="og:url" content="" />
-        <meta property="og:image" content="" />
-        <!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="/images/applogo.jpg" />
-        <!-- Template CSS -->
-        <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
-    </head>
 
-    <body>
-        <div class="screen-overlay"></div>
-        <aside class="navbar-aside" id="offcanvas_aside">
-            <div class="aside-top">
-                <a href="index.html" class="brand-wrap">
-                    <!-- <img src="assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
-                    <img src="/admincss/assets/imgs/theme/applogo.jpg" style="height: 120px;width: 130px;;" alt="marslogo">
-                </a>
-                <div>
-                    <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
-                </div>
+<head>
+    <meta charset="utf-8" />
+    <title>Mars -eCommerce</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/images/applogo.jpg" />
+    <!-- Template CSS -->
+    <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <!-- <img src="assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
+                <img src="/admincss/assets/imgs/theme/applogo.jpg" style="height: 120px;width: 130px;;" alt="marslogo">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"><i
+                        class="text-muted material-icons md-menu_open"></i></button>
             </div>
-            <nav>
-                <ul class="menu-aside">
-                    <li class="menu-item ">
-                        <a class="menu-link" href="/admin/home">
-                            <i class="icon material-icons md-home"></i>
-                            <span class="text">Dashboard</span>
-                        </a>
-                    </li>
-             
-                    <li class="menu-item">
-                        <a class="menu-link" href="/admin/products">
-                            <i class="icon material-icons md-shopping_bag"></i>
-                            <span class="text">Products</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="menu-link" href="/admin/category">
-                            <i class="icon material-icons md-shopping_bag"></i>
-                            <span class="text">Categories</span>
-                        </a>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/home">
+                        <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
 
-                    </li>
-                    <li class="menu-item">
-                        <a class="menu-link" href="/admin//order">
-                            <i class="icon material-icons md-shopping_cart"></i>
-                            <span class="text">Orders</span>
-                        </a>
-                       
-                    </li>
-                    <li class="menu-item ">
-                        <a class="menu-link" href="/admin/customers">
-                            <i class="icon material-icons md-store"></i>
-                            <span class="text">Customers</span>
-                        </a>
-                    </li>
-                    <li class="menu-item ">
-                        <a class="menu-link" href="/admin/addproduct">
-                            <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
-                        </a>
-                    </li>
-            
-         
-                  
-                    <li class="menu-item">
-                        <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
-                    </li>
-                        <!-- <li class="menu-item">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/products">
+                        <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-link" href="/admin/category">
+                        <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Categories</span>
+                    </a>
+
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/order">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/customers">
+                        <i class="icon material-icons md-store"></i>
+                        <span class="text">Customers</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/addproduct">
+                        <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                </li>
+
+
+
+                <li class="menu-item">
+                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span
+                            class="text">Brands</span> </a>
+                </li>
+                <!-- <li class="menu-item">
                             <a class="menu-link" disabled href="#">
                                 <i class="icon material-icons md-pie_chart"></i>
                                 <span class="text">Statistics</span>
                             </a>
                         </li> -->
-                </ul>
-                <hr />
-                <!-- <ul class="menu-aside">
+            </ul>
+            <hr />
+            <!-- <ul class="menu-aside">
                     <li class="menu-item has-submenu">
                         <a class="menu-link" href="#">
                             <i class="icon material-icons md-settings"></i>
@@ -101,178 +112,272 @@
                         </a>
                     </li>
                 </ul> -->
-                <br />
-                <br />
-            </nav>
-        </aside>
-        <main class="main-wrap">
-            <header class="main-header navbar">
-                <div class="col-search">
-                    <form class="searchform">
-                        <div class="input-group">
-                            <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
-                            <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+            <br />
+            <br />
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
+                        <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products"></option>
+                        <option value="New orders"></option>
+                        <option value="Apple iphone"></option>
+                        <option value="Ahmed Hassan"></option>
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i
+                        class="material-icons md-apps"></i></button>
+                <ul class="nav">
+
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i
+                                class="material-icons md-cast"></i></a>
+                    </li>
+
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/admincss/assets/imgs/people/avatar-2.png" alt="User" /></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
+                                Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
+                                Settings</a>
+                            <a class="dropdown-item" href="#"><i
+                                    class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
+                                center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
-                        <datalist id="search_terms">
-                            <option value="Products"></option>
-                            <option value="New orders"></option>
-                            <option value="Apple iphone"></option>
-                            <option value="Ahmed Hassan"></option>
-                        </datalist>
-                    </form>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order List</h2>
                 </div>
-                <div class="col-nav">
-                    <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i class="material-icons md-apps"></i></button>
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a class="nav-link btn-icon" href="#">
-                                <i class="material-icons md-notifications animation-shake"></i>
-                                <span class="badge rounded-pill">3</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                        </li>
-                        <li class="dropdown nav-item">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                                <a class="dropdown-item text-brand" href="#"><img src="/admincss/assets/imgs/theme/flag-us.png" alt="English" />English</a>
-                                <a class="dropdown-item" href="#"><img src="/admincss/assets/imgs/theme/flag-fr.png" alt="Français" />Français</a>
-                                <a class="dropdown-item" href="#"><img src="/admincss/assets/imgs/theme/flag-jp.png" alt="Français" />日本語</a>
-                                <a class="dropdown-item" href="#"><img src="/admincss/assets/imgs/theme/flag-cn.png" alt="Français" />中国人</a>
-                            </div>
-                        </li>
-                        <li class="dropdown nav-item">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admincss/assets/imgs/people/avatar-2.png" alt="User" /></a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                            </div>
-                        </li>
-                    </ul>
+                <div>
+                    <input type="text" placeholder="Search order ID" class="form-control bg-white" />
                 </div>
-            </header>
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Order List</h2>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <div class="row gx-3">
+                        <div class="col-lg-4 col-md-6 me-auto">
+                            <input type="text" placeholder="Search..." class="form-control" />
                         </div>
-                    </header>
-                    <!-- card-header end// -->
-
-                    
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th scope="col">Product Name</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">quantity</th>
-                                        <th scope="col">Total</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <%orderlist.forEach(order=>{%>
-                                       <% order.products.forEach(product=>{%>
-
-
-                                    <tr>
-                                        <td><%=order._id%></td>
-                                        <td><b><%=product.product.name%></b></td>
-                                        <td><%=product.product.price%></td>
-                                        <td><%=product.quantity%></td>
-                                        <td>₹<%=product.quantity*product.product.price %></td>
-                                        <td><span class="badge rounded-pill alert-warning"><%=product.status%></span></td>
-                                        <td class="text-end">
-                                            <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= product.product._id%>" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="/orderDetails?orderId=<%= order._id %>&productId=<%= product.product._id%>">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <%})%>
-
-
-                                    <%})%>
-
-                                </tbody>
-
-                            </table>
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select">
+                                <option>Status</option>
+                                <option>Active</option>
+                                <option>Disabled</option>
+                                <option>Show all</option>
+                            </select>
                         </div>
-                        <!-- table-responsive //end -->
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select">
+                                <option>Show 20</option>
+                                <option>Show 30</option>
+                                <option>Show 40</option>
+                            </select>
+                        </div>
                     </div>
-                    <!-- card-body end// -->
+                </header>
+                <!-- card-header end// -->
+
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <td>User ID</td>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">quantity</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" class="text-end">Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <%orderlist.forEach(order=>{%>
+                                    <% order.products.forEach(product=>{%>
+
+
+                                        <tr>
+                                            <td>
+                                                <%=order._id%>
+                                            </td>
+                                            <td>
+                                                <%=order.user%>
+                                            </td>
+                                            <td><b>
+                                                    <%=product.product.name%>
+                                                </b></td>
+                                            <td>
+                                                <%=product.product.price%>
+                                            </td>
+                                            <td>
+                                                <%=product.quantity%>
+                                            </td>
+                                            <td>₹<%=product.quantity*product.product.price %>
+                                            </td>
+                                            <td><span class="badge rounded-pill alert-warning">
+                                                    <%=product.status%>
+                                                </span></td>
+                                                <td class="text-end">
+                                                    <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                                                    <div class="dropdown d-inline-block">
+                                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Change Status
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <li><a onclick="delivered('<%=order.user%>', '<%=product.product._id%>')" class="dropdown-item" >Delivered</a></li>
+                                                            <li><a onclick="cancelled('<%=order.user%>', '<%=product.product._id%>')" class="dropdown-item">Cancelled</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                        </tr>
+                                        <%})%>
+                                            <%})%>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- table-responsive //end -->
                 </div>
-                <!-- card end// -->
-              
-            </section>
-            <!-- content-main end// -->
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        &copy; Nest - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">All rights reserved</div>
-                    </div>
+                <!-- card-body end// -->
+            </div>
+            <!-- card end// -->
+
+        </section>
+        <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; Nest - HTML Ecommerce Template .
                 </div>
-            </footer>
-        </main>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">All rights reserved</div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+
+    <script>
+        function delivered(userId,productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to change the status to delivered.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/statusDelivered', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({userId,productId})
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.message == 'succes') {
+                                window.location.reload();
+                            } else {
+                                console.log('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+
+        }
+
+
+
+
+
+        function cancelled(userId,productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to cancel the order.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/statusCancelled', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({userId,productId})
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.message == 'succes') {
+                                window.location.reload();
+                            } else {
+                                console.log('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+
+        }
+        
+    </script>
+</body>
+
 </html>

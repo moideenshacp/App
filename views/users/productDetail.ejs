@@ -105,7 +105,7 @@
 
                         <!-- <a href="/login"><i class="icon-user"></i>Login</a> -->
 
-                        <a href="wishlist.html" class="wishlist-link">
+                        <a href="/wishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
                             <!-- <span class="wishlist-txt"></span> -->
                         </a>
@@ -303,7 +303,7 @@
                                                         cart</span></a>
                                                 <%}%>
                                                     <div class="details-action-wrapper">
-                                                        <a href="#" class="btn-product btn-wishlist"
+                                                        <a onclick="Addwishlist('<%=productData.id%>')" class="btn-product btn-wishlist"
                                                             title="Wishlist"><span>Add to Wishlist</span></a>
                                                     </div><!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
@@ -498,20 +498,26 @@
                                                     </a>
 
                                                     <div class="product-action-vertical">
-                                                        <a href="#"
+                                                        <a onclick="Addwishlist('<%=product.id%>')"
                                                             class="btn-product-icon btn-wishlist btn-expandable"><span>add
                                                                 to wishlist</span></a>
-                                                        <a href="popup/quickView.html"
-                                                            class="btn-product-icon btn-quickview"
-                                                            title="Quick view"><span>Quick view</span></a>
-                                                        <a href="#" class="btn-product-icon btn-compare"
-                                                            title="Compare"><span>Compare</span></a>
+                                                        
                                                     </div><!-- End .product-action-vertical -->
+                                                    <%if(productData.quantity===0){%>
+                                                        <div class="product-action">
+                                                            <a class="btn-product" disabled><span>Out of
+                                                                    Stock</span></a>
+                                                        </div><!-- End .product-action -->
 
-                                                    <div class="product-action">
-                                                        <a onclick="Addcart('<%=productData._id%>',document.getElementById('qty').value)" id="addToCart" class="btn-product btn-cart"><span>add to
-                                                                cart</span></a>
-                                                    </div><!-- End .product-action -->
+
+                                                    <%}else{%>
+                                                        <div class="product-action">
+                                                            <a onclick="Addcart('<%=productData._id%>',document.getElementById('qty').value)" id="addToCart" class="btn-product btn-cart"><span>add to
+                                                                    cart</span></a>
+                                                        </div><!-- End .product-action -->
+
+                                                    <%}%>
+                                                    
                                     </figure><!-- End .product-media -->
 
                                     <div class="product-body">
@@ -995,6 +1001,49 @@
                             icon: 'error',
                             title: 'Oops...',
                             text: 'Product is already in cart!',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                    else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+
+        function Addwishlist(productId) {
+            fetch('/wishlist', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId})
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Product added to wishlist successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (data.fail) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Product is already in Wishlist!',
                             confirmButtonText: 'OK'
                         });
                     }

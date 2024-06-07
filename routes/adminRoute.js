@@ -72,6 +72,10 @@ admin_route.get('/edit-category',auth.isLogin,adminController.editCategoryLoad)
 admin_route.post('/edit-category',adminController.editcategory)
 
 //order
-admin_route.get('/order',adminController.loadOrder)
+admin_route.get('/order',auth.isLogin,adminController.loadOrder)
+admin_route.get('/orderDetail',auth.isLogin,adminController.orderDetail)
+admin_route.post('/statusDelivered',adminController.statusDelivered)
+admin_route.post('/statusCancelled',adminController.statusCancelled)
+
 
 module.exports = admin_route;

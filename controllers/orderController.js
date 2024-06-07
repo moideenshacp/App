@@ -66,10 +66,8 @@ const cancelOrder= async(req,res)=>{
             console.log(orderProduct.quantity+'22222222222222222');
             console.log(productData.quantity+'33333333333333');
 
-            // Increase the stock of the product by the cancelled quantity
             productData.quantity += orderProduct.quantity;
 
-            // Save the changes to the product
             await productData.save();
             
         }

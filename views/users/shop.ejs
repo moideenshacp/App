@@ -104,7 +104,7 @@
 
                         <!-- <a href="/login"><i class="icon-user"></i>Login</a> -->
                      
-                        <a href="wishlist.html" class="wishlist-link">
+                        <a href="/wishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
                             <!-- <span class="wishlist-txt"></span> -->
                         </a>
@@ -241,7 +241,7 @@
                                         </a>
 
                                         <div class="product-action-vertical">
-                                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                            <a onclick="Addwishlist('<%=product._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                         </div><!-- End .product-action -->
 
                                         <div class="product-action action-icon-top">
@@ -969,6 +969,47 @@
                 });
 }
 
+
+function Addwishlist(productId) {
+            fetch('/wishlist', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId})
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Product added to wishlist successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (data.fail) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Product is already in Wishlist!',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                    else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     </script>
 
 </body>
