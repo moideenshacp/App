@@ -31,6 +31,7 @@ admin_route.set('views','./views/admin');
 const auth = require('../middleware/adminAuth');
 
 const adminController = require('../controllers/adminController')
+const couponController = require('../controllers/couponController')
 
 //load login
 admin_route.get('/',auth.isLogout,adminController.loadLogin)
@@ -77,5 +78,9 @@ admin_route.get('/orderDetail',auth.isLogin,adminController.orderDetail)
 admin_route.post('/statusDelivered',adminController.statusDelivered)
 admin_route.post('/statusCancelled',adminController.statusCancelled)
 
+
+///coupon
+admin_route.get('/Addcoupon',auth.isLogin,couponController.couponAddLoad)
+admin_route.get('/coupon',auth.isLogin,couponController.couponList)
 
 module.exports = admin_route;

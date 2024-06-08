@@ -6,12 +6,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 // const logger = require('morgan');
 const session = require('express-session')
-const config = require('./config/config')
+const configFile = require('./config/config')
 const bodyParser = require('body-parser')
 const adminRouter = require('./routes/adminRoute');
 const usersRouter = require('./routes/userRoute');
 const nocache = require('nocache')
-// 
+
 require('dotenv').config()
 const passport = require('passport')
 require('./passportsetup')
@@ -22,7 +22,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(session({secret:config.sessionsecret}))
+app.use(session({secret:configFile.sessionsecret}))
 // app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

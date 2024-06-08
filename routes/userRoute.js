@@ -84,49 +84,49 @@ user_route.get('/productDetail',auth.isLogin,blockAuth.block,userController.prod
 user_route.get('/shop',auth.isLogin,blockAuth.block,userController.shop)
 
 //cart
-user_route.get('/cart',cartController.loadCart)
-user_route.post('/cart',cartController.addCart)
-user_route.post('/removeProduct',cartController.removeProduct)
-user_route.post('/totalPrice',cartController.totalPrice)
+user_route.get('/cart',auth.isLogin,cartController.loadCart)
+user_route.post('/cart',auth.isLogin,cartController.addCart)
+user_route.post('/removeProduct',auth.isLogin,cartController.removeProduct)
+user_route.post('/totalPrice',auth.isLogin,cartController.totalPrice)
 
 //create adress
-user_route.get('/addAdress',userController.loadNewAdress)
-user_route.post('/addAdress',userController.addAddress)
-user_route.post('/removeAddress',userController.removeAddress)
+user_route.get('/addAdress',auth.isLogin,userController.loadNewAdress)
+user_route.post('/addAdress',auth.isLogin,userController.addAddress)
+user_route.post('/removeAddress',auth.isLogin,userController.removeAddress)
 
 //edit address
-user_route.get('/edit-Address',userController.loadEditAddress)
-user_route.post('/edit-Address',userController.updateAddress)
+user_route.get('/edit-Address',auth.isLogin,userController.loadEditAddress)
+user_route.post('/edit-Address',auth.isLogin,userController.updateAddress)
 
 //load checkout
-user_route.get('/checkout',cartController.loadCheckout)
+user_route.get('/checkout',auth.isLogin,cartController.loadCheckout)
 //------------adddress add
-user_route.get('/checkoutAddress',cartController.checkoutAddressLoad)
-user_route.post('/checkoutAddress',cartController.checkoutAddress)
+user_route.get('/checkoutAddress',auth.isLogin,cartController.checkoutAddressLoad)
+user_route.post('/checkoutAddress',auth.isLogin,cartController.checkoutAddress)
 //-------------------edit adit
-user_route.get('/checkoutEditAddress',cartController.checkoutEditAddressLoad)
-user_route.post('/checkoutEditAddress',cartController.checkoutEditAddress)
+user_route.get('/checkoutEditAddress',auth.isLogin,cartController.checkoutEditAddressLoad)
+user_route.post('/checkoutEditAddress',auth.isLogin,cartController.checkoutEditAddress)
 
 //editprofile
-user_route.post('/editProfile',userController.editProfile)
+user_route.post('/editProfile',auth.isLogin,userController.editProfile)
 
 //forrgetpassword
-user_route.get('/forgetPassword',userController.forgetpasswordLoad)
-user_route.post('/forgetPassword',userController.forgetPassword)
-user_route.post('/verifyOtpPassword',userController.verifyOtpPassword)
-user_route.post('/resendotpPassword',userController.resendotpPassword)
-user_route.post('/updatePassword',userController.updatePassword)
+user_route.get('/forgetPassword',auth.isLogout,userController.forgetpasswordLoad)
+user_route.post('/forgetPassword',auth.isLogout,userController.forgetPassword)
+user_route.post('/verifyOtpPassword',auth.isLogout,userController.verifyOtpPassword)
+user_route.post('/resendotpPassword',auth.isLogout,userController.resendotpPassword)
+user_route.post('/updatePassword',auth.isLogout,userController.updatePassword)
 
 //cash on delivery
 
-user_route.post('/order',orderController.order)
-user_route.post('/cancelOrder',orderController.cancelOrder)
-user_route.get('/orderDetails',orderController.orderDetails)
+user_route.post('/order',auth.isLogin,orderController.order)
+user_route.post('/cancelOrder',auth.isLogin,orderController.cancelOrder)
+user_route.get('/orderDetails',auth.isLogin,orderController.orderDetails)
 
 
 //wishlist
-user_route.get('/wishlist',wishlistController.wishlistLoad)
-user_route.post('/wishlist',wishlistController.addWishlist)
-user_route.post('/removeProductWishlist',wishlistController.removeProductWishlist)
+user_route.get('/wishlist',auth.isLogin,wishlistController.wishlistLoad)
+user_route.post('/wishlist',auth.isLogin,wishlistController.addWishlist)
+user_route.post('/removeProductWishlist',auth.isLogin,wishlistController.removeProductWishlist)
 
 module.exports = user_route;

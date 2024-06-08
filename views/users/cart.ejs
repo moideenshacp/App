@@ -727,6 +727,7 @@
 
     <script>
         function removeProduct(productId, userId) {
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'You are about to remove this item from your cart.',
@@ -741,7 +742,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ productId })
+                        body: JSON.stringify({ productId})
                     })
                         .then(response => {
                             if (!response.ok) {

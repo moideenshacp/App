@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="/usercss/assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 </head>
 
 <body>
@@ -286,8 +289,8 @@
 
                                         <div>
                                             <label>
-                                                <input type="radio" name="paymentMethod" value="bankTransfer">
-                                                     bank transfer
+                                                <input type="radio" name="paymentMethod" value="Razorpay">
+                                                Razorpay
                                             </label>
                                         </div>
 
@@ -745,7 +748,7 @@
                             return response.json();
                         })
                         .then(data => {
-                            if (data.message == 'succes') {
+                            if (data.message == 'success') {
                                 window.location.href = '/profile';
                             } else {
                                 console.log('Error:', data.error);
