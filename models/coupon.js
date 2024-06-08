@@ -11,7 +11,7 @@ const couponSchema = mongoose.Schema({
     minAmount:{
         type:Number
     },
-    discout:{
+    discount:{
         type:Number
     },
     expireDate:{
@@ -31,6 +31,7 @@ const couponSchema = mongoose.Schema({
         },
         used:{
             type:Boolean,
+            default:false
 
         }
 
