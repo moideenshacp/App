@@ -273,7 +273,7 @@
                                                                             <%=cartProduct.product.name%>
                                                                         </td>
                                                                         <td>
-                                                                            <%=cartProduct.product.price*cartProduct.quantity%>
+                                                                            ₹<%=cartProduct.product.price*cartProduct.quantity%>
                                                                         </td>
 
                                                                     </tr>
@@ -285,7 +285,7 @@
                                                                             <tr class="summary-subtotal">
                                                                                 <td>Subtotal:</td>
                                                                                 <td>
-                                                                                    <%=subtotal%>
+                                                                                    ₹<%=subtotal%>
                                                                                 </td>
                                                                             </tr><!-- End .summary-subtotal -->
                                                                             <tr>
@@ -295,7 +295,7 @@
                                                                             <tr class="summary-total">
                                                                                 <td>Total:</td>
                                                                                 <td>
-                                                                                    <%=subtotal%>
+                                                                                    ₹<%=subtotal%>
                                                                                 </td>
                                                                             </tr><!-- End .summary-total -->
                                                         </tbody>
@@ -821,7 +821,7 @@
                         key: data.key_id,
                         amount: data.amount,
                         currency: "INR",
-                        name: "Zephyr",
+                        name: "MARS _STORE",
                         description: "Transaction Description",
                         image: "https://example.com/your_logo",
                         order_id: data.order_id,
@@ -898,6 +898,26 @@
         form.addEventListener('submit', (event) => {
             event.preventDefault()
             const paymentMethod = form.elements['paymentMethod'].value;
+            const selectedAddress = form.elements['selectedAddress'].value;
+
+        if (!selectedAddress) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select an address!',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        if (!paymentMethod) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select a payment method!',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
             console.log(paymentMethod);
             if (paymentMethod == 'Razorpay') {
                 razorpay()

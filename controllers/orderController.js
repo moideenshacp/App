@@ -153,6 +153,7 @@ const cancelOrder= async(req,res)=>{
         const productId = req.body.productId;
         const userId = req.session.user_id
         console.log(productId+'1111111111111111111111');
+        const productCart = await product.findOne({_id:productId})
         const orderData = await Order.find({user:userId})
         for(i=0;i<orderData.length;i++){
         if(orderData[i].products.find(product => product.product.toString() === productId)){
@@ -172,10 +173,18 @@ const cancelOrder= async(req,res)=>{
             productData.quantity += orderProduct.quantity;
 
             await productData.save();
+           console.log(orderData[dataIndex].paymentMethod,'payyyyyyyyyyyyyyyyyyyyy');
             
-        }
-        res.status(200).json({ message: 'succes' });
-        
+            if (orderData[dataIndex].paymentMethod === 'Razorpay') {
+                const user = await users.findById(userId);
+                user.wallet += productCart.price * orderProduct.quantity;
+                await user.save();
+            }
+            res.status(200).json({ message: 'succes' });
+            
+        }else{
+            res.status(404).json({ message: 'Product not found in orders' });
+         }
 
         
     } catch (error) {

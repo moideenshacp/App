@@ -22,6 +22,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
 <style>
     .total-sales {
     background-color: #f4f4f4; /* Light gray background */
@@ -195,35 +199,34 @@
                 <div>
                     <h2 class="content-title card-title">Sales List</h2>
                 </div>
-                <div>
+                <!-- <div>
                     <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                </div>
+                </div> -->
             </div>
             <div class="card mb-4">
                 <header class="card-header">
                     <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
+                        <!-- <div class="col-lg-4 col-md-6 me-auto">
                             <input type="text" placeholder="Search..." class="form-control" />
-                        </div>
+                        </div> -->
                         <div class="col-lg-2 col-6 col-md-3">
                             <select class="form-select">
-                                <option>Status</option>
-                                <option>Active</option>
-                                <option>Disabled</option>
-                                <option>Show all</option>
+                                <option>Daily</option>
+                                <option>Weekly</option>
+                                <option>Yearly</option>
                             </select>
                         </div>
-                        <div class="col-lg-2 col-6 col-md-3">
+                        <!-- <div class="col-lg-2 col-6 col-md-3">
                             <select class="form-select">
                                 <option>Show 20</option>
                                 <option>Show 30</option>
                                 <option>Show 40</option>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
                 </header>
                 <!-- card-header end// -->
-
+                
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -245,13 +248,14 @@
 
                             <tbody>
                                 <% let totalSalesAmount = 0; %>
+                                <% let deliveredProductCount = 0; %>
                                 <%orderlist.forEach((order,index)=>{%>
                                     <% order.products.forEach(product=>{%>
                                         <%if(product.status=='delivered'){%>
 
                                         <%if(product.status=='delivered'){%>
                                             <% totalSalesAmount += product.quantity * product.product.price; %>
-
+                                            <% deliveredProductCount += 1; %>
                                         <%}%>
 
                                         <tr>
@@ -291,14 +295,29 @@
                                                 <td id="total-amounts" colspan="8" class="text-end"><b>Total Sales Amount:</b></td>
                                                 <td id="total-amount"><b>₹<%= totalSalesAmount %></b></td>
                                             </tr>
+                                            <tr class="total-sales">
+                                                <td id="total-amounts" colspan="8" class="text-end"><b>Total Delivered Products:</b></td>
+                                                <td id="total-amount"><b><%= deliveredProductCount %></b></td>
+                                            </tr>
                             </tbody>
 
                         </table>
                     </div>
                     <!-- table-responsive //end -->
                 </div>
+                
                 <!-- card-body end// -->
             </div>
+            <button id="download-pdf-btn" class="btn btn-primary">
+                <i class="icon material-icons md-file_download"></i>
+                <span class="text">Download PDF</span>
+            </button>
+            <button id="download-excel-btn" class="btn btn-primary">
+                <i class="icon material-icons md-file_download"></i>
+                <span class="text">Download Excel</span>
+            </button>
+            
+            
             <!-- card end// -->
 
         </section>
@@ -325,89 +344,98 @@
     <!-- Main Script -->
     <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
 
-    <script>
-        function delivered(userId,productId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You are about to change the status to delivered.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, change it!',
-                cancelButtonText: 'No, keep it'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/admin/statusDelivered', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({userId,productId})
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.message == 'succes') {
-                                window.location.reload();
-                            } else {
-                                console.log('Error:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+    
+<script>
+    document.getElementById('download-pdf-btn').addEventListener('click', function() {
+        var element = document.querySelector('.table'); // Select the table element
+        html2pdf(element); // Convert the table element to PDF
+    });
+</script>
+
+<script>
+    document.getElementById('download-excel-btn').addEventListener('click', exportToExcel);
+
+    function exportToExcel() {
+    // Get the table element
+    var table = document.querySelector('.table');
+
+    // Convert the table rows to an array of arrays representing rows and cells
+    var rows = Array.from(table.querySelectorAll('tr')).map(row => 
+        Array.from(row.querySelectorAll('td, th')).map(cell => cell.innerText)
+    );
+
+    // Create a new workbook
+    var wb = XLSX.utils.book_new();
+
+    // Add a worksheet with the table data
+    var ws = XLSX.utils.aoa_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // Export the workbook to an Excel file
+    XLSX.writeFile(wb, 'table_data.xlsx');
+}
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const filterDropdown = document.querySelector('.form-select');
+    
+        filterDropdown.addEventListener('change', () => {
+            const selectedFilter = filterDropdown.value;
+            fetchOrders(selectedFilter);
+        });
+    });
+    
+    function fetchOrders(filter) {
+        fetch(`/orders?filter=${filter}`)
+            .then(response => response.json())
+            .then(data => {
+                renderOrders(data);
+            })
+            .catch(error => console.error('Error fetching orders:', error));
+    }
+    
+    function renderOrders(orders) {
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+    
+        let totalSalesAmount = 0;
+    
+        orders.forEach((order, index) => {
+            order.products.forEach(product => {
+                if (product.status === 'delivered') {
+                    totalSalesAmount += product.quantity * product.product.price;
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${order._id}</td>
+                        <td>${order.date}</td>
+                        <td>${order.user.name}</td>
+                        <td><b>${product.product.name}</b></td>
+                        <td>${product.product.price}</td>
+                        <td>${product.quantity}</td>
+                        <td><span class="badge rounded-pill alert-warning">${product.status}</span></td>
+                        <td>₹${product.quantity * product.product.price}</td>
+                    `;
+    
+                    tbody.appendChild(row);
                 }
             });
-
-        }
-
-
-
-
-
-        function cancelled(userId,productId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You are about to cancel the order.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, cancel it!',
-                cancelButtonText: 'No, keep it'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/admin/statusCancelled', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({userId,productId})
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.message == 'succes') {
-                                window.location.reload();
-                            } else {
-                                console.log('Error:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                }
-            });
-
-        }
-        
+        });
+    
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'total-sales';
+        totalRow.innerHTML = `
+            <td id="total-amounts" colspan="8" class="text-end"><b>Total Sales Amount:</b></td>
+            <td id="total-amount"><b>₹${totalSalesAmount}</b></td>
+        `;
+        tbody.appendChild(totalRow);
+    }
     </script>
-
+    
     
 </body>
 
