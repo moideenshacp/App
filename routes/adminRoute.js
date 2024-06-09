@@ -83,5 +83,11 @@ admin_route.post('/statusCancelled',adminController.statusCancelled)
 admin_route.get('/Addcoupon',auth.isLogin,couponController.couponAddLoad)
 admin_route.get('/coupon',auth.isLogin,couponController.couponList)
 admin_route.post('/Addcoupon',auth.isLogin,couponController.couponAdd)
+admin_route.get('/couponEdit',auth.isLogin,couponController.editCouponLoad)
+admin_route.post('/couponEdit',auth.isLogin,couponController.updateCoupon)
+admin_route.get('/couponList',auth.isLogin,couponController.couponShow)
+
+//sales report
+admin_route.get('/salesReport',auth.isLogin,adminController.salesReportLoad)
 
 module.exports = admin_route;

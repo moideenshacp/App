@@ -93,7 +93,7 @@
          
                   
                     <li class="menu-item">
-                        <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
+                        <a class="menu-link" href="/admin/salesReport"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
                     </li>
                         <!-- <li class="menu-item">
                             <a class="menu-link" disabled href="#">
@@ -267,20 +267,7 @@
         <!-- Main Script -->
         <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
 
-        <script>
-            function previewImage(input, previewId) {
-                const preview = document.getElementById(previewId);
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        preview.src = e.target.result;
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                } else {
-                    preview.src = "";
-                }
-            }
-        </script>
+        
 
 
     </body>

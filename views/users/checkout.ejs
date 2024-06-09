@@ -3,6 +3,7 @@
 
 
 <!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -173,11 +174,11 @@
         </header><!-- End .header -->
 
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">Checkout<span>Shop</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
+            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">Checkout<span>Shop</span></h1>
+                </div><!-- End .container -->
+            </div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -189,130 +190,150 @@
             </nav><!-- End .breadcrumb-nav -->
 
             <div class="page-content">
-            	<div class="checkout">
-	                <div class="container">
-            			<div class="checkout-discount">
-            				<form action="#">
-        						<input type="text" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-            				</form>
-            			</div><!-- End .checkout-discount -->
-                        
+                <div class="checkout">
+                    <div class="container">
+                        <div class="checkout-discount">
+                            <form action="#">
+                                <input type="text" class="form-control" required id="checkout-discount-input">
+                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click
+                                        here to enter your code</span></label>
+                            </form>
+                        </div><!-- End .checkout-discount -->
+
                         <a href="/checkoutAddress"><button type="submit" class="btn btn-outline-primary-2">
-                            <span>Create New Address</span>
-                            <i class="icon-long-arrow-right"></i>
-                        </button></a> 
-                        
-            			<form id="form">
-		                	<div class="row">
+                                <span>Create New Address</span>
+                                <i class="icon-long-arrow-right"></i>
+                            </button></a>
+
+                        <form id="form">
+                            <div class="row">
                                 <%if(addressescount<=0){%>
 
-		                		<div class="col-lg-9">
-		                			
-		                		</div><!-- End .col-lg-9 -->
-                                <%}else{%>
-                                    
                                     <div class="col-lg-9">
-                                        
-                                        <br><br>
-                                        <% address.addresses.forEach(address => { %>
-                                            
-                                        <div class="card card-dashboard" style="width: 500px; margin-bottom: 20px;">
-                                            
-                                            <div class="card-body">
-                                                
-                                                
-                                                <h3 class="card-title"><%=address.name%></h3><!-- End .card-title -->
 
-                                                <p>
-                                                    
-                                                    <%= address.name %><br>
-                                                    <%= address.address %><br>
-                                                    <%= address.state + ',' + address.pincode %><br>
-                                                    <%= address.phone %><br>
-                                                    <%= address.email %><br>
-                                                    <a href="/checkoutEditAddress?id=<%=address._id%>">Edit <i class="icon-edit"></i></a></p>
-                                                    <input type="radio" name="selectedAddress"  value="<%= address._id %>" style="position: absolute; top: 5px; right: 5px;">
-                                                    <label for="" style="position: absolute; top: 5px; right: 25px;"></label>
-                                                </p>
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .card-dashboard -->
-                                        <% }) %>
-                                    </div><!-- End .col-lg-6 -->
-                                    
-                                    <%}%>
+                                    </div><!-- End .col-lg-9 -->
+                                    <%}else{%>
+
+                                        <div class="col-lg-9">
+
+                                            <br><br>
+                                            <% address.addresses.forEach(address=> { %>
+
+                                                <div class="card card-dashboard"
+                                                    style="width: 500px; margin-bottom: 20px;">
+
+                                                    <div class="card-body">
 
 
-		                		<aside class="col-lg-3">
-		                			<div class="summary">
-		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+                                                        <h3 class="card-title">
+                                                            <%=address.name%>
+                                                        </h3><!-- End .card-title -->
 
-		                				<table class="table table-summary">
-		                					<thead>
-		                						<tr>
-		                							<th>Product</th>
-		                							<th>Total</th>
-		                						</tr>
-		                					</thead>
+                                                        <p>
 
-		                					<tbody>
-                                                <% cartPoducts.forEach(cart=> { %>
-                                                    <% cart.products.forEach(cartProduct=> { %>                                                    <tr>
-                                                        <td><%=cartProduct.product.name%></td>
-                                                        <td><%=cartProduct.product.price*cartProduct.quantity%></td>
+                                                            <%= address.name %><br>
+                                                                <%= address.address %><br>
+                                                                    <%= address.state + ',' + address.pincode %><br>
+                                                                        <%= address.phone %><br>
+                                                                            <%= address.email %><br>
+                                                                                <a
+                                                                                    href="/checkoutEditAddress?id=<%=address._id%>">Edit
+                                                                                    <i class="icon-edit"></i></a>
+                                                        </p>
+                                                        <input type="radio" name="selectedAddress"
+                                                            value="<%= address._id %>"
+                                                            style="position: absolute; top: 5px; right: 5px;">
+                                                        <label for=""
+                                                            style="position: absolute; top: 5px; right: 25px;"></label>
+                                                        </p>
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .card-dashboard -->
+                                                <% }) %>
+                                        </div><!-- End .col-lg-6 -->
 
-                                                    </tr>
-                                                    <%})%>
-                                                <%})%>
-		                						
+                                        <%}%>
 
-		                						
-		                						<tr class="summary-subtotal">
-		                							<td>Subtotal:</td>
-		                							<td><%=subtotal%></td>
-		                						</tr><!-- End .summary-subtotal -->
-		                						<tr>
-		                							<td>Shipping:</td>
-		                							<td>Free shipping</td>
-		                						</tr>
-		                						<tr class="summary-total">
-		                							<td>Total:</td>
-		                							<td><%=subtotal%></td>
-		                						</tr><!-- End .summary-total -->
-		                					</tbody>
-		                				</table><!-- End .table table-summary -->
-                                        <div>
-                                            <br>
-                                            <h6>*payment Methods</h6>
-                                        </div>
-                                        <br>
 
-                                        <div>
-                                            <label>
-                                                <input type="radio" name="paymentMethod" value="Razorpay">
-                                                Razorpay
-                                            </label>
-                                        </div>
+                                            <aside class="col-lg-3">
+                                                <div class="summary">
+                                                    <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
-                                        <div>
-                                            <label>
-                                                <input type="radio" name="paymentMethod" value="cashOnDelivery">
-                                                Cash on delivery
-                                            </label>
-                                        </div>
+                                                    <table class="table table-summary">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Product</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
 
-                                                                          
-                                        
+                                                        <tbody>
+                                                            <% cartPoducts.forEach(cart=> { %>
+                                                                <% cart.products.forEach(cartProduct=> { %> <tr>
+                                                                        <td>
+                                                                            <%=cartProduct.product.name%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=cartProduct.product.price*cartProduct.quantity%>
+                                                                        </td>
 
-		                				<button onclick="order()"  class="btn btn-outline-primary-2 btn-order btn-block">
-		                					<span class="btn-text">Place Order</span>
-		                					<span class="btn-hover-text">Proceed to Checkout</span>
-		                				</button>
-		                			</div><!-- End .summary -->
-		                		</aside><!-- End .col-lg-3 -->
-		                	</div><!-- End .row -->
-            			</form>
-	                </div><!-- End .container -->
+                                                                    </tr>
+                                                                    <%})%>
+                                                                        <%})%>
+
+
+
+                                                                            <tr class="summary-subtotal">
+                                                                                <td>Subtotal:</td>
+                                                                                <td>
+                                                                                    <%=subtotal%>
+                                                                                </td>
+                                                                            </tr><!-- End .summary-subtotal -->
+                                                                            <tr>
+                                                                                <td>Shipping:</td>
+                                                                                <td>Free shipping</td>
+                                                                            </tr>
+                                                                            <tr class="summary-total">
+                                                                                <td>Total:</td>
+                                                                                <td>
+                                                                                    <%=subtotal%>
+                                                                                </td>
+                                                                            </tr><!-- End .summary-total -->
+                                                        </tbody>
+                                                    </table><!-- End .table table-summary -->
+                                                    <div>
+                                                        <br>
+                                                        <h6>*payment Methods</h6>
+                                                    </div>
+                                                    <br>
+
+                                                    <div>
+                                                        <label>
+                                                            <input type="radio" name="paymentMethod" value="Razorpay">
+                                                            Online Payment
+                                                        </label>
+                                                    </div>
+
+                                                    <div>
+                                                        <label>
+                                                            <input type="radio" name="paymentMethod"
+                                                                value="cashOnDelivery">
+                                                            Cash on delivery
+                                                        </label>
+                                                    </div>
+
+
+
+
+                                                    <button type="submit"
+                                                        class="btn btn-outline-primary-2 btn-order btn-block">
+                                                        <span class="btn-text">Place Order</span>
+                                                        <span class="btn-hover-text">Proceed to Checkout</span>
+                                                    </button>
+                                                </div><!-- End .summary -->
+                                            </aside><!-- End .col-lg-3 -->
+                            </div><!-- End .row -->
+                        </form>
+                    </div><!-- End .container -->
                 </div><!-- End .checkout -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
@@ -412,10 +433,11 @@
 
             <form action="#" method="get" class="mobile-search">
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
+                    placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
-            
+
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li class="active">
@@ -455,10 +477,12 @@
                             <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
                             <li><a href="category.html">Shop Grid 3 Columns</a></li>
                             <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
+                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span
+                                            class="tip tip-hot">Hot</span></span></a></li>
                             <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>
                             <li><a href="product-category-boxed.html">Product Category Boxed</a></li>
-                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span
+                                            class="tip tip-new">New</span></span></a></li>
                             <li><a href="cart.html">Cart</a></li>
                             <li><a href="checkout.html">Checkout</a></li>
                             <li><a href="wishlist.html">Wishlist</a></li>
@@ -470,7 +494,8 @@
                         <ul>
                             <li><a href="product.html">Default</a></li>
                             <li><a href="product-centered.html">Centered</a></li>
-                            <li><a href="product-extended.html"><span>Extended Info<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-extended.html"><span>Extended Info<span
+                                            class="tip tip-new">New</span></span></a></li>
                             <li><a href="product-gallery.html">Gallery</a></li>
                             <li><a href="product-sticky.html">Sticky Info</a></li>
                             <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
@@ -588,23 +613,28 @@
                         <div class="form-tab">
                             <ul class="nav nav-pills nav-fill" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
+                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin"
+                                        role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                                        aria-controls="register" aria-selected="false">Register</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="tab-content-5">
-                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                                <div class="tab-pane fade show active" id="signin" role="tabpanel"
+                                    aria-labelledby="signin-tab">
                                     <form action="#">
                                         <div class="form-group">
                                             <label for="singin-email">Username or email address *</label>
-                                            <input type="text" class="form-control" id="singin-email" name="singin-email" required>
+                                            <input type="text" class="form-control" id="singin-email"
+                                                name="singin-email" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
                                             <label for="singin-password">Password *</label>
-                                            <input type="password" class="form-control" id="singin-password" name="singin-password" required>
+                                            <input type="password" class="form-control" id="singin-password"
+                                                name="singin-password" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
@@ -614,8 +644,10 @@
                                             </button>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
-                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
+                                                <input type="checkbox" class="custom-control-input"
+                                                    id="signin-remember">
+                                                <label class="custom-control-label" for="signin-remember">Remember
+                                                    Me</label>
                                             </div><!-- End .custom-checkbox -->
 
                                             <a href="#" class="forgot-link">Forgot Your Password?</a>
@@ -643,12 +675,14 @@
                                     <form action="#">
                                         <div class="form-group">
                                             <label for="register-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="register-email" name="register-email" required>
+                                            <input type="email" class="form-control" id="register-email"
+                                                name="register-email" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
                                             <label for="register-password">Password *</label>
-                                            <input type="password" class="form-control" id="register-password" name="register-password" required>
+                                            <input type="password" class="form-control" id="register-password"
+                                                name="register-password" required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
@@ -658,8 +692,10 @@
                                             </button>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                                <input type="checkbox" class="custom-control-input" id="register-policy"
+                                                    required>
+                                                <label class="custom-control-label" for="register-policy">I agree to the
+                                                    <a href="#">privacy policy</a> *</label>
                                             </div><!-- End .custom-checkbox -->
                                         </div><!-- End .form-footer -->
                                     </form>
@@ -690,10 +726,10 @@
     </div><!-- End .modal -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
-        $(document).ready(function(){
-            $('.card-header a').click(function(){
+        $(document).ready(function () {
+            $('.card-header a').click(function () {
                 var targetCollapse = $(this).attr('href');
                 $('.collapse.show').collapse('hide');
                 $(targetCollapse).collapse('show');
@@ -711,53 +747,168 @@
     <script src="assets/js/main.js"></script>
 
     <script>
-         function order() {
-    const form = document.getElementById('form');
-    const selectedAddress = form.elements['selectedAddress'].value;
-    const paymentMethod = form.elements['paymentMethod'].value;
-    const subtotal =" <%=subtotal%>";
-    if (!selectedAddress || !paymentMethod) {
-        // Display SweetAlert error message
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Please select both address and payment method before placing the order.',
-            confirmButtonText: 'OK'
-        });
-        return; 
-    }
+        const form = document.getElementById('form');
 
-    let datas = {
-        selectedAddress,
-        paymentMethod,
-        subtotal
-    };
-
-
-    fetch('/order', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datas)
-    })
-    .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.message == 'success') {
-                                window.location.href = '/profile';
-                            } else {
-                                console.log('Error:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
+        function cashOnDelivery() {
+            const selectedAddress = form.elements['selectedAddress'].value;
+            const paymentMethod = form.elements['paymentMethod'].value;
+            const subtotal = parseFloat("<%= subtotal %>");
+            let datas = {
+                selectedAddress,
+                paymentMethod,
+                subtotal
+            };
+            fetch('/order', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Order Success',
+                            text: 'Your order has been placed successfully!',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/profile';
                         });
-                }
+                    } else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        }
+
+
+
+        function razorpay() {
+            const selectedAddress = form.elements['selectedAddress'].value;
+            const paymentMethod = form.elements['paymentMethod'].value;
+            const subtotal = parseFloat("<%= subtotal %>");
+            let datas = {
+                selectedAddress,
+                paymentMethod,
+                subtotal
+            };
+            fetch('/razorpay', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    var options = {
+                        key: data.key_id,
+                        amount: data.amount,
+                        currency: "INR",
+                        name: "Zephyr",
+                        description: "Transaction Description",
+                        image: "https://example.com/your_logo",
+                        order_id: data.order_id,
+                        handler: function (response) {
+                            const requestData = {
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                selectedAddress: datas.selectedAddress,
+                                paymentMethod: datas.paymentMethod,
+                                subtotal: datas.subtotal
+                            };
+                            fetch('/verifySignature', {
+                                method: 'post',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ requestData }),
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Order Success',
+                                            text: 'Your order has been placed successfully!',
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            window.location.href = '/profile';
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Order Failed',
+                                            text: 'Signature verification failed!',
+                                            confirmButtonText: 'OK'
+                                        });
+                                        console.log('Error:', data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Order Failed',
+                                        text: 'An error occurred!',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        },
+                        prefill: {
+                            name: "Customer Name",
+                            email: "customer_email@example.com",
+                            contact: "customer_phone",
+                        },
+                        theme: {
+                            color: "#192e68",
+                        },
+                    };
+                    var paymentGateway = new Razorpay(options);
+                    paymentGateway.open();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault()
+            const paymentMethod = form.elements['paymentMethod'].value;
+            console.log(paymentMethod);
+            if (paymentMethod == 'Razorpay') {
+                razorpay()
+            } else if (paymentMethod == 'cashOnDelivery') {
+                cashOnDelivery()
+            }
+
+
+        })
+
+
 
     </script>
 
@@ -766,4 +917,5 @@
 
 
 <!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+
 </html>

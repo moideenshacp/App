@@ -530,7 +530,7 @@ const statusDelivered= async(req,res)=>{
         let dataIndex=0
         const productId = req.body.productId;
         const userId = req.body.userId;
-        console.log(productId+'1111111111111111111111');
+        console.log(productId+'11111111111111111111110');
         const orderData = await Order.find({user:userId})
         for(i=0;i<orderData.length;i++){
         if(orderData[i].products.find(product => product.product.toString() === productId)){
@@ -589,6 +589,16 @@ const statusCancelled= async(req,res)=>{
     }
 }
 
+const salesReportLoad = async(req,res)=>{
+    try {
+        const orderlist = await Order.find().populate('products.product').populate('user')
+
+        res.render('salesReport',{orderlist})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 module.exports = {
     loadLogin,
@@ -612,6 +622,7 @@ module.exports = {
     loadOrder,
     orderDetail,
     statusDelivered,
-    statusCancelled
+    statusCancelled,
+    salesReportLoad
   
 }

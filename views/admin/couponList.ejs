@@ -84,7 +84,7 @@
          
                   
                     <li class="menu-item">
-                        <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
+                        <a class="menu-link" href="/admin/salesReport"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
                     </li>
                         <!-- <li class="menu-item">
                             <a class="menu-link" disabled href="#">
@@ -219,10 +219,12 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Price</th>
-                                        <th>Category</th>
-                                        
-                                        <th>Quantity</th>
+                                        <th>Code</th>
+                                        <th>MinAmout</th>
+                                        <th>Discout</th>
+
+                                        <th scope="col">Status</th>
+
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
@@ -245,28 +247,30 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                515151
+                                                <%=coupon.code%>
                                             </td>
                                             <td>
-                                                dcfvgbhn
+                                                <%=coupon.minAmount%>
                                             </td>
-                                            <!-- <td><span class="badge rounded-pill alert-success">Active</span></td> -->
-                                            <td>855</td>
+                                            <td><%=coupon.discount%></td>
+
+                                            <td><span class="badge rounded-pill alert-warning">
+                                                <%=coupon.status%>
+                                            </span></td>
                                             <td class="text-end">
                                                 <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                    <a href="" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Edit</a>
+                                                    <a href="/admin/couponEdit?id=<%=coupon._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Edit</a>
                                                 </button>
-                                                
+                                               <% if(coupon.status==false){%>
                                                 <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                    <a href="" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">List</a>
+                                                    <a href="/admin/couponList?id=<%=coupon._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">List</a>
                                                 </button>
-                                           
+                                               <%}else{%>
                                                 <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                    <a href="" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">UnList</a>
+                                                    <a href="/admin/couponList?id=<%=coupon._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">UnList</a>
                                                 </button>
-                                               
-                                                
-                                                
+                                               <%}%>
+   
                                             </td>
                                            
                                         </tr>
@@ -289,15 +293,6 @@
         <!-- Main Script -->
         <script src="/admincss/assets/js/main.js" type="text/javascript"></script>
 
-        <script>
-            <% if (typeof successMessage !== 'undefined') { %>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: '<%= successMessage %>',
-                    confirmButtonText: 'OK'
-                });
-            <% } %>
-        </script>
+       
     </body>
 </html>

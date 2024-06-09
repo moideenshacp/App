@@ -122,11 +122,16 @@ user_route.post('/updatePassword',auth.isLogout,userController.updatePassword)
 user_route.post('/order',auth.isLogin,orderController.order)
 user_route.post('/cancelOrder',auth.isLogin,orderController.cancelOrder)
 user_route.get('/orderDetails',auth.isLogin,orderController.orderDetails)
-
+//razorpay
+user_route.post('/razorpay',auth.isLogin,orderController.RazorpayOrder)
 
 //wishlist
 user_route.get('/wishlist',auth.isLogin,wishlistController.wishlistLoad)
 user_route.post('/wishlist',auth.isLogin,wishlistController.addWishlist)
 user_route.post('/removeProductWishlist',auth.isLogin,wishlistController.removeProductWishlist)
+
+
+//verify signature
+user_route.post('/verifySignature',auth.isLogin,orderController.verifySignature)
 
 module.exports = user_route;

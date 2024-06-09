@@ -15,7 +15,29 @@
     <link rel="shortcut icon" type="image/x-icon" href="/images/applogo.jpg" />
     <!-- Template CSS -->
     <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<style>
+    .total-sales {
+    background-color: #f4f4f4; /* Light gray background */
+    font-weight: bold; /* Bold text */
+    font-size: 1.1em; /* Larger font size */
+}
+#total-amount b {
+    font-weight: bold;
+    /* You can adjust the font-weight value to make it even bolder */
+}
+#total-amounts b {
+    font-weight: bold;
+    /* You can adjust the font-weight value to make it even bolder */
+}
+
+</style>
 
 </head>
 
@@ -24,11 +46,12 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <!-- <img src="/admincss/assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
+                <!-- <img src="assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" /> -->
                 <img src="/admincss/assets/imgs/theme/applogo.jpg" style="height: 120px;width: 130px;;" alt="marslogo">
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+                <button class="btn btn-icon btn-aside-minimize"><i
+                        class="text-muted material-icons md-menu_open"></i></button>
             </div>
         </div>
         <nav>
@@ -83,7 +106,7 @@
      
               
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/salesReport"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
+                    <a class="menu-link" href="/admin/salesReport"> <i class="icon material-icons md-stars"></i> <span class="text">Sales Report</span> </a>
                 </li>
                     <!-- <li class="menu-item">
                         <a class="menu-link" disabled href="#">
@@ -169,10 +192,12 @@
         </header>
         <section class="content-main">
             <div class="content-header">
-                <h2 class="content-title">Customers list</h2>
-                <!-- <div>
-                        <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a>
-                    </div> -->
+                <div>
+                    <h2 class="content-title card-title">Sales List</h2>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                </div>
             </div>
             <div class="card mb-4">
                 <header class="card-header">
@@ -180,7 +205,7 @@
                         <div class="col-lg-4 col-md-6 me-auto">
                             <input type="text" placeholder="Search..." class="form-control" />
                         </div>
-                        <div class="col-lg-2 col-md-3 col-6">
+                        <div class="col-lg-2 col-6 col-md-3">
                             <select class="form-select">
                                 <option>Status</option>
                                 <option>Active</option>
@@ -188,7 +213,7 @@
                                 <option>Show all</option>
                             </select>
                         </div>
-                        <div class="col-lg-2 col-md-3 col-6">
+                        <div class="col-lg-2 col-6 col-md-3">
                             <select class="form-select">
                                 <option>Show 20</option>
                                 <option>Show 30</option>
@@ -198,110 +223,192 @@
                     </div>
                 </header>
                 <!-- card-header end// -->
+
+
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
+
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <!-- <th>Status</th> -->
-                                    <th>Mobile</th>
-                                    <th class="text-end">Action</th>
+                                    <th>NO</th>
+                                    <th>Order ID</th>
+                                    <th>Orderdate</th>
+                                    <td>User Name</td>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">quantity</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                               
+                                <% let totalSalesAmount = 0; %>
+                                <%orderlist.forEach((order,index)=>{%>
+                                    <% order.products.forEach(product=>{%>
+                                        <%if(product.status=='delivered'){%>
 
-                                <% users.forEach(user=> { %>
-                                    <tr>
-                                        <td width="40%">
-                                            <a href="#" class="itemside">
-                                                <div class="left">
-                                                    <img src="/admincss/assets/imgs/people/appperson.png"
-                                                        class="img-sm img-avatar" alt="Userpic" />
-                                                </div>
-                                                <div class="info pl-3">
-                                                    <h6 class="mb-0 title">
-                                                        <%= user.name %>
-                                                    </h6>
-                                                    <small class="text-muted">Customer Id:<%=user._id%></small>
-                                                </div>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <%= user.email %>
-                                        </td>
-                                        <!-- <td><span class="badge rounded-pill alert-success">Active</span></td> -->
-                                        <td><%=user.mobile%></td>
-                                        <%if(user.is_blocked===false){%>
-                                            <td class="text-end">
-                                                <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                    <a href="/admin/blockuser/<%=user._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Block</a>
-                                                </button>
-                                                
-                                                
+                                        <%if(product.status=='delivered'){%>
+                                            <% totalSalesAmount += product.quantity * product.product.price; %>
+
+                                        <%}%>
+
+                                        <tr>
+                                            <td>
+                                                <%=index+1%>
                                             </td>
-
-
-
-                                            <%}else{%>
-                                                <td class="text-end">
-                                                    <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
-                                                        <a href="/admin/blockuser/<%=user._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Unblock</a>
-                                                    </button>
-                                                    
-                                                    
+                                            <td>
+                                                <%=order._id%>
+                                            </td>
+                                            <td>
+                                                <%=order.date%>
+                                            </td>
+                                            <td>
+                                                <%=order.user.name%>
+                                            </td>
+                                            <td><b>
+                                                    <%=product.product.name%>
+                                                </b></td>
+                                            <td>
+                                                <%=product.product.price%>
+                                            </td>
+                                            <td>
+                                                <%=product.quantity%>
+                                            </td>
+                                            
+                                            <td><span class="badge rounded-pill alert-warning">
+                                                    <%=product.status%>
+                                                </span></td>
+                                                <td>₹<%=product.quantity*product.product.price %>
                                                 </td>
-
-                                                <% } %>
-                                    </tr>
-                                    <% }) %>
-
-                           
-                                
-
-
+                                                
+                                        </tr>
+                                        <%}%>
+                                        <%})%>
+                                            <%})%>
+                                            <tr class="total-sales">
+                                                <td id="total-amounts" colspan="8" class="text-end"><b>Total Sales Amount:</b></td>
+                                                <td id="total-amount"><b>₹<%= totalSalesAmount %></b></td>
+                                            </tr>
                             </tbody>
+
                         </table>
-                        <!-- table-responsive.// -->
                     </div>
+                    <!-- table-responsive //end -->
                 </div>
                 <!-- card-body end// -->
             </div>
             <!-- card end// -->
-            <!-- <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div> -->
+
         </section>
         <!-- content-main end// -->
-
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; Nest - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">All rights reserved</div>
+                </div>
+            </div>
+        </footer>
     </main>
-    <script src="/admincss/assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="/admincss/assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="/admincss/assets/js/vendors/select2.min.js"></script>
-    <script src="/admincss/assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="/admincss/assets/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- <script src="/admincss/assets/js/vendors/blocking.js"></script> -->
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
-    <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
 
     <script>
+        function delivered(userId,productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to change the status to delivered.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/statusDelivered', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({userId,productId})
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.message == 'succes') {
+                                window.location.reload();
+                            } else {
+                                console.log('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+
+        }
 
 
 
+
+
+        function cancelled(userId,productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to cancel the order.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/statusCancelled', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({userId,productId})
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.message == 'succes') {
+                                window.location.reload();
+                            } else {
+                                console.log('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+
+        }
+        
     </script>
+
+    
 </body>
 
 </html>
