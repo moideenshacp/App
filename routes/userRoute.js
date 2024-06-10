@@ -134,4 +134,7 @@ user_route.post('/removeProductWishlist',auth.isLogin,wishlistController.removeP
 //verify signature
 user_route.post('/verifySignature',auth.isLogin,orderController.verifySignature)
 
+//wallet order
+user_route.post('/wallet',auth.isLogin,orderController.walletOrder)
+
 module.exports = user_route;

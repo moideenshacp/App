@@ -193,12 +193,23 @@
                 <div class="checkout">
                     <div class="container">
                         <div class="checkout-discount">
-                            <form action="#">
-                                <input type="text" class="form-control" required id="checkout-discount-input">
-                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click
-                                        here to enter your code</span></label>
+                            <form id="coupon-form">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" required id="checkout-discount-input" placeholder="Have a coupon? ">
+                                    </div>
+                                    <div class="col-auto"> <!-- Adjusted column width -->
+                                        <button type="submit" class="btn btn-primary btn-block">Apply</button>
+                                    </div>
+                                </div>
+                                <label for="checkout-discount-input" class="text-truncate"><span></span></label>
                             </form>
+                            <div id="coupon-discount"></div>
                         </div><!-- End .checkout-discount -->
+                        
+                        
+                        
+                        
 
                         <a href="/checkoutAddress"><button type="submit" class="btn btn-outline-primary-2">
                                 <span>Create New Address</span>
@@ -273,7 +284,8 @@
                                                                             <%=cartProduct.product.name%>
                                                                         </td>
                                                                         <td>
-                                                                            ₹<%=cartProduct.product.price*cartProduct.quantity%>
+                                                                            ₹
+                                                                            <%=cartProduct.product.price*cartProduct.quantity%>
                                                                         </td>
 
                                                                     </tr>
@@ -310,6 +322,12 @@
                                                         <label>
                                                             <input type="radio" name="paymentMethod" value="Razorpay">
                                                             Online Payment
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <label>
+                                                            <input type="radio" name="paymentMethod" value="Wallet">
+                                                            Wallet
                                                         </label>
                                                     </div>
 
@@ -791,6 +809,53 @@
 
         }
 
+        function Wallet() {
+            const selectedAddress = form.elements['selectedAddress'].value;
+            const paymentMethod = form.elements['paymentMethod'].value;
+            const subtotal = parseFloat("<%= subtotal %>");
+            let datas = {
+                selectedAddress,
+                paymentMethod,
+                subtotal
+            };
+            fetch('/wallet', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Order Success',
+                            text: 'Your order has been placed successfully!',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/profile';
+                        });
+                    } else if (data.fail) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Order Failed',
+                            text: 'insufficient balance in your wallet',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        console.log('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
 
 
         function razorpay() {
@@ -900,29 +965,31 @@
             const paymentMethod = form.elements['paymentMethod'].value;
             const selectedAddress = form.elements['selectedAddress'].value;
 
-        if (!selectedAddress) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Please select an address!',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-        if (!paymentMethod) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Please select a payment method!',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+            if (!selectedAddress) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select an address!',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            if (!paymentMethod) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select a payment method!',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
             console.log(paymentMethod);
             if (paymentMethod == 'Razorpay') {
                 razorpay()
             } else if (paymentMethod == 'cashOnDelivery') {
                 cashOnDelivery()
+            } else if (paymentMethod == 'Wallet') {
+                Wallet()
             }
 
 

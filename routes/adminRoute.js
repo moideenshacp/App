@@ -89,5 +89,4 @@ admin_route.get('/couponList',auth.isLogin,couponController.couponShow)
 
 //sales report
 admin_route.get('/salesReport',auth.isLogin,adminController.salesReportLoad)
-admin_route.get('/orders',auth.isLogin,adminController.filterSale)
 module.exports = admin_route;

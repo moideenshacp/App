@@ -12,6 +12,8 @@ const nodemailer = require('nodemailer');
 const passport = require('passport');
 const category = require('../models/category');
 const order = require('../models/order');
+const Coupon = require('../models/coupon');
+
 
 
 
@@ -441,8 +443,9 @@ const loadprofile = async(req,res)=>{
         const address = await Address.findOne({user:req.session.user_id})
         const orderPoducts = await Order.find({user:req.session.user_id}).populate('products.product')
         const orderAddress = await Order.findOne().populate('address')
+        const couponView = await Coupon.find()
 
-        res.render('profile',{address,user,orderPoducts})
+        res.render('profile',{address,user,orderPoducts,couponView})
     } catch (error) {
         console.log(error.message);
     }

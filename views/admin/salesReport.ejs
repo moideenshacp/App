@@ -234,7 +234,7 @@
 
                             <thead>
                                 <tr>
-                                    <th>NO</th>
+                                    <!-- <th>NO</th> -->
                                     <th>Order ID</th>
                                     <th>Orderdate</th>
                                     <td>User Name</td>
@@ -259,9 +259,9 @@
                                         <%}%>
 
                                         <tr>
-                                            <td>
+                                            <!-- <td>
                                                 <%=index+1%>
-                                            </td>
+                                            </td> -->
                                             <td>
                                                 <%=order._id%>
                                             </td>
@@ -292,11 +292,11 @@
                                         <%})%>
                                             <%})%>
                                             <tr class="total-sales">
-                                                <td id="total-amounts" colspan="8" class="text-end"><b>Total Sales Amount:</b></td>
+                                                <td id="total-amounts" colspan="7" class="text-end"><b>Total Sales Amount:</b></td>
                                                 <td id="total-amount"><b>₹<%= totalSalesAmount %></b></td>
                                             </tr>
                                             <tr class="total-sales">
-                                                <td id="total-amounts" colspan="8" class="text-end"><b>Total Delivered Products:</b></td>
+                                                <td id="total-amounts" colspan="7" class="text-end"><b>Total Delivered Products:</b></td>
                                                 <td id="total-amount"><b><%= deliveredProductCount %></b></td>
                                             </tr>
                             </tbody>
@@ -378,63 +378,7 @@
 </script>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const filterDropdown = document.querySelector('.form-select');
-    
-        filterDropdown.addEventListener('change', () => {
-            const selectedFilter = filterDropdown.value;
-            fetchOrders(selectedFilter);
-        });
-    });
-    
-    function fetchOrders(filter) {
-        fetch(`/orders?filter=${filter}`)
-            .then(response => response.json())
-            .then(data => {
-                renderOrders(data);
-            })
-            .catch(error => console.error('Error fetching orders:', error));
-    }
-    
-    function renderOrders(orders) {
-        const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = ''; // Clear existing rows
-    
-        let totalSalesAmount = 0;
-    
-        orders.forEach((order, index) => {
-            order.products.forEach(product => {
-                if (product.status === 'delivered') {
-                    totalSalesAmount += product.quantity * product.product.price;
-                    const row = document.createElement('tr');
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${order._id}</td>
-                        <td>${order.date}</td>
-                        <td>${order.user.name}</td>
-                        <td><b>${product.product.name}</b></td>
-                        <td>${product.product.price}</td>
-                        <td>${product.quantity}</td>
-                        <td><span class="badge rounded-pill alert-warning">${product.status}</span></td>
-                        <td>₹${product.quantity * product.product.price}</td>
-                    `;
-    
-                    tbody.appendChild(row);
-                }
-            });
-        });
-    
-        const totalRow = document.createElement('tr');
-        totalRow.className = 'total-sales';
-        totalRow.innerHTML = `
-            <td id="total-amounts" colspan="8" class="text-end"><b>Total Sales Amount:</b></td>
-            <td id="total-amount"><b>₹${totalSalesAmount}</b></td>
-        `;
-        tbody.appendChild(totalRow);
-    }
-    </script>
+
     
     
 </body>

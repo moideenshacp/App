@@ -614,44 +614,7 @@ const salesReportLoad = async (req, res) => {
     }
 }
 
-const filterSale = async (req, res) => {
-    try {
-        const filter = req.query.filter;
-        let dateRange;
 
-        const now = new Date();
-        if (filter === 'Daily') {
-            dateRange = {
-                $gte: new Date(now.setHours(0, 0, 0, 0)),
-                $lt: new Date(now.setHours(23, 59, 59, 999))
-            };
-        } else if (filter === 'Weekly') {
-            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-            const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 6));
-            dateRange = {
-                $gte: new Date(startOfWeek.setHours(0, 0, 0, 0)),
-                $lt: new Date(endOfWeek.setHours(23, 59, 59, 999))
-            };
-        } else if (filter === 'Yearly') {
-            const startOfYear = new Date(now.getFullYear(), 0, 1);
-            const endOfYear = new Date(now.getFullYear(), 11, 31);
-            dateRange = {
-                $gte: new Date(startOfYear.setHours(0, 0, 0, 0)),
-                $lt: new Date(endOfYear.setHours(23, 59, 59, 999))
-            };
-        }
-
-        // Assuming you're using Mongoose to interact with MongoDB
-        Order.find({ 'date': dateRange })
-            .populate('user')
-            .populate('products.product')
-            .then(orders => res.json(orders))
-            .catch(error => res.status(500).json({ error: error.message }));
-
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 module.exports = {
     loadLogin,
@@ -677,6 +640,5 @@ module.exports = {
     statusDelivered,
     statusCancelled,
     salesReportLoad,
-    filterSale
 
 }

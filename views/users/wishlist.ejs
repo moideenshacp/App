@@ -662,7 +662,7 @@
                             text: 'Product added to cart successfully.',
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            window.location.reload();
+                            window.location.href ='/cart'
                         });
                     } else if (data.fail) {
                         Swal.fire({

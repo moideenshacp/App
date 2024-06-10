@@ -48,7 +48,38 @@
 }
     </style>
 
-
+<style>
+    .coupon-list {
+        margin-top: 20px;
+    }
+    .coupon-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    .coupon-title {
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .badge {
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 5px;
+    }
+    .badge-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+    .badge-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+    .btn-outline-primary {
+        margin-left: 10px;
+    }
+</style>
 </head>
 
 <body>
@@ -322,12 +353,37 @@
                                     <% }) %>
                                     <% }) %>
 
-                                    
+                                    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
+                                        <div class="coupon-list row">
+                                            <% couponView.forEach((coupon,index) => { %>
+                                                <% if (new Date(coupon.expireDate) > new Date()){%>
 
-								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<p>No downloads available yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="coupon-item">
+                                                        <p>Name: <b><%= coupon.name %></b></p>
+                                                        <p>Expires on: <%= new Date(coupon.expireDate).toLocaleDateString() %></p>
+                                                        <p>Minimum Amount: <%= coupon.minAmount %></p>
+                                                        <p>Discount: <%= coupon.discount %>%</p>
+                                                        <% if (coupon.status === true) { %>
+                                                            <p>Status: <span class="badge badge-success">Available</span></p>
+                                                        <% } else { %>
+                                                            <p>Status: <span class="badge badge-danger">Not Available</span></p>
+                                                        <% } %>
+                                                        <p>Code: <span id="coupon-code-<%= index %>"><%= coupon.code %></span></p>
+                                                        <% if (coupon.status === true) { %>
+                                                        <button class="btn btn-sm btn-outline-primary mt-auto" onclick="copyToClipboard('coupon-code-<%= index %>')">Copy</button>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+
+                                                <%}%>
+
+                                            <% }) %>
+                                            <!-- Add more coupon items as needed -->
+                                        </div>
+                                    </div><!-- .End .tab-pane -->
+                                    
+                                    
                                     
                                 
                 
@@ -986,6 +1042,25 @@
     }
     
     </script>
+
+<script>
+    function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(copyText).then(function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Coupon Code Copied!',
+                text: copyText + ' has been copied to the clipboard.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }, function(err) {
+            console.error('Async: Could not copy text: ', err);
+        });
+    }
+</script>
+
+
 </body>
 
 

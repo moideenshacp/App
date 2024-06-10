@@ -12,6 +12,7 @@ require('dotenv').config();
 var {
     validatePaymentVerification,
   } = require("razorpay/dist/utils/razorpay-utils");
+const { fail } = require('assert');
 
 
 
@@ -60,6 +61,67 @@ const order = async(req,res)=>{
         console.log(error);
     }
 }
+const walletOrder = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        const userData = await users.findOne({ _id: userId });
+        const { selectedAddress, paymentMethod, subtotal } = req.body;
+        const productData = await Cart.findOne({ user: userId }).populate('products.product');
+        
+        if (!productData || !productData.products.length) {
+            return res.status(400).json({ error: "No products found in cart" });
+        }
+
+        const length = productData.products.length;
+
+        for (let i = 0; i < length; i++) {
+            const productId = productData.products[i].product._id;
+            const quantities = productData.products[i].quantity;
+            
+            const productCheck = await product.findByIdAndUpdate(
+                { _id: productId },
+                { $inc: { quantity: -quantities } }
+            );
+
+            if (!productCheck) {
+                return res.status(500).json({ error: "Error updating product quantity" });
+            }
+        }
+
+        if (userData.wallet >= subtotal) {
+            userData.wallet -= subtotal;
+            await userData.save();
+
+            const order = new Order({
+                user: userId,
+                products: productData.products,
+                paymentMethod: paymentMethod,
+                address: selectedAddress,
+                date: Date.now(),
+                totalAmount: subtotal
+            });
+
+            const savedOrder = await order.save();
+            if (!savedOrder) {
+                throw new Error("Order could not be saved");
+            }
+
+            const cartDeletion = await Cart.deleteOne({ user: userId });
+            if (!cartDeletion) {
+                throw new Error("Error clearing cart");
+            }
+
+            return res.status(200).json({ message: 'success' });
+        } else {
+            return res.status(200).json({fail: "payment failed"});
+        }
+
+    } catch (error) {
+        console.error("Error placing order:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 const RazorpayOrder = async (req,res)=>{
     try {
         const {subtotal} = req.body
@@ -175,7 +237,7 @@ const cancelOrder= async(req,res)=>{
             await productData.save();
            console.log(orderData[dataIndex].paymentMethod,'payyyyyyyyyyyyyyyyyyyyy');
             
-            if (orderData[dataIndex].paymentMethod === 'Razorpay') {
+            if (orderData[dataIndex].paymentMethod === 'Razorpay'|| orderData[dataIndex].paymentMethod === 'Wallet') {
                 const user = await users.findById(userId);
                 user.wallet += productCart.price * orderProduct.quantity;
                 await user.save();
@@ -233,5 +295,6 @@ module.exports={
     cancelOrder,
     orderDetails,
     RazorpayOrder,
-    verifySignature
+    verifySignature,
+    walletOrder
 }
