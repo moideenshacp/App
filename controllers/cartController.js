@@ -55,7 +55,7 @@ const loadCart = async(req,res)=>{
             return acc += val.product.price * val.quantity;
         }, 0);
     }
-            res.render('cart',{cartPoducts,subtotal,cartcount})
+            res.render('carts',{cartPoducts,subtotal,cartcount})
         }
        
     catch (error) {
