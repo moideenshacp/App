@@ -248,11 +248,13 @@
                                                         <div class="cart-product-quantity">
                                                             
                                                             
-                                                            <input type="number" class="form-control"
+                                                            <!-- <input type="number" class="form-control"
                                                                 value="<%= cartProduct.quantity %>" min="1"
                                                                 max="<%=cartProduct.product.quantity%>" id="qty"
                                                                 step="1" data-decimals="0" required
-                                                                onchange="updatePrice('<%=cartProduct.product._id%>',this.value)">
+                                                                onchange="updatePrice('<%=cartProduct.product._id%>',this.value)"> -->
+                                                                <input type="number" id="qty" class="form-control" value="<%= cartProduct.quantity %>" min="1" max="<%=cartProduct.product.quantity%>" step="1" data-decimals="0" required onchange="updatePrice('<%=cartProduct.product._id%>',this.value)">
+                                                                
                                                         </div><!-- End .cart-product-quantity -->
                                                         
                                                     </td>
@@ -806,6 +808,18 @@
 
 
     </script>
+    <script>
+        function changeQuantity(change, productId) {
+            const qtyInput = document.getElementById('qty-' + productId);
+            let currentValue = parseInt(qtyInput.value);
+            const newValue = currentValue + change;
+            
+            if (newValue >= parseInt(qtyInput.min) && newValue <= parseInt(qtyInput.max)) {
+                qtyInput.value = newValue;
+                updatePrice(productId, newValue);
+            }
+        }
+        </script>
 </body>
 
 

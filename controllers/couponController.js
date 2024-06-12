@@ -18,8 +18,15 @@ const couponAddLoad = async(req,res)=>{
 
 const couponList = async(req,res)=>{
     try {
-        const coupons = await Coupon.find({})
-        res.render('couponList',{coupons})
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 3;
+        const skip = (page - 1) * limit;
+        const coupons = await Coupon.find({}).skip(skip).limit(limit)
+
+        const totalCoupons = await Coupon.countDocuments();
+        const totalPages = Math.ceil(totalCoupons / limit);
+
+        res.render('couponList',{coupons,currentPage: page,totalPages,limit})
         
     } catch (error) {
         console.log(error);
@@ -33,6 +40,7 @@ const couponAdd = async(req,res)=>{
     try {
 
         const coupons = await Coupon.find({})
+        const today = new Date();
 
 
         const {name,code,minamount,discount,expireDate,description} = req.body
@@ -54,9 +62,13 @@ const couponAdd = async(req,res)=>{
         if (!description || /^\s*$/.test(description)) {
             return res.render('couponAdd', { messages: 'Invalid discription provided.', name, code, minamount, discount, expireDate, description });
         }
-        const existingCoupon = await Coupon.findOne({ name, code });
-        if (existingCoupon) {
-            return res.render('couponAdd', { messages: 'Coupon with the same name and code already exists.', name, code, minamount, discount, expireDate, description });
+        const existingCouponName = await Coupon.findOne({ name});
+        if (existingCouponName) {
+            return res.render('couponAdd', { messages: 'Coupon with the same name already exist', name, code, minamount, discount, expireDate, description });
+        }
+        const existingCouponCode = await Coupon.findOne({ code});
+        if (existingCouponCode) {
+            return res.render('couponAdd', { messages: 'Coupon with the same code already exist', name, code, minamount, discount, expireDate, description });
         }
 
         const newCoupon= new Coupon({

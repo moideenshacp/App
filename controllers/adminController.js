@@ -125,11 +125,14 @@ const loadHome = async (req, res) => {
 //customers
 const customers = async (req, res) => {
     try {
-
-        const userslist = await users.find({});
-
-
-        res.render('customers', { users: userslist })
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 3;
+        const skip = (page - 1) * limit;
+        const userslist = await users.find({}).skip(skip).limit(limit);
+        
+        const totalUsers = await users.countDocuments();
+        const totalPages = Math.ceil(totalUsers / limit);
+        res.render('customers', { users: userslist ,currentPage:page,limit,totalPages})
 
     } catch (error) {
         console.log(error.message);
@@ -196,10 +199,16 @@ const category = async (req, res) => {
 //product list
 const productList = async (req, res) => {
     try {
-        const productlist = await products.find({}).populate('category');
 
-        const categorylist = await categories.find({})
-        res.render('productlist', { productlist })
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
+        const productlist = await products.find({}).populate('category').skip(skip).limit(limit)
+        const categorylist = await categories.find({})        
+        const totalProducts = await products.countDocuments();
+        const totalPages = Math.ceil(totalProducts / limit);
+        res.render('productlist', { productlist,currentPage:page,limit,totalPages })
 
     } catch (error) {
         console.log(error.message);
@@ -501,8 +510,14 @@ const editProduct = async (req, res) => {
 //order
 const loadOrder = async (req, res) => {
     try {
-        const orderlist = await Order.find().populate('products.product')
-        res.render('order', { orderlist })
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 3;
+        const skip = (page - 1) * limit;
+        const orderlist = await Order.find().populate('products.product').skip(skip).limit(limit);
+
+        const totalOrders = await Order.countDocuments();
+        const totalPages = Math.ceil(totalOrders / limit);
+        res.render('order', { orderlist ,currentPage: page,totalPages,limit})
     } catch (error) {
         console.log(error);
     }

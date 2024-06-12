@@ -137,4 +137,7 @@ user_route.post('/verifySignature',auth.isLogin,orderController.verifySignature)
 //wallet order
 user_route.post('/wallet',auth.isLogin,orderController.walletOrder)
 
+//filter shop
+user_route.post('/filter',auth.isLogin,userController.filter)
+
 module.exports = user_route;

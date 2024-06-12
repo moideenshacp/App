@@ -482,9 +482,24 @@ const productDetail = async(req,res)=>{
 
 const shop = async(req,res)=>{
     try {
-        const productData = await products.find({}).populate('category')
-        
-        res.render('shop',{productData})
+
+        const searchQuery = req.query.search; 
+
+        let productData;
+        let categoryData;
+
+        if (searchQuery) {
+             productData = await products.find({
+                $or: [
+                    { name: { $regex: '.*' + searchQuery + '.*', $options: 'i' } }, 
+                ]
+            }).populate('category'); 
+        } else {
+            productData = await products.find({}).populate('category');
+        }
+
+        categoryData = await category.find();
+        res.render('shop',{productData,categoryData})
     } catch (error) {
         console.log(error);
     }
@@ -676,7 +691,6 @@ const editProfile = async(req,res)=>{
         const existingProfile = await users.findOne({ email: email });
 
         
-        console.log('----------------'+existingProfile+'-------');
         const editProfile = await users.findByIdAndUpdate({_id:req.body.userId},{$set:{name:req.body.name,email:req.body.email,mobile:req.body.mobile}})
         res.status(200).json({message:'success'})
     } catch (error) {
@@ -795,6 +809,38 @@ const signout = async(req,res)=>{
 
 
 
+const filter = async (req, res) => {
+    try {
+        const { selectedCategory, priceRange } = req.body;
+
+        let query = {};
+
+        if (selectedCategory && selectedCategory.length > 0) {
+            const categories = await category.find({ name: { $in: selectedCategory } });
+            const categoryIds = categories.map(category => category._id);
+            query.category = { $in: categoryIds };
+        }
+
+        if (priceRange && priceRange.length === 2) {
+            const [minPrice, maxPrice] = priceRange;
+            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+                query.price = { $gte: minPrice, $lte: maxPrice };
+            } else {
+                console.log('Invalid price range:', priceRange);
+            }
+        }
+        const categoryData = await category.find()
+
+
+        const productData = await products.find(query).populate('category');
+        
+        res.status(200).json({message:'success',productData,categoryData})
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Server Error');
+    }
+};
 
 
 
@@ -831,6 +877,7 @@ module.exports= {
     verifyOtpPassword,
     resendotpPassword,
     updatePassword,
+    filter
     
    
 

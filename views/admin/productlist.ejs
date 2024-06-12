@@ -229,8 +229,7 @@
     
                                     <% productlist.forEach((product,index)=> { %>
                                         <tr>
-                                            <td><%=index+1%></td>
-                                            <td width="40%">
+                                            <td><%= (currentPage - 1) * limit + index + 1 %></td>                                            <td width="40%">
                                                 <a href="#" class="itemside" data-src="/productImages/productImages/<%=product.image%>">
                                                     <div class="left">
                                                         <img src="/productImages/productImages/<%=product.image[0]%>"
@@ -280,6 +279,29 @@
                             </table>
                             <!-- table-responsive.// -->
                         </div>
+                    </div>
+                    <div class="pagination-area mt-15 mb-50">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+                                <% if (currentPage > 1) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>"><i class="material-icons md-chevron_left"></i></a>
+                                    </li>
+                                <% } %>
+                
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                                    </li>
+                                <% } %>
+                
+                                <% if (currentPage < totalPages) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=<%= limit %>"><i class="material-icons md-chevron_right"></i></a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </nav>
                     </div>
             </section>
             <!-- content-main end// -->
