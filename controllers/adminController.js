@@ -4,10 +4,10 @@ const products = require('../models/product')
 const cart = require('../models/cart')
 const bcrypt = require('bcrypt');
 const { query } = require('express');
+const Product = require('../models/product')
 const path = require('path')
 const Address = require('../models/address');
 const Order = require('../models/order')
-
 const multer = require('multer')
 
 const { TopologyClosedEvent } = require('mongodb');
@@ -629,6 +629,68 @@ const salesReportLoad = async (req, res) => {
     }
 }
 
+const returnOrder = async(req,res)=>{
+    try {
+        let dataIndex=0
+        const { orderId, productId,userId } = req.query;
+        const action = req.query.action;
+        const productFind = await Product.findOne({_id:productId})
+        const orderData = await Order.find({user:userId})
+        for(i=0;i<orderData.length;i++){
+        if(orderData[i].products.find(product => product.product.toString() === productId)){
+            var orderProduct = orderData[i].products.find(product => product.product.toString() === productId)
+            dataIndex=i;
+        };
+
+        }
+        if(action==='accept'){
+
+            orderProduct.status = 'Returned';
+            
+            await orderData[dataIndex].save();
+            const productData = await products.findById(orderProduct.product);
+
+            productData.quantity += orderProduct.quantity;
+            productData.sales -= orderProduct.quantity;
+
+
+            await productData.save();
+           console.log(orderData[dataIndex].paymentMethod,'payyyyyyyyyyyyyyyyyyyyy');
+            
+            if (orderData[dataIndex].paymentMethod === 'Razorpay'|| orderData[dataIndex].paymentMethod === 'Wallet') {
+                const user = await users.findById(userId);
+                user.wallet += productFind.price * orderProduct.quantity;
+                await user.save();
+            }
+        }else if(action==='deny'){
+            console.log('1234789');
+            orderProduct.status ='Return Denied'
+            await orderData[dataIndex].save();
+
+        }else{
+            throw new Error('Invalid action type');
+        }
+        res.redirect('/admin/order')
+   
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+//sort sale
+const sortSales = async (req, res) => {
+    try {
+        const { selectedValue } = req.body;
+        console.log(selectedValue); 
+
+
+        res.status(200).json({ message: 'success' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'error' }); // Handle errors gracefully
+    }
+};
 
 
 module.exports = {
@@ -654,6 +716,10 @@ module.exports = {
     orderDetail,
     statusDelivered,
     statusCancelled,
+
+    //sales report
     salesReportLoad,
+    returnOrder,
+    sortSales
 
 }

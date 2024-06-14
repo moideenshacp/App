@@ -77,8 +77,6 @@ admin_route.get('/order',auth.isLogin,adminController.loadOrder)
 admin_route.get('/orderDetail',auth.isLogin,adminController.orderDetail)
 admin_route.post('/statusDelivered',adminController.statusDelivered)
 admin_route.post('/statusCancelled',adminController.statusCancelled)
-
-
 ///coupon
 admin_route.get('/Addcoupon',auth.isLogin,couponController.couponAddLoad)
 admin_route.get('/coupon',auth.isLogin,couponController.couponList)
@@ -89,4 +87,11 @@ admin_route.get('/couponList',auth.isLogin,couponController.couponShow)
 
 //sales report
 admin_route.get('/salesReport',auth.isLogin,adminController.salesReportLoad)
+admin_route.post('/sortSales',auth.isLogin,adminController.sortSales)
+
+//return order
+admin_route.get('/returnOrder',auth.isLogin,adminController.returnOrder)
+
+
+
 module.exports = admin_route;

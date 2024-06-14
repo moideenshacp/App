@@ -205,78 +205,84 @@ padding-top: 15px;
 </header><!-- End .header -->
     
     <section class="h-100 h-custom" style="background-color: #eee;">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-lg-8 col-xl-6">
-            <div class="card border-top border-bottom border-3" style="border-color: #f37a27 !important;">
-              <div class="card-body p-5">
-      
-                <p class="lead fw-bold mb-5" style="color: #f37a27;">Order Details</p>
-      
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <p class="small text-muted mb-1">Date: <b><%=formattedDate%></b></p>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <p class="small text-muted mb-1">Order No.: <b><%=orderData._id%></b></p>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <p class="small text-muted mb-1">Order Status: <b><%= orderProduct.status %></b></p>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <p class="small text-muted mb-1">Payment Method: <b><%=orderData.paymentMethod%></b></p>
-                    </div>
-                </div>
-                
-      
-                <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
-                  <div class="row align-items-center"> <!-- Modified this line -->
-                    <div class="col-md-2 col-lg-2"> <!-- Added this line -->
-                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
-                      <img src="/productImages/productImages/<%=orderProduct.product.image[0]%>" alt="Product Image" class="img-fluid"> </a><!-- Added this line -->
-                    </div> <!-- Added this line -->
-                    
-                    <div class="col-md-3 col-lg-7"> <!-- Modified this line -->
-                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
-                      <p><b><%=orderProduct.product.name%></b></p></a>
+        <div class="container py-3 h-120">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+              <div class="col-lg-8 col-xl-6">
+                <div class="card border-top border-bottom border-3" style="border-color: #f37a27 !important;">
+                  <div class="card-body p-5">
+          
+                    <p class="lead fw-bold mb-1" style="color: #f37a27;">Order Details</p>
+          
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <p class="small text-muted mb-1">Date: <b><%=formattedDate%></b></p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <p class="small text-muted mb-1">Order No.:# <b><%= orderData._id%></b></p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <p class="small text-muted mb-1">Order Status: <b><%= orderProduct.status %></b></p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <p class="small text-muted mb-1">Payment Method: <b><%=orderData.paymentMethod%></b></p>
+                        </div>
                     </div>
                     
-                    <div class="col-md-4 col-lg-3">
-                        <a href="/productDetail?id=<%=orderProduct.product._id%>">
-                      <p><b>₹<%=orderProduct.product.price%></b></p></a>
+          
+                    <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
+                      <div class="row align-items-center"> <!-- Modified this line -->
+                        <div class="col-md-2 col-lg-2"> <!-- Added this line -->
+                            <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                          <img src="/productImages/productImages/<%=orderProduct.product.image[0]%>" alt="Product Image" class="img-fluid"> </a><!-- Added this line -->
+                        </div> <!-- Added this line -->
+                        
+                        <div class="col-md-3 col-lg-7"> <!-- Modified this line -->
+                            <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                          <p><b><%=orderProduct.product.name%></b></p></a>
+                        </div>
+                        
+                        <div class="col-md-4 col-lg-3">
+                            <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                          <p><b>₹<%=orderProduct.product.price%></b></p></a>
+                        </div>
+                      </div>
+                   
                     </div>
-                  </div>
-               
-                </div>
-      
-                <div class="row my-4">
-                    <div class="col-md-12">
-                        <p class="lead fw-bold mb-0 text-end" style="color: #f37a27;">
-                            Total Price: ₹<%=orderProduct.product.price %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.price * orderProduct.quantity %>
-                        </p>
+          
+                    <div class="row my-4">
+                        <div class="col-md-12">
+                            <p class="lead fw-bold mb-0 text-end" style="color: #f37a27;">
+                                Total Price: ₹<%=orderProduct.product.price %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.price * orderProduct.quantity %>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                
-                
-      
-                <!-- Address Details Section -->
-                <p class="lead fw-bold mb-4 pb-2" style="color: #f37a27;">Address Details</p>
-      
-                <div class="row">
-                  <div class="col-md-12">
-                    <p><strong>Name: </strong>   <%=orderAddress.name%></p>
-                    <p><strong>Address:</strong>  <%=orderAddress.address%>,<%=orderAddress.city%>,<%=orderAddress.pincode%></p>
-                    <p><strong>State:</strong>  <%=orderAddress.state%></p>
-                    <p><strong>Email:</strong>  <%=orderAddress.email%></p>
-                    <p><strong>Phone:</strong>  +91 <%=orderAddress.phone%></p>
+                    
+                    
+          
+                    <!-- Address Details Section -->
+                    <p class="lead fw-bold " style="color: #f37a27;">Address Details:</p>
+          
+                    <div class="row">
+                      <div class="col-md-12">
+                        <p><strong>Name: </strong>   <%=orderAddress.name%></p>
+                        <p><strong>Address:</strong>  <%=orderAddress.address%>,<%=orderAddress.city%>,<%=orderAddress.pincode%></p>
+                        <p><strong>State:</strong>  <%=orderAddress.state%></p>
+                        <p><strong>Email:</strong>  <%=orderAddress.email%></p>
+                        <p><strong>Phone:</strong>  +91 <%=orderAddress.phone%></p>
+                      </div>
+                      <hr>
+                      <% if (orderProduct.status === 'Return request sended' ||orderProduct.status === 'Returned'||orderProduct.status === 'Return Denied') { %>
+                        <p  class="lead fw-bold " style="color: #f37a27;"><strong>Return Reason:</strong></p>
+                        <p><%= orderProduct.returnReason %> </p>
+                    <% } %>
+                    </div>
+                   
                   </div>
+                  
                 </div>
-      
               </div>
             </div>
           </div>
-        </div>
-      </div>
       
       
         <footer class="footer">
@@ -361,7 +367,7 @@ padding-top: 15px;
                   </figure><!-- End .footer-payments -->
               </div><!-- End .container -->
           </div><!-- End .footer-bottom -->
-      </footer><!-- End .footer -->
+      </footer>End .footer
       </section>
 </body>
 </html>

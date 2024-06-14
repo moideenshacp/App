@@ -310,9 +310,10 @@
                                     <div>
                                         <%if(productData.quantity===0){%>
                                         <p style="color: red; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;" >Oops Product is out of stock now!!</p>
-                                        <%}else{%>
-                                            <p style="color: red;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Only <%=productData.quantity%> stock Left</p>
-
+                                        <%}else if(productData.quantity>10){%>
+                                            <p style="color: red;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">In Stock</p>
+                                            <%}else if(productData.quantity<=10){%>
+                                             <p style="color: red;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Only <%=productData.quantity%> Left!!</p>
                                             <%}%>
                                     </div>
                                     <br><br>

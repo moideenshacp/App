@@ -441,7 +441,7 @@ const loadprofile = async(req,res)=>{
     try {
         const user = await users.find({_id:req.session.user_id})
         const address = await Address.findOne({user:req.session.user_id})
-        const orderPoducts = await Order.find({user:req.session.user_id}).populate('products.product')
+        const orderPoducts = await Order.find({user:req.session.user_id}).populate('products.product').sort({ date: -1 });
         const orderAddress = await Order.findOne().populate('address')
         const couponView = await Coupon.find()
 
@@ -843,6 +843,35 @@ const filter = async (req, res) => {
 };
 
 
+const sort = async(req,res)=>{
+    try {
+
+        const {selectedValue}=req.body;
+        console.log(selectedValue);
+        const productData = await products.find().populate('category')
+        const categoryData = await category.find()
+
+        if(selectedValue=='lowtohigh'){
+            productData.sort((a, b) => a.price - b.price);
+         }else if(selectedValue=='hightolow'){
+            productData.sort((a, b) => b.price - a.price);  
+         }else if(selectedValue=='newarrivals'){
+            productData.sort((a, b) => b.createdAt - a.createdAt);
+         }else if(selectedValue=='aA-zZ'){
+            productData.sort((a, b) => a.name.localeCompare(b.name));
+         }else if (selectedValue == 'zZ-aA') {
+            productData.sort((a, b) => b.name.localeCompare(a.name)); 
+        }else if (selectedValue == 'popularity') {
+            productData.sort((a, b) => b.sales - a.sales); 
+        }
+    res.status(200).json({message:'success',productData,categoryData})
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 
 module.exports= {
@@ -877,7 +906,8 @@ module.exports= {
     verifyOtpPassword,
     resendotpPassword,
     updatePassword,
-    filter
+    filter,
+    sort
     
    
 

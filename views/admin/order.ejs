@@ -236,7 +236,7 @@
                                         <tr>
                                             <td><%= productCounter++ %></td>
                                             <td>
-                                                <%=order._id%>
+                                                #<%=order._id%>
                                             </td>
                                             <td>
                                                 <%=order.user%>
@@ -255,8 +255,15 @@
                                             <td><span class="badge rounded-pill alert-warning">
                                                     <%=product.status%>
                                                 </span></td>
+
                                                 <td class="text-end">
-                                                    <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                                                    <% if (product.status === 'Return request sended') { %>
+                                                        <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                                                        <a href="/admin/returnOrder?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=accept&userId=<%= order.user %>" class="btn btn-md rounded font-sm">Accept</a>
+                                                        <a href="/admin/returnOrder?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=deny&userId=<%= order.user %>" class="btn btn-md rounded font-sm">Deny</a>
+
+                                                        <%}else{%>
+                                                            <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>" class="btn btn-md rounded font-sm">Detail</a>
                                                     <div class="dropdown d-inline-block">
                                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Change Status
@@ -266,6 +273,9 @@
                                                             <li><a onclick="cancelled('<%=order.user%>', '<%=product.product._id%>')" class="dropdown-item">Cancelled</a></li>
                                                         </ul>
                                                     </div>
+
+                                                        <%}%>
+                                                    
                                                 </td>
                                         </tr>
                                         <%})%>

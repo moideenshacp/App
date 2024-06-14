@@ -32,6 +32,14 @@ const productSchema = mongoose.Schema({
     is_listed:{
         type:Boolean,
         default:true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    sales: {
+        type: Number,
+        default: 0
     }
 
 

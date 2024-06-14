@@ -38,7 +38,7 @@ const order = async(req,res)=>{
             const productId = productData.products[i].product._id
             const quantities = productData.products[i].quantity;
             
-            const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities}})
+            const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities,sales:quantities}})
         }
        
         const order = new Order({
@@ -80,7 +80,7 @@ const walletOrder = async (req, res) => {
             
             const productCheck = await product.findByIdAndUpdate(
                 { _id: productId },
-                { $inc: { quantity: -quantities } }
+                { $inc: { quantity: -quantities ,sales:quantities} }
             );
 
             if (!productCheck) {
@@ -181,7 +181,7 @@ const verifySignature = async (req, res) => {
                 const productId = productData.products[i].product._id
                 const quantities = productData.products[i].quantity;
                 
-                const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities}})
+                const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities,sales:quantities}})
             }
            
             const order = new Order({
@@ -190,12 +190,13 @@ const verifySignature = async (req, res) => {
                 paymentMethod:paymentMethod,
                 address:selectedAddress,
                 date:Date.now(),
+
                 totalAmount:subtotal
     
             })
-            
             await order.save()
-            await Cart.deleteOne({ user: userId }); 
+            await Cart.deleteOne({ user: userId });
+
             res.status(200).json({ success: true, message: 'Signature verified and order created successfully' });
         } else {
             console.log("Signature verification failed");
@@ -233,6 +234,7 @@ const cancelOrder= async(req,res)=>{
             console.log(productData.quantity+'33333333333333');
 
             productData.quantity += orderProduct.quantity;
+            productData.sales -= orderProduct.quantity;
 
             await productData.save();
            console.log(orderData[dataIndex].paymentMethod,'payyyyyyyyyyyyyyyyyyyyy');
@@ -242,6 +244,41 @@ const cancelOrder= async(req,res)=>{
                 user.wallet += productCart.price * orderProduct.quantity;
                 await user.save();
             }
+            res.status(200).json({ message: 'succes' });
+            
+        }else{
+            res.status(404).json({ message: 'Product not found in orders' });
+         }
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const returnOrder= async(req,res)=>{
+    try {
+        let dataIndex=0
+        const productId = req.body.productId;
+        const returnReason = req.body.reason;
+        console.log(returnReason);
+        const userId = req.session.user_id
+        console.log(productId+'1111111111111111111111');
+        const productCart = await product.findOne({_id:productId})
+        const orderData = await Order.find({user:userId})
+        for(i=0;i<orderData.length;i++){
+        if(orderData[i].products.find(product => product.product.toString() === productId)){
+            var orderProduct = orderData[i].products.find(product => product.product.toString() === productId)
+            dataIndex=i;
+        };
+
+        }
+        if (orderProduct) {
+            orderProduct.status = 'Return request sended';
+            orderProduct.returnReason=returnReason;
+
+            await orderData[dataIndex].save();
+           
             res.status(200).json({ message: 'succes' });
             
         }else{
@@ -296,5 +333,6 @@ module.exports={
     orderDetails,
     RazorpayOrder,
     verifySignature,
-    walletOrder
+    walletOrder,
+    returnOrder
 }

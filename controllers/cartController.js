@@ -92,7 +92,7 @@ if(updateCart){
     const subtotal = fullProduct.products.reduce((acc, val) => {
         return acc += val.product.price * val.quantity;
     }, 0);
-        res.status(200).json({message:'succes', quantity, price: productPrice.price,subtotal});
+        res.status(200).json({message:'succes', quantity, price: productPrice.price,subtotal,quantity});
 }
        
     } catch (error) {

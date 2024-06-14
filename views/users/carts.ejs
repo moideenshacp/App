@@ -241,8 +241,9 @@
                                                                 step="1" data-decimals="0" required
                                                                 onchange="updatePrice('<%=cartProduct.product._id%>',this.value)"> -->
                                                                 <%
-                                                                var maxQty = Math.min(cartProduct.product.quantity, 5); // Set max quantity as the minimum of product stock and 5
+                                                                var maxQty = Math.min(cartProduct.product.quantity, 5);
                                                             %>
+
                                                             
                                                             <input type="number" id="qty" class="form-control" value="1" min="1" max="<%= maxQty %>" step="1" data-decimals="0" required onchange="updatePrice('<%= cartProduct.product._id %>', this.value)">
                                                             

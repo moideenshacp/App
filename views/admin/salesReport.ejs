@@ -210,7 +210,7 @@
                             <input type="text" placeholder="Search..." class="form-control" />
                         </div> -->
                         <div class="col-lg-2 col-6 col-md-3">
-                            <select class="form-select">
+                            <select name="sortby" id="sortby" class="form-select" onchange="sortSales()">
                                 <option>Daily</option>
                                 <option>Weekly</option>
                                 <option>Yearly</option>
@@ -263,10 +263,10 @@
                                                 <%=index+1%>
                                             </td> -->
                                             <td>
-                                                <%=order._id%>
+                                                #<%=order._id%>
                                             </td>
                                             <td>
-                                                <%=order.date%>
+                                                <%= new Date(order.date).toLocaleDateString() %>
                                             </td>
                                             <td>
                                                 <%=order.user.name%>
@@ -377,7 +377,38 @@
 
 </script>
 
+<script>
+    function sortSales(){
+        var selectedValue = document.getElementById("sortby").value;
+        console.log(selectedValue);
 
+        fetch('/sortSales', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ selectedValue: selectedValue}),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if(data.message=='success') {
+                        displayProducts(data.productData)
+                        console.log('suceess')
+                    } else {
+                        window.location.reload();
+                    };
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+    }
+</script>
 
     
     

@@ -211,10 +211,13 @@
         					<div class="toolbox-sort">
         						<label for="sortby">Sort by:</label>
         						<div class="select-custom">
-									<select name="sortby" id="sortby" class="form-control">
+									<select name="sortby" id="sortby" class="form-control" onchange="sortProduct()">
 										<option value="popularity" selected="selected">Most Popular</option>
-										<option value="rating">Most Rated</option>
-										<option value="date">Date</option>
+                                        <option value="lowtohigh">Price: low to high</option>
+										<option value="hightolow">Price: high to low</option>
+                                        <option value="newarrivals">New arrivals</option>
+                                        <option value="aA-zZ">aA-zZ</option>
+                                        <option value="zZ-aA">zZ-aA</option>
 									</select>
 								</div>
         					</div><!-- End .toolbox-sort -->
@@ -271,7 +274,7 @@
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="product.html"><%=product.name%></a></h3><!-- End .product-title -->
                                         <div class="product-price">
-                                            <%=product.price%>
+                                            ₹<%=product.price%>
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             <div class="ratings">
@@ -923,6 +926,95 @@ function Addwishlist(productId) {
                     });
                 }
                 }
+</script>
+
+<script>
+    function sortProduct(){
+        var selectedValue = document.getElementById("sortby").value;
+        console.log(selectedValue);
+
+
+
+        fetch('/sort', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ selectedValue}),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if(data.message=='success') {
+                        displayProducts(data.productData)
+                        console.log('suceess')
+                    } else {
+                        window.location.reload();
+                    };
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+                };
+
+
+
+                function displayProducts(productData) {
+                    const productList = document.querySelector('.products .row');
+                    productList.innerHTML = ''; // Clear previous products
+
+                    if (productData.length === 0) {
+            const noProductsElement = document.createElement('div');
+            noProductsElement.classList.add('col-12');
+            noProductsElement.innerHTML = '<p>No products available</p>';
+            productList.appendChild(noProductsElement);
+        } else{
+                    productData.forEach(product => {
+                        if (product.is_listed && product.category.is_listed) {
+                            const productElement = document.createElement('div');
+                            productElement.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2');
+                            productElement.innerHTML = `
+                                <div class="product">
+                                    <figure class="product-media">
+                                        ${product.quantity === 0 ? '<span class="product-label label-new">Out of Stock</span>' : '<span class="product-label label-new">New</span>'}
+                                        <a href="/productDetail?id=${product._id}">
+                                            <img src="/productImages/productImages/${product.image[0]}" alt="Product image" class="product-image">
+                                        </a>
+                                        <div class="product-action-vertical">
+                                            <a onclick="Addwishlist('${product._id}')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                        </div>
+                                        <div class="product-action action-icon-top">
+                                            ${product.quantity === 0 ? '<a class="btn-product" disabled><span>Out of Stock</span></a>' : '<a onclick="Addcart(\'' + product._id + '\')" class="btn-product btn-cart" id="addToCart"><span>add to cart</span></a>'}
+                                        </div>
+                                    </figure>
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            <a href="#">${product.category.name}</a>
+                                        </div>
+                                        <h3 class="product-title"><a href="product.html">${product.name}</a></h3>
+                                        <div class="product-price">
+                                            ₹${product.price}
+                                        </div>
+                                        <div class="ratings-container">
+                                            <div class="ratings">
+                                                <div class="ratings-val" style="width: 0%;"></div>
+                                            </div>
+                                            <span class="ratings-text">( 0 Reviews )</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            productList.appendChild(productElement);
+                        }
+                    });
+                }
+                }
+
+    
 </script>
 
 

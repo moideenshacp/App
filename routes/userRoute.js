@@ -121,6 +121,7 @@ user_route.post('/updatePassword',auth.isLogout,userController.updatePassword)
 
 user_route.post('/order',auth.isLogin,orderController.order)
 user_route.post('/cancelOrder',auth.isLogin,orderController.cancelOrder)
+user_route.post('/returnOrder',auth.isLogin,orderController.returnOrder)
 user_route.get('/orderDetails',auth.isLogin,orderController.orderDetails)
 //razorpay
 user_route.post('/razorpay',auth.isLogin,orderController.RazorpayOrder)
@@ -139,5 +140,8 @@ user_route.post('/wallet',auth.isLogin,orderController.walletOrder)
 
 //filter shop
 user_route.post('/filter',auth.isLogin,userController.filter)
+
+//sort
+user_route.post('/sort',auth.isLogin,userController.sort)
 
 module.exports = user_route;
