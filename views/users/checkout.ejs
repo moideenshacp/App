@@ -196,20 +196,24 @@
                             <form id="coupon-form">
                                 <div class="row">
                                     <div class="col">
-                                        <input type="text" class="form-control" required id="checkout-discount-input" placeholder="Have a coupon? ">
+                                        <input type="text" class="form-control" required id="checkout-discount-input"
+                                            placeholder="Have a coupon? ">
                                     </div>
                                     <div class="col-auto"> <!-- Adjusted column width -->
                                         <button type="submit" class="btn btn-primary btn-block">Apply</button>
+                                        <button type="submit" class="btn btn-primary btn-block">Remove</button>
+
                                     </div>
+                                    <input type="hidden" value="<%=subtotal%>">
                                 </div>
                                 <label for="checkout-discount-input" class="text-truncate"><span></span></label>
                             </form>
                             <div id="coupon-discount"></div>
                         </div><!-- End .checkout-discount -->
-                        
-                        
-                        
-                        
+
+
+
+                        <br>
 
                         <a href="/checkoutAddress"><button type="submit" class="btn btn-outline-primary-2">
                                 <span>Create New Address</span>
@@ -297,19 +301,14 @@
                                                                             <tr class="summary-subtotal">
                                                                                 <td>Subtotal:</td>
                                                                                 <td>
-                                                                                    ₹<%=subtotal%>
+                                                                                    ₹<%=subtotals%>
                                                                                 </td>
                                                                             </tr><!-- End .summary-subtotal -->
-                                                                            <tr>
-                                                                                <td>Shipping:</td>
-                                                                                <td>Free shipping</td>
-                                                                            </tr>
+                                                                          
                                                                             <tr class="summary-total">
                                                                                 <td>Total:</td>
-                                                                                <td>
-                                                                                    ₹<%=subtotal%>
-                                                                                </td>
-                                                                            </tr><!-- End .summary-total -->
+                                                                                <td id="total">₹ <%= subtotal %></td>
+                                                                            </tr>
                                                         </tbody>
                                                     </table><!-- End .table table-summary -->
                                                     <div>
@@ -770,7 +769,10 @@
         function cashOnDelivery() {
             const selectedAddress = form.elements['selectedAddress'].value;
             const paymentMethod = form.elements['paymentMethod'].value;
-            const subtotal = parseFloat("<%= subtotal %>");
+            const SubtotalEle = document.getElementById('total')
+            const subtotal = SubtotalEle.textContent.trim();
+
+            console.log(subtotal,'5444');
             let datas = {
                 selectedAddress,
                 paymentMethod,
@@ -812,7 +814,8 @@
         function Wallet() {
             const selectedAddress = form.elements['selectedAddress'].value;
             const paymentMethod = form.elements['paymentMethod'].value;
-            const subtotal = parseFloat("<%= subtotal %>");
+            const SubtotalEle = document.getElementById('total')
+            const subtotal = SubtotalEle.textContent.trim();
             let datas = {
                 selectedAddress,
                 paymentMethod,
@@ -861,7 +864,8 @@
         function razorpay() {
             const selectedAddress = form.elements['selectedAddress'].value;
             const paymentMethod = form.elements['paymentMethod'].value;
-            const subtotal = parseFloat("<%= subtotal %>");
+            const SubtotalEle = document.getElementById('total')
+            const subtotal = SubtotalEle.textContent.trim();
             let datas = {
                 selectedAddress,
                 paymentMethod,
@@ -997,6 +1001,64 @@
 
 
 
+    </script>
+
+
+
+    <script>
+        document.getElementById('coupon-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const couponCode = document.getElementById('checkout-discount-input').value.trim();
+
+            applyCoupon(couponCode);
+        });
+
+        function applyCoupon(couponCode) {
+            const subtotal = parseFloat("<%= subtotals %>");
+
+
+            fetch('/applyCoupon', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ couponCode,subtotal }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const couponDiscountElement = document.getElementById('coupon-discount');
+                    if (data.message === 'Coupon applied successfully') {
+                        document.getElementById('total').textContent = data.discountedSubtotal;
+                        couponDiscountElement.innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
+                    } else if(data.message === 'Coupon is not active'){
+                        couponDiscountElement.innerHTML = `<p>Coupon is not active!</p>`;
+                    }else if(data.message === 'Coupon has expired'){
+                        couponDiscountElement.innerHTML = `<p>Coupon has expired!</p>`;
+                    }else if(data.message === 'Coupon not found'){
+                        couponDiscountElement.innerHTML = `<p>Coupon not found!</p>`;
+                    }else if(data.message==='Coupon is already used'){
+                        couponDiscountElement.innerHTML = `<p>This coupon is already used!</p>`;
+                    }
+                    else if(data.message==='min amount is not valid'){
+                        couponDiscountElement.innerHTML =`<p>You didn't achive the minimum amount for claiming this coupon!</p>` ;
+                    }
+                    else{
+                        couponDiscountElement.innerHTML = `<p>Something went wrong!</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+
+
+        }
     </script>
 
 

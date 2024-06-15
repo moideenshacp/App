@@ -258,12 +258,12 @@
 
                                                 <td class="text-end">
                                                     <% if (product.status === 'Return request sended') { %>
-                                                        <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                                                        <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %> class="btn btn-md rounded font-sm">Detail</a>
                                                         <a href="/admin/returnOrder?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=accept&userId=<%= order.user %>" class="btn btn-md rounded font-sm">Accept</a>
                                                         <a href="/admin/returnOrder?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=deny&userId=<%= order.user %>" class="btn btn-md rounded font-sm">Deny</a>
 
                                                         <%}else{%>
-                                                            <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                                                            <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>&userId=<%= order.user %>"" class="btn btn-md rounded font-sm">Detail</a>
                                                     <div class="dropdown d-inline-block">
                                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Change Status

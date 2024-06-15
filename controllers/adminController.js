@@ -112,7 +112,7 @@ const loadHome = async (req, res) => {
                     }
                 })
             })
-            res.render('adminHome', { totalSalesAmount,deliveredProductCount })
+            res.render('adminHome', { totalSalesAmount, deliveredProductCount })
         } else {
             res.redirect('/admin')
         }
@@ -129,10 +129,10 @@ const customers = async (req, res) => {
         const limit = parseInt(req.query.limit) || 3;
         const skip = (page - 1) * limit;
         const userslist = await users.find({}).skip(skip).limit(limit);
-        
+
         const totalUsers = await users.countDocuments();
         const totalPages = Math.ceil(totalUsers / limit);
-        res.render('customers', { users: userslist ,currentPage:page,limit,totalPages})
+        res.render('customers', { users: userslist, currentPage: page, limit, totalPages })
 
     } catch (error) {
         console.log(error.message);
@@ -205,10 +205,10 @@ const productList = async (req, res) => {
         const limit = parseInt(req.query.limit) || 5;
         const skip = (page - 1) * limit;
         const productlist = await products.find({}).populate('category').skip(skip).limit(limit)
-        const categorylist = await categories.find({})        
+        const categorylist = await categories.find({})
         const totalProducts = await products.countDocuments();
         const totalPages = Math.ceil(totalProducts / limit);
-        res.render('productlist', { productlist,currentPage:page,limit,totalPages })
+        res.render('productlist', { productlist, currentPage: page, limit, totalPages })
 
     } catch (error) {
         console.log(error.message);
@@ -517,7 +517,7 @@ const loadOrder = async (req, res) => {
 
         const totalOrders = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrders / limit);
-        res.render('order', { orderlist ,currentPage: page,totalPages,limit})
+        res.render('order', { orderlist, currentPage: page, totalPages, limit })
     } catch (error) {
         console.log(error);
     }
@@ -526,8 +526,10 @@ const loadOrder = async (req, res) => {
 //load order detail
 const orderDetail = async (req, res) => {
     try {
-        const userId = req.session.user_id;
+        const userId = req.query.userId;
+        console.log(userId);
         const productId = req.query.productId;
+        console.log(productId);
         const orderId = req.query.orderId;
         const orderData = await Order.findOne({ _id: orderId }).populate('address.addresses')
         const orders = await Order.find({ user: userId }).populate('products.product')
@@ -629,24 +631,24 @@ const salesReportLoad = async (req, res) => {
     }
 }
 
-const returnOrder = async(req,res)=>{
+const returnOrder = async (req, res) => {
     try {
-        let dataIndex=0
-        const { orderId, productId,userId } = req.query;
+        let dataIndex = 0
+        const { orderId, productId, userId } = req.query;
         const action = req.query.action;
-        const productFind = await Product.findOne({_id:productId})
-        const orderData = await Order.find({user:userId})
-        for(i=0;i<orderData.length;i++){
-        if(orderData[i].products.find(product => product.product.toString() === productId)){
-            var orderProduct = orderData[i].products.find(product => product.product.toString() === productId)
-            dataIndex=i;
-        };
+        const productFind = await Product.findOne({ _id: productId })
+        const orderData = await Order.find({ user: userId })
+        for (i = 0; i < orderData.length; i++) {
+            if (orderData[i].products.find(product => product.product.toString() === productId)) {
+                var orderProduct = orderData[i].products.find(product => product.product.toString() === productId)
+                dataIndex = i;
+            };
 
         }
-        if(action==='accept'){
+        if (action === 'accept') {
 
             orderProduct.status = 'Returned';
-            
+
             await orderData[dataIndex].save();
             const productData = await products.findById(orderProduct.product);
 
@@ -655,23 +657,23 @@ const returnOrder = async(req,res)=>{
 
 
             await productData.save();
-           console.log(orderData[dataIndex].paymentMethod,'payyyyyyyyyyyyyyyyyyyyy');
-            
-            if (orderData[dataIndex].paymentMethod === 'Razorpay'|| orderData[dataIndex].paymentMethod === 'Wallet') {
+            console.log(orderData[dataIndex].paymentMethod, 'payyyyyyyyyyyyyyyyyyyyy');
+
+            if (orderData[dataIndex].paymentMethod === 'Razorpay' || orderData[dataIndex].paymentMethod === 'Wallet') {
                 const user = await users.findById(userId);
                 user.wallet += productFind.price * orderProduct.quantity;
                 await user.save();
             }
-        }else if(action==='deny'){
+        } else if (action === 'deny') {
             console.log('1234789');
-            orderProduct.status ='Return Denied'
+            orderProduct.status = 'Return Denied'
             await orderData[dataIndex].save();
 
-        }else{
+        } else {
             throw new Error('Invalid action type');
         }
         res.redirect('/admin/order')
-   
+
     } catch (error) {
         console.log(error);
     }
@@ -682,15 +684,70 @@ const returnOrder = async(req,res)=>{
 const sortSales = async (req, res) => {
     try {
         const { selectedValue } = req.body;
-        console.log(selectedValue); 
+        console.log(selectedValue);
+
+        let orderlist = [];
+        const categoryData = await categories.find();
+
+        // Calculate date range based on selectedValue
+        let startDate, endDate;
+        const currentDate = new Date();
+
+        switch (selectedValue) {
+            case 'daily':
+                startDate = new Date(currentDate);
+                startDate.setHours(0, 0, 0, 0);
+                endDate = new Date(currentDate);
+                endDate.setHours(23, 59, 59, 999);
+                break;
+            case 'weekly':
+                startDate = new Date(currentDate);
+                startDate.setDate(startDate.getDate() - 7);
+                endDate = new Date(currentDate);
+                break;
+            case 'monthly':
+                startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                break;
+            case 'yearly':
+                startDate = new Date(currentDate.getFullYear(), 0, 1);
+                endDate = new Date(currentDate.getFullYear(), 11, 31);
+                break;
+            default:
+                startDate = new Date(currentDate);
+                startDate.setHours(0, 0, 0, 0);
+                endDate = new Date(currentDate);
+                endDate.setHours(23, 59, 59, 999);
+                break;
+        }
+        let totalSalesAmount = 0;
+        let deliveredProductCount = 0;
 
 
-        res.status(200).json({ message: 'success' });
+        orderlist = await Order.find({ date: { $gte: startDate, $lte: endDate } })
+            .populate('products.product')
+            .populate('user');
+
+
+        orderlist.forEach(order => {
+            order.products.forEach(product => {
+                if (product.status === 'delivered') {
+                    totalSalesAmount += product.quantity * product.product.price;
+                    deliveredProductCount += 1;
+                }
+            });
+        });
+
+        console.log(orderlist);
+        console.log(totalSalesAmount)
+        console.log(deliveredProductCount);
+        res.status(200).json({ message: 'success', orderlist, categoryData, totalSalesAmount, deliveredProductCount });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'error' }); // Handle errors gracefully
+        res.status(500).json({ message: 'error' });
     }
 };
+
 
 
 module.exports = {

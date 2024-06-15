@@ -874,6 +874,7 @@ const sort = async(req,res)=>{
 
 
 
+
 module.exports= {
     loadHome,
     loadLogin,
@@ -906,8 +907,10 @@ module.exports= {
     verifyOtpPassword,
     resendotpPassword,
     updatePassword,
+    //sort  filter=================
     filter,
-    sort
+    sort,
+ 
     
    
 

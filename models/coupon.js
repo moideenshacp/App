@@ -31,7 +31,7 @@ const couponSchema = mongoose.Schema({
         },
         used:{
             type:Boolean,
-            default:false
+            default:true
 
         }
 

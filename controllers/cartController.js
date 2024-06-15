@@ -20,7 +20,7 @@ const addCart = async(req,res)=>{
         const userCart = await Cart.findOne({ user: userId })
         
 
-            const existingCartproduct = await Cart.findOne({user:req.session.user_id,'products.product':productId})
+        const existingCartproduct = await Cart.findOne({user:req.session.user_id,'products.product':productId})
         if(existingCartproduct){
             res.status(200).json({fail:'product is already in cart'})
         }else{
@@ -93,7 +93,8 @@ if(updateCart){
         return acc += val.product.price * val.quantity;
     }, 0);
         res.status(200).json({message:'succes', quantity, price: productPrice.price,subtotal,quantity});
-}
+}   
+
        
     } catch (error) {
         console.log((error));
@@ -101,28 +102,36 @@ if(updateCart){
 }
 
 //load checkout
-const loadCheckout = async(req,res)=>{
-    try {
+    const loadCheckout = async(req,res)=>{
+        try {
 
-        const addressData = await Address.find({user:req.session.user_id})
-        const address = await Address.findOne({user:req.session.user_id})
+            const addressData = await Address.find({user:req.session.user_id})
+            const address = await Address.findOne({user:req.session.user_id})
+            const cartFind = await Cart.findOne({user:req.session.user_id})
+            console.log(cartFind,'20202020202');
 
-        const addressescount = addressData.map(addressDoc => addressDoc.addresses.length);
+            const addressescount = addressData.map(addressDoc => addressDoc.addresses.length);
 
 
-        const cartPoducts = await Cart.find({user:req.session.user_id}).populate('products.product')
-        let subtotal = 0;
-        if(cartPoducts.length>0){
-         subtotal = cartPoducts[0].products.reduce((acc, val) => {
-            return acc += val.product.price * val.quantity;
-        }, 0);
-    }
-        res.render('checkout',{addressescount,address,cartPoducts,subtotal})
+            const cartPoducts = await Cart.find({user:req.session.user_id}).populate('products.product')
+            let subtotals = 0;
+            let subtotal=0;
+            if(cartPoducts.length>0){
+            subtotals = cartPoducts[0].products.reduce((acc, val) => {
+                return acc += val.product.price * val.quantity;
+            }, 0);
+        }
+
+        if (cartFind){
+            subtotal = subtotals
+        }
         
-    } catch (error) {
-        console.log(error);
+            res.render('checkout',{addressescount,address,cartPoducts,subtotal,subtotals})
+            
+        } catch (error) {
+            console.log(error);
+        }
     }
-}
 //load checkout address
 const checkoutAddressLoad = async(req,res)=>{
     try {

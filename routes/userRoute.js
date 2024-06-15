@@ -18,6 +18,8 @@ const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController')
 const wishlistController = require('../controllers/wishlistcontroller')
+const couponController = require('../controllers/couponController')
+
 const passport = require('passport');
 
 
@@ -143,5 +145,8 @@ user_route.post('/filter',auth.isLogin,userController.filter)
 
 //sort
 user_route.post('/sort',auth.isLogin,userController.sort)
+
+//appply coupon
+user_route.post('/applyCoupon',auth.isLogin,couponController.applyCoupon)
 
 module.exports = user_route;

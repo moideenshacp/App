@@ -211,9 +211,10 @@
                         </div> -->
                         <div class="col-lg-2 col-6 col-md-3">
                             <select name="sortby" id="sortby" class="form-select" onchange="sortSales()">
-                                <option>Daily</option>
-                                <option>Weekly</option>
-                                <option>Yearly</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
                             </select>
                         </div>
                         <!-- <div class="col-lg-2 col-6 col-md-3">
@@ -228,83 +229,83 @@
                 <!-- card-header end// -->
                 
 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
 
-                            <thead>
-                                <tr>
-                                    <!-- <th>NO</th> -->
-                                    <th>Order ID</th>
-                                    <th>Orderdate</th>
-                                    <td>User Name</td>
-                                    <th scope="col">Product Name</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">quantity</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Total</th>
-                                </tr>
-                            </thead>
+                                <thead>
+                                    <tr>
+                                        <!-- <th>NO</th> -->
+                                        <th>Order ID</th>
+                                        <th>Orderdate</th>
+                                        <td>User Name</td>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">quantity</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
 
-                            <tbody>
-                                <% let totalSalesAmount = 0; %>
-                                <% let deliveredProductCount = 0; %>
-                                <%orderlist.forEach((order,index)=>{%>
-                                    <% order.products.forEach(product=>{%>
-                                        <%if(product.status=='delivered'){%>
+                                <tbody>
+                                    <% let totalSalesAmount = 0; %>
+                                    <% let deliveredProductCount = 0; %>
+                                    <%orderlist.forEach((order,index)=>{%>
+                                        <% order.products.forEach(product=>{%>
+                                            <%if(product.status=='delivered'){%>
 
-                                        <%if(product.status=='delivered'){%>
-                                            <% totalSalesAmount += product.quantity * product.product.price; %>
-                                            <% deliveredProductCount += 1; %>
-                                        <%}%>
+                                            <%if(product.status=='delivered'){%>
+                                                <% totalSalesAmount += product.quantity * product.product.price; %>
+                                                <% deliveredProductCount += 1; %>
+                                            <%}%>
 
-                                        <tr>
-                                            <!-- <td>
-                                                <%=index+1%>
-                                            </td> -->
-                                            <td>
-                                                #<%=order._id%>
-                                            </td>
-                                            <td>
-                                                <%= new Date(order.date).toLocaleDateString() %>
-                                            </td>
-                                            <td>
-                                                <%=order.user.name%>
-                                            </td>
-                                            <td><b>
-                                                    <%=product.product.name%>
-                                                </b></td>
-                                            <td>
-                                                <%=product.product.price%>
-                                            </td>
-                                            <td>
-                                                <%=product.quantity%>
-                                            </td>
-                                            
-                                            <td><span class="badge rounded-pill alert-warning">
-                                                    <%=product.status%>
-                                                </span></td>
-                                                <td>₹<%=product.quantity*product.product.price %>
+                                            <tr >
+                                                <!-- <td>
+                                                    <%=index+1%>
+                                                </td> -->
+                                                <td>
+                                                    #<%=order._id%>
+                                                </td>
+                                                <td>
+                                                    <%= new Date(order.date).toLocaleDateString() %>
+                                                </td>
+                                                <td>
+                                                    <%=order.user.name%>
+                                                </td>
+                                                <td><b>
+                                                        <%=product.product.name%>
+                                                    </b></td>
+                                                <td>
+                                                    <%=product.product.price%>
+                                                </td>
+                                                <td>
+                                                    <%=product.quantity%>
                                                 </td>
                                                 
-                                        </tr>
-                                        <%}%>
-                                        <%})%>
+                                                <td><span class="badge rounded-pill alert-warning">
+                                                        <%=product.status%>
+                                                    </span></td>
+                                                    <td>₹<%=product.quantity*product.product.price %>
+                                                    </td>
+                                                    
+                                            </tr>
+                                            <%}%>
                                             <%})%>
-                                            <tr class="total-sales">
-                                                <td id="total-amounts" colspan="7" class="text-end"><b>Total Sales Amount:</b></td>
-                                                <td id="total-amount"><b>₹<%= totalSalesAmount %></b></td>
-                                            </tr>
-                                            <tr class="total-sales">
-                                                <td id="total-amounts" colspan="7" class="text-end"><b>Total Delivered Products:</b></td>
-                                                <td id="total-amount"><b><%= deliveredProductCount %></b></td>
-                                            </tr>
-                            </tbody>
+                                                <%})%>
+                                                <tr class="total-salesamount">
+                                                    <td id="total-amounts" colspan="7" class="text-end"><b>Total Sales Amount:</b></td>
+                                                    <td id="total-amount"><b>₹<%=totalSalesAmount%></b></td>
+                                                </tr>
+                                                <tr class="total-salescount">
+                                                    <td id="total-aamounts" colspan="7" class="text-end"><b>Total Delivered Products:</b></td>
+                                                    <td id="delivered-count"><b><%=deliveredProductCount%></b></td>
+                                                </tr>
+                                </tbody>
 
-                        </table>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
                     </div>
-                    <!-- table-responsive //end -->
-                </div>
                 
                 <!-- card-body end// -->
             </div>
@@ -382,7 +383,7 @@
         var selectedValue = document.getElementById("sortby").value;
         console.log(selectedValue);
 
-        fetch('/sortSales', {
+        fetch('/admin/salesReport', {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json'
@@ -397,8 +398,10 @@
                 })
                 .then(data => {
                     if(data.message=='success') {
-                        displayProducts(data.productData)
-                        console.log('suceess')
+                        displaySalesReport(data.orderlist, data.categoryData,data.totalSalesAmount,data.deliveredProductCount);
+                        console.log(data.orderlist);
+               
+                         console.log('suceess')
                     } else {
                         window.location.reload();
                     };
@@ -408,6 +411,55 @@
                 });
 
     }
+
+    function displaySalesReport(orderlist, categoryData, totalSalesAmount, deliveredProductCount) {
+    const tbody = document.querySelector('.table tbody ');
+    const totalAmountElement = document.getElementById('total-salesamount');
+    const deliveredCountElement = document.getElementById('delivered-count');
+
+    tbody.innerHTML = '';
+
+    let totalAmount = 0;
+    let deliveredCount = 0;
+
+    orderlist.forEach(order => {
+        order.products.forEach(product => {
+            if (product.status === 'delivered') {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${order._id}</td>
+                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                    <td>${order.user.name}</td>
+                    <td><b>${product.product.name}</b></td>
+                    <td>${product.product.price}</td>
+                    <td>${product.quantity}</td>
+                    <td><span class="badge rounded-pill alert-warning">${product.status}</span></td>
+                    <td>₹${product.quantity * product.product.price}</td>
+                     <td>₹${totalSalesAmount}</td>
+                    
+                `;
+                tbody.appendChild(row);
+
+                totalAmount += product.quantity * product.product.price;
+                deliveredCount++;
+            }
+        });
+    });
+
+    console.log(totalAmountElement)
+    if (totalAmountElement) {
+        totalAmountElement.textContent = `₹${totalSalesAmount}`;
+    } else {
+        console.error('Total amount element not found.');
+    }
+
+    if (deliveredCountElement) {
+        deliveredCountElement.textContent = deliveredCount;
+    } else {
+        console.error('Delivered count element not found.');
+    }
+}
+
 </script>
 
     

@@ -87,7 +87,7 @@ admin_route.get('/couponList',auth.isLogin,couponController.couponShow)
 
 //sales report
 admin_route.get('/salesReport',auth.isLogin,adminController.salesReportLoad)
-admin_route.post('/sortSales',auth.isLogin,adminController.sortSales)
+admin_route.post('/salesReport',auth.isLogin,adminController.sortSales)
 
 //return order
 admin_route.get('/returnOrder',auth.isLogin,adminController.returnOrder)

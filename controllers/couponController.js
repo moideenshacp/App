@@ -1,6 +1,8 @@
 
 const { trusted } = require('mongoose');
 const Coupon = require('../models/coupon');
+const Cart = require('../models/cart');
+
 
 
 
@@ -156,11 +158,65 @@ const couponShow = async(req,res)=>{
     }
 }
 
+
+//apply coupon
+const applyCoupon = async(req,res)=>{
+    try {
+    const userId = req.session.user_id;
+    const {couponCode,subtotal}= req.body;
+    const cartFind = await Cart.findOne({user:userId})
+
+    const couponCheck = await Coupon.findOne({code:couponCode})
+    if (!couponCheck) {
+        console.log('789654');
+        return res.status(200).json({ message: 'Coupon not found' });
+    }
+
+    if (couponCheck.expireDate < new Date()) {
+        console.log('exp');
+        return res.status(200).json({ message: 'Coupon has expired' });
+    }
+    if (!Array.isArray(couponCheck.usedUsers)) {
+        couponCheck.usedUsers = [];
+    }
+
+    const userHasUsedCoupon = couponCheck.usedUsers.some(user => user._id.toString() === userId.toString());
+
+    if (userHasUsedCoupon) {
+        return res.status(200).json({ message: 'Coupon is already used' });
+      }
+    if (couponCheck.status==false) {
+        console.log('status');
+        return res.status(200).json({ message: 'Coupon is not active' });
+    }
+    if(couponCheck.minAmount>subtotal){
+        return res.status(200).json({ message: 'min amount is not valid' });
+
+    }
+
+    let discountAmount = (subtotal * couponCheck.discount) / 100;
+    discountAmount = Math.floor(discountAmount);
+    let discountedSubtotal = subtotal - discountAmount;
+    console.log(discountedSubtotal);
+
+
+    // couponCheck.usedUsers.push(userId);
+    //     await couponCheck.save();
+        console.log('done');
+        res.status(200).json({ message: 'Coupon applied successfully', discountedSubtotal })
+
+} catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports={
     couponAddLoad,
     couponList,
     couponAdd,
     editCouponLoad,
     updateCoupon,
-    couponShow
+    couponShow,
+    //apply coupon===================
+    applyCoupon
 }
