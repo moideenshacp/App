@@ -193,21 +193,21 @@
                 <div class="checkout">
                     <div class="container">
                         <div class="checkout-discount">
-                            <form id="coupon-form">
-                                <div class="row">
-                                    <div class="col">
-                                        <input type="text" class="form-control" required id="checkout-discount-input"
-                                            placeholder="Have a coupon? ">
-                                    </div>
-                                    <div class="col-auto"> <!-- Adjusted column width -->
-                                        <button type="submit" class="btn btn-primary btn-block">Apply</button>
-                                        <button type="submit" class="btn btn-primary btn-block">Remove</button>
+                                <form id="coupon-form">
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="text" class="form-control" required id="checkout-discount-input"
+                                                placeholder="Have a coupon? ">
+                                        </div>
+                                        <div class="col-auto"> <!-- Adjusted column width -->
+                                            <button type="submit" class="btn btn-primary btn-block">Apply</button>
+                                            <button type="button" id="remove-coupon-btn" class="btn btn-primary btn-block">Remove</button>
 
+                                        </div>
+                                        <input type="hidden" value="<%=subtotal%>">
                                     </div>
-                                    <input type="hidden" value="<%=subtotal%>">
-                                </div>
-                                <label for="checkout-discount-input" class="text-truncate"><span></span></label>
-                            </form>
+                                    <label for="checkout-discount-input" class="text-truncate"><span></span></label>
+                                </form>
                             <div id="coupon-discount"></div>
                         </div><!-- End .checkout-discount -->
 
@@ -1035,7 +1035,10 @@
                     const couponDiscountElement = document.getElementById('coupon-discount');
                     if (data.message === 'Coupon applied successfully') {
                         document.getElementById('total').textContent = data.discountedSubtotal;
+                        localStorage.setItem('discountedSubtotal', data.discountedSubtotal);  // Store the discounted subtotal
+                        localStorage.setItem('couponCode', couponCode); 
                         couponDiscountElement.innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
+                        document.getElementById('checkout-discount-input').value = couponCode;
                     } else if(data.message === 'Coupon is not active'){
                         couponDiscountElement.innerHTML = `<p>Coupon is not active!</p>`;
                     }else if(data.message === 'Coupon has expired'){
@@ -1059,6 +1062,47 @@
 
 
         }
+
+        window.addEventListener('load', () => {
+        const discountedSubtotal = localStorage.getItem('discountedSubtotal');
+        const couponCode = localStorage.getItem('couponCode');
+
+        if (discountedSubtotal) {
+            document.getElementById('total').textContent = discountedSubtotal;
+            document.getElementById('coupon-discount').innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
+        }
+        if (couponCode) {
+            document.getElementById('checkout-discount-input').value = couponCode;  // Show the coupon code in the input field
+        }
+    });
+
+
+
+
+
+
+    function removeCoupon() {
+        fetch('/removeCoupon', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Coupon removed successfully') {
+                    localStorage.removeItem('discountedSubtotal');
+                    localStorage.removeItem('couponCode');
+                    document.getElementById('total').textContent = data.subtotal;
+                    document.getElementById('checkout-discount-input').value = '';
+                    document.getElementById('coupon-discount').innerHTML = <p>Coupon removed successfully!</p>;
+                } else {
+                    document.getElementById('coupon-discount').innerHTML = <p>Something went wrong!</p>;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
     </script>
 
 

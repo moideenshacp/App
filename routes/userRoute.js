@@ -148,5 +148,6 @@ user_route.post('/sort',auth.isLogin,userController.sort)
 
 //appply coupon
 user_route.post('/applyCoupon',auth.isLogin,couponController.applyCoupon)
+user_route.post('/removeCoupon',auth.isLogin,couponController.removeCoupon)
 
 module.exports = user_route;
