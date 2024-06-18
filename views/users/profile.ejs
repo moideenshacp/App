@@ -276,6 +276,23 @@
                                     <p class="card-text">Wallet Amount: ₹<span class="font-weight-bold"><%=user[0].wallet%></span></p>
                                 </div>
                             </div>
+                            <div class="card mt-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Wallet History</h5>
+                                    <table class="table mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="wallet-history-table">
+                                            <!-- Wallet transactions will be appended here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 								    </div><!-- .End .tab-pane -->
                                     <% orderPoducts.forEach(order=> { %>
                                         <% order.products.forEach(orderProduct=> { %>
@@ -343,12 +360,15 @@
                                                             <%}%>
 
                                                                 </td>
+                                                                
 
                                                         </tr>
+                                                        
       
                                                     </tbody>
                                                     <% }) %>
                                                         <% }) %>
+                                                        
                                         </table><!-- End .table table-wishlist -->
                                         
                                        
@@ -1099,6 +1119,41 @@
             });
         }, function(err) {
             console.error('Async: Could not copy text: ', err);
+        });
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/wallet/history')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    displayWalletHistory(data.transactions);
+                } else {
+                    console.error('Failed to fetch wallet history');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    function displayWalletHistory(transactions) {
+        const walletHistoryTable = document.getElementById('wallet-history-table');
+        transactions.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date(transaction.date).toLocaleDateString()}</td>
+                <td>${transaction.type}</td>
+                <td>${transaction.amount > 0 ? '+' : ''}₹${Math.abs(transaction.amount)}</td>
+            `;
+            walletHistoryTable.appendChild(row);
         });
     }
 </script>

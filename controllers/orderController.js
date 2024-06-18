@@ -5,6 +5,7 @@ const Cart = require('../models/cart');
 const product = require('../models/product');
 const Address = require('../models/address');
 const Order = require('../models/order');
+const Wallet = require('../models/walletHistory')
 const Razorpay = require('razorpay');
 const { logout } = require('./adminController');
 const crypto = require('crypto');
@@ -13,6 +14,7 @@ var {
     validatePaymentVerification,
   } = require("razorpay/dist/utils/razorpay-utils");
 const { fail } = require('assert');
+const { wallet } = require('./userController');
 
 
 
@@ -92,6 +94,15 @@ const walletOrder = async (req, res) => {
             userData.wallet -= subtotal;
             await userData.save();
 
+
+            const transaction = new Wallet({
+                user: userId,
+                amount: -subtotal,
+                type: 'debit',
+                
+            });
+            await transaction.save();
+
             const order = new Order({
                 user: userId,
                 products: productData.products,
@@ -127,6 +138,7 @@ const RazorpayOrder = async (req,res)=>{
         const {subtotal} = req.body
         console.log("we get innn");
         const amount = subtotal * 100;
+        console.log(subtotal);
         const options = {
             amount: amount,
             currency: 'INR',
@@ -243,6 +255,15 @@ const cancelOrder= async(req,res)=>{
                 const user = await users.findById(userId);
                 user.wallet += productCart.price * orderProduct.quantity;
                 await user.save();
+                const refundAmount = productCart.price * orderProduct.quantity
+
+                 const walletTransaction = new Wallet({
+                    user: userId,
+                    amount: refundAmount,
+                    type: 'credit',
+            });
+            await walletTransaction.save();
+        
             }
             res.status(200).json({ message: 'succes' });
             

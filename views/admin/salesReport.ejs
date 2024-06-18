@@ -372,7 +372,6 @@
     var ws = XLSX.utils.aoa_to_sheet(rows);
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
-    // Export the workbook to an Excel file
     XLSX.writeFile(wb, 'table_data.xlsx');
 }
 
@@ -413,14 +412,11 @@
     }
 
     function displaySalesReport(orderlist, categoryData, totalSalesAmount, deliveredProductCount) {
-    const tbody = document.querySelector('.table tbody ');
+    const tbody = document.querySelector('.table tbody');
     const totalAmountElement = document.getElementById('total-salesamount');
     const deliveredCountElement = document.getElementById('delivered-count');
 
-    tbody.innerHTML = '';
-
-    let totalAmount = 0;
-    let deliveredCount = 0;
+    tbody.innerHTML = '';  // Clear the table body before appending new rows
 
     orderlist.forEach(order => {
         order.products.forEach(product => {
@@ -435,18 +431,12 @@
                     <td>${product.quantity}</td>
                     <td><span class="badge rounded-pill alert-warning">${product.status}</span></td>
                     <td>₹${product.quantity * product.product.price}</td>
-                     <td>₹${totalSalesAmount}</td>
-                    
                 `;
                 tbody.appendChild(row);
-
-                totalAmount += product.quantity * product.product.price;
-                deliveredCount++;
             }
         });
     });
 
-    console.log(totalAmountElement)
     if (totalAmountElement) {
         totalAmountElement.textContent = `₹${totalSalesAmount}`;
     } else {
@@ -454,11 +444,12 @@
     }
 
     if (deliveredCountElement) {
-        deliveredCountElement.textContent = deliveredCount;
+        deliveredCountElement.textContent = deliveredProductCount;
     } else {
         console.error('Delivered count element not found.');
     }
 }
+
 
 </script>
 

@@ -6,6 +6,7 @@ const products = require('../models/product')
 const cart = require('../models/cart')
 const Address = require('../models/address')
 const Order = require('../models/order')
+const Wallet = require('../models/walletHistory')
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 // const { name } = require('ejs');
@@ -453,6 +454,19 @@ const loadprofile = async(req,res)=>{
 
 
 
+const wallet =  async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        const transactions = await Wallet.find({ user: userId }).sort({ date: -1 });
+        res.status(200).json({ success: true, transactions });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to fetch wallet history' });
+    }
+};
+
+
+
 
 
 ////load product
@@ -884,6 +898,7 @@ module.exports= {
     SignupHome,
     verifyOtp,
     loadprofile,
+    wallet,
     userhome,
     signout,
     resendotp,

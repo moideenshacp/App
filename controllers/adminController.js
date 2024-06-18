@@ -5,6 +5,7 @@ const cart = require('../models/cart')
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const Product = require('../models/product')
+const Wallet = require('../models/walletHistory')
 const path = require('path')
 const Address = require('../models/address');
 const Order = require('../models/order')
@@ -663,6 +664,14 @@ const returnOrder = async (req, res) => {
                 const user = await users.findById(userId);
                 user.wallet += productFind.price * orderProduct.quantity;
                 await user.save();
+                const refundAmount = productCart.price * orderProduct.quantity
+
+                const walletTransaction = new Wallet({
+                    user: userId,
+                    amount: refundAmount,
+                    type: 'credit',
+            });
+            await walletTransaction.save();
             }
         } else if (action === 'deny') {
             console.log('1234789');

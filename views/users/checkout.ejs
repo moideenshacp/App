@@ -193,21 +193,20 @@
                 <div class="checkout">
                     <div class="container">
                         <div class="checkout-discount">
-                                <form id="coupon-form">
-                                    <div class="row">
-                                        <div class="col">
-                                            <input type="text" class="form-control" required id="checkout-discount-input"
-                                                placeholder="Have a coupon? ">
-                                        </div>
-                                        <div class="col-auto"> <!-- Adjusted column width -->
-                                            <button type="submit" class="btn btn-primary btn-block">Apply</button>
-                                            <button type="button" id="remove-coupon-btn" class="btn btn-primary btn-block">Remove</button>
-
-                                        </div>
-                                        <input type="hidden" value="<%=subtotal%>">
+                            <form id="coupon-form">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" required id="checkout-discount-input" placeholder="Have a coupon? ">
                                     </div>
-                                    <label for="checkout-discount-input" class="text-truncate"><span></span></label>
-                                </form>
+                                    <div class="col-auto"> <!-- Adjusted column width -->
+                                        <button type="submit" class="btn btn-primary btn-block">Apply</button>
+                                        <button type="button" id="remove-coupon-btn" class="btn btn-primary btn-block">Remove</button>
+                                    </div>
+                                    <input type="hidden" value="<%=subtotal%>">
+                                </div>
+                                <label for="checkout-discount-input" class="text-truncate"><span></span></label>
+                            </form>
+                            
                             <div id="coupon-discount"></div>
                         </div><!-- End .checkout-discount -->
 
@@ -865,7 +864,8 @@
             const selectedAddress = form.elements['selectedAddress'].value;
             const paymentMethod = form.elements['paymentMethod'].value;
             const SubtotalEle = document.getElementById('total')
-            const subtotal = SubtotalEle.textContent.trim();
+            const subtotalText = SubtotalEle.textContent.trim();
+            const subtotal = parseFloat(subtotalText.replace(/[^\d.-]/g, ''));
             let datas = {
                 selectedAddress,
                 paymentMethod,
@@ -1013,6 +1013,10 @@
 
             applyCoupon(couponCode);
         });
+        document.getElementById('remove-coupon-btn').addEventListener('click', function () {
+        console.log('Remove button clicked'); // Debug log
+        removeCoupon();
+    });
 
         function applyCoupon(couponCode) {
             const subtotal = parseFloat("<%= subtotals %>");
@@ -1063,7 +1067,40 @@
 
         }
 
-        window.addEventListener('load', () => {
+
+        function removeCoupon() {
+        const subtotal = parseFloat("<%= subtotals %>");
+
+        fetch('/removeCoupon', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ subtotal }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message === 'Coupon removed successfully') {
+                document.getElementById('total').textContent = data.originalSubtotal;
+                localStorage.removeItem('discountedSubtotal');
+                localStorage.removeItem('couponCode');
+                document.getElementById('coupon-discount').innerHTML = `<p>Coupon removed successfully!</p>`;
+                document.getElementById('checkout-discount-input').value = '';
+            } else {
+                document.getElementById('coupon-discount').innerHTML = `<p>Failed to remove coupon!</p>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    window.addEventListener('load', () => {
         const discountedSubtotal = localStorage.getItem('discountedSubtotal');
         const couponCode = localStorage.getItem('couponCode');
 
@@ -1072,7 +1109,7 @@
             document.getElementById('coupon-discount').innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
         }
         if (couponCode) {
-            document.getElementById('checkout-discount-input').value = couponCode;  // Show the coupon code in the input field
+            document.getElementById('checkout-discount-input').value = couponCode;
         }
     });
 
@@ -1080,29 +1117,7 @@
 
 
 
-
-    function removeCoupon() {
-        fetch('/removeCoupon', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Coupon removed successfully') {
-                    localStorage.removeItem('discountedSubtotal');
-                    localStorage.removeItem('couponCode');
-                    document.getElementById('total').textContent = data.subtotal;
-                    document.getElementById('checkout-discount-input').value = '';
-                    document.getElementById('coupon-discount').innerHTML = <p>Coupon removed successfully!</p>;
-                } else {
-                    document.getElementById('coupon-discount').innerHTML = <p>Something went wrong!</p>;
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
+    
     </script>
 
 

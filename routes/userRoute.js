@@ -71,6 +71,7 @@ user_route.get('/google',auth.isLogin,passport.authenticate('google',{failureRed
 
 //profile
 user_route.get('/profile',auth.isLogin,blockAuth.block,userController.loadprofile)
+user_route.get('/wallet/history',auth.isLogin,userController.wallet)
 
 //userhome
 user_route.get('/home', auth.isLogin,blockAuth.block, userController.userhome)
@@ -148,6 +149,7 @@ user_route.post('/sort',auth.isLogin,userController.sort)
 
 //appply coupon
 user_route.post('/applyCoupon',auth.isLogin,couponController.applyCoupon)
-user_route.post('/removeCoupon',auth.isLogin,couponController.removeCoupon)
+user_route.post('/removeCoupon', auth.isLogin, couponController.removeCoupon);
+
 
 module.exports = user_route;

@@ -164,9 +164,9 @@ const applyCoupon = async(req,res)=>{
     try {
     const userId = req.session.user_id;
     const {couponCode,subtotal}= req.body;
-    const cartFind = await Cart.findOne({user:userId}):
+    const cartFind = await Cart.findOne({user:userId});
 
-        req.session.coupon=
+        req.session.coupon= req.body.couponCode
 
     const couponCheck = await Coupon.findOne({code:couponCode})
     if (!couponCheck) {
@@ -215,35 +215,42 @@ const applyCoupon = async(req,res)=>{
 const removeCoupon = async (req, res) => {
     try {
         const userId = req.session.user_id;
+        const { subtotal } = req.body;
+
         const cartFind = await Cart.findOne({ user: userId });
-
         if (!cartFind) {
-            return res.status(404).json({ message: 'Cart not found' });
+            return res.status(200).json({ message: 'Cart not found' });
         }
 
-        const subtotal = calculateSubtotal(cartFind);
-
-        // Assuming the coupon code is stored in the session
         const couponCode = req.session.coupon;
-
-        if (couponCode) {
-            const couponCheck = await Coupon.findOne({ code: couponCode });
-            if (couponCheck) {
-                // Remove user from usedUsers array
-                couponCheck.usedUsers = couponCheck.usedUsers.filter(user => user.toString() !== userId.toString());
-                await couponCheck.save();
-            }
+        if (!couponCode) {
+            return res.status(200).json({ message: 'No coupon applied' });
         }
 
-        // Reset the coupon details in the session
-        req.session.coupon = null;
+        const couponCheck = await Coupon.findOne({ code: couponCode });
+        if (!couponCheck) {
+            return res.status(200).json({ message: 'Coupon not found' });
+        }
 
-        res.status(200).json({ message: 'Coupon removed successfully', subtotal });
+        const userIndex = couponCheck.usedUsers.findIndex(user => user._id.toString() === userId.toString());
+        if (userIndex !== -1) {
+            couponCheck.usedUsers.splice(userIndex, 1);
+            await couponCheck.save();
+        }
+        req.session.coupon = null;
+        res.status(200).json({ message: 'Coupon removed successfully', originalSubtotal: subtotal });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+module.exports = {
+    applyCoupon,
+    removeCoupon,
+    // other controllers
+};
+
+
 
 
 module.exports={
