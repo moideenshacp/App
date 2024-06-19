@@ -17,6 +17,14 @@ const { fail } = require('assert');
 const { wallet } = require('./userController');
 
 
+function genrateOrderID(){
+    var digits ='1234567890';
+    var Id ='';
+    for(let i=0;i<6;i++){
+        Id+=digits[Math.floor(Math.random()*10)]
+    }
+    return Id;
+}
 
 
 const RAZORPAY_ID_KEY = process.env.RAZORPAY_ID_KEY;
@@ -42,14 +50,16 @@ const order = async(req,res)=>{
             
             const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities,sales:quantities}})
         }
+        const totalAmount = parseFloat(subtotal.replace(/[^\d.-]/g, ''));
        
         const order = new Order({
+            orderId:genrateOrderID(),
             user:userId,
             products:productData.products,
             paymentMethod:paymentMethod,
             address:selectedAddress,
             date:Date.now(),
-            totalAmount:subtotal
+            totalAmount:totalAmount
 
         })
         
@@ -104,6 +114,7 @@ const walletOrder = async (req, res) => {
             await transaction.save();
 
             const order = new Order({
+                orderId:genrateOrderID(),
                 user: userId,
                 products: productData.products,
                 paymentMethod: paymentMethod,
@@ -197,12 +208,12 @@ const verifySignature = async (req, res) => {
             }
            
             const order = new Order({
+                orderId:genrateOrderID(),
                 user:userId,
                 products:productData.products,
                 paymentMethod:paymentMethod,
                 address:selectedAddress,
                 date:Date.now(),
-
                 totalAmount:subtotal
     
             })

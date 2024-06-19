@@ -298,6 +298,31 @@
                             <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
                         </div>End .load-more-container -->
                     </div><!-- End .products -->
+                    <div class="pagination-area mt-15 mb-50">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+                                <% if (currentPage > 1) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>"><i class="material-icons md-chevron_left"></i></a>
+                                    </li>
+                                <% } %>
+                
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                                    </li>
+                                <% } %>
+                
+                                <% if (currentPage < totalPages) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=<%= limit %>"><i class="material-icons md-chevron_right"></i></a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </nav>
+                    </div>
+
+
 
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
                     

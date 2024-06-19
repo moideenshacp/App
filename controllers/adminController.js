@@ -514,7 +514,7 @@ const loadOrder = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 3;
         const skip = (page - 1) * limit;
-        const orderlist = await Order.find().populate('products.product').skip(skip).limit(limit);
+        const orderlist = await Order.find().populate('products.product').populate('user').skip(skip).limit(limit);
 
         const totalOrders = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrders / limit);
@@ -527,14 +527,14 @@ const loadOrder = async (req, res) => {
 //load order detail
 const orderDetail = async (req, res) => {
     try {
-        const userId = req.query.userId;
-        console.log(userId);
+        const userId = req.session.user_id;
         const productId = req.query.productId;
-        console.log(productId);
         const orderId = req.query.orderId;
-        const orderData = await Order.findOne({ _id: orderId }).populate('address.addresses')
-        const orders = await Order.find({ user: userId }).populate('products.product')
-        const address = await Address.findOne({ user: userId })
+        const orderData = await Order.findOne({_id:orderId}).populate('address.addresses')   
+        const orders = await Order.find({user:userId}).populate('products.product')
+        const address = await Address.findOne({user:userId})
+
+        console.log('User ID:', userId);
         let orderProduct = null;
         orders.forEach(order => {
             order.products.forEach(product => {
@@ -544,9 +544,9 @@ const orderDetail = async (req, res) => {
             });
         });
         let orderAddress = null;
-        address.addresses.forEach(add => {
-            if (add._id.toString() === orderData.address.toString()) {
-                orderAddress = add
+        address.addresses.forEach(add=>{
+            if(add._id.toString()===orderData.address.toString()){
+                orderAddress=add
             }
         })
         const formattedDate = orderData.date.toLocaleString('en-US', { timeZone: 'UTC' });
@@ -664,7 +664,7 @@ const returnOrder = async (req, res) => {
                 const user = await users.findById(userId);
                 user.wallet += productFind.price * orderProduct.quantity;
                 await user.save();
-                const refundAmount = productCart.price * orderProduct.quantity
+                const refundAmount = productFind.price * orderProduct.quantity
 
                 const walletTransaction = new Wallet({
                     user: userId,
@@ -692,7 +692,8 @@ const returnOrder = async (req, res) => {
 //sort sale
 const sortSales = async (req, res) => {
     try {
-        const { selectedValue } = req.body;
+        const { selectedValue, dateRangeStart, dateRangeEnd } = req.body;
+        console.log(dateRangeStart);
         console.log(selectedValue);
 
         let orderlist = [];
@@ -721,6 +722,10 @@ const sortSales = async (req, res) => {
             case 'yearly':
                 startDate = new Date(currentDate.getFullYear(), 0, 1);
                 endDate = new Date(currentDate.getFullYear(), 11, 31);
+                break;
+            case 'custom':
+                startDate = new Date(dateRangeStart);
+                endDate = new Date(dateRangeEnd);
                 break;
             default:
                 startDate = new Date(currentDate);

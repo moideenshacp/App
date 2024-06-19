@@ -80,17 +80,7 @@
             <div class="header-middle">
                 <div class="container">
                     <div class="header-left">
-                        <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
-                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper search-wrapper-wide">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                    <input type="search" class="form-control" name="q" id="q"
-                                        placeholder="Search product ..." required>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
+                        
                     </div>
 
                     <!-- <a href="index-6.html   " class="logo">
@@ -328,7 +318,7 @@
                                                             Wallet
                                                         </label>
                                                     </div>
-
+                                                    <%if(subtotal<=1000){%>
                                                     <div>
                                                         <label>
                                                             <input type="radio" name="paymentMethod"
@@ -337,6 +327,7 @@
                                                         </label>
                                                     </div>
 
+                                                    <%}%>
 
 
 
@@ -814,7 +805,9 @@
             const selectedAddress = form.elements['selectedAddress'].value;
             const paymentMethod = form.elements['paymentMethod'].value;
             const SubtotalEle = document.getElementById('total')
-            const subtotal = SubtotalEle.textContent.trim();
+            const subtotalText = SubtotalEle.textContent.trim();
+            const subtotal = parseFloat(subtotalText.replace(/[^\d.-]/g, ''));
+
             let datas = {
                 selectedAddress,
                 paymentMethod,

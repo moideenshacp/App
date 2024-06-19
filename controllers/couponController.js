@@ -61,6 +61,9 @@ const couponAdd = async(req,res)=>{
         if (!expireDate || isNaN(Date.parse(expireDate))) {
             return res.render('couponAdd', { messages: 'Invalid expiry date provided.', name, code, minamount, discount, expireDate, description });
         }
+        if (new Date(expireDate) < today) {
+            return res.render('couponAdd', { messages: 'The expiry date has already passed.', name, code, minamount, discount, expireDate, description });
+        }
         if (!description || /^\s*$/.test(description)) {
             return res.render('couponAdd', { messages: 'Invalid discription provided.', name, code, minamount, discount, expireDate, description });
         }
@@ -107,6 +110,8 @@ const editCouponLoad = async(req,res)=>{
 const updateCoupon = async(req,res)=>{
     try {
         const id = req.body.id
+        const today = new Date();
+
         const couponFind = await Coupon.findOne({_id:id})
         const {name,code,minamount,discount,expireDate,description} = req.body
         if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
@@ -123,6 +128,9 @@ const updateCoupon = async(req,res)=>{
         }
         if (!expireDate || isNaN(Date.parse(expireDate))) {
             return res.render('couponAdd', { messages: 'Invalid expiry date provided.', name, code, minamount, discount, expireDate, description });
+        }
+        if (new Date(expireDate) < today) {
+            return res.render('couponAdd', { messages: 'The expiry date has already passed.', name, code, minamount, discount, expireDate, description });
         }
         if (!description || /^\s*$/.test(description)) {
             return res.render('couponAdd', { messages: 'Invalid discription provided.', name, code, minamount, discount, expireDate, description });

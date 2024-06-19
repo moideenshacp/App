@@ -294,87 +294,60 @@
                                 </div>
                             </div>
 								    </div><!-- .End .tab-pane -->
-                                    <% orderPoducts.forEach(order=> { %>
-                                        <% order.products.forEach(orderProduct=> { %>
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-                                        <table class="table table-cart table-mobile">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
-                                                    <th>Total</th>
-                                                    <th>Status</th>
-                                                    <th>Details</th>
-
-                                                    <%if(orderProduct.status==='pending'){%>
-                                                    <th>Action</th>
-                                                    <%}%>
-                                                </tr>
-                                            </thead>
-                                            <% orderPoducts.forEach(order=> { %>
-                                                <% order.products.forEach(orderProduct=> { %>
+                                    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                        <% orderPoducts.forEach(order => { %>
+                                            <div class="order-section">
+                                                <h6>Order ID: <%= order._id %></h6>
+                                                <table class="table table-cart table-mobile">
                                                     <tbody>
-                                                        <tr>
-                                                            <td class="product-col">
-                                                                <div class="product">
-                                                                    <figure class="product-media">
-                                                                        <a
-                                                                            href="/productDetail?id=<%=orderProduct.product._id%>">
-                                                                            <img src="/productImages/productImages/<%=orderProduct.product.image[0]%>"
-                                                                                alt="Product image">
-                                                                        </a>
-                                                                    </figure>
-                                                                    <h3 class="product-title">
-                                                                        <a
-                                                                            href="/productDetail?id=<%=orderProduct.product._id%>">
-                                                                            <%= orderProduct.product.name %>
-                                                                        </a>
-                                                                    </h3><!-- End .product-title -->
-                                                                </div><!-- End .product -->
-                                                            </td>
-    
-                                                            <td class="total-col">
-                                                                ₹<%=orderProduct.product.price%>
-                                                            </td>
-                                                            <td class="total-col">
-                                                                <%=orderProduct.quantity%>
-                                                            </td>
-                                                            <td class="total-col">
-                                                                ₹<%=orderProduct.quantity*orderProduct.product.price %>
-                                                            </td>
-                                                            <td class="total-col">
-                                                                <%=orderProduct.status %>
-                                                            </td>
-                                                            <td>
-                                                                <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= orderProduct.product._id%>"><button class="btn btn-primary show-details-btn">Show Details</button></a>
-                                                            </td>   
-                                                            <td>
-                                                            <%if(orderProduct.status==='pending'){%>
-                                                                
-                                                                <a onclick="cancelOrder('<%=orderProduct.product._id%>')"><button class="btn btn-primary show-details-btn">Cancel Order</button></a>
-                                                                
-                                                            <%}else if(orderProduct.status==='delivered'){%>
-                                                                <a onclick="returnOrder('<%=orderProduct.product._id%>')"><button class="btn btn-primary show-details-btn">Return Order</button></a>
-
-                                                            <%}%>
-
+                                                        <% order.products.forEach(orderProduct => { %>
+                                                            <tr>
+                                                                <td class="product-col">
+                                                                    <div class="product">
+                                                                        <figure class="product-media">
+                                                                            <a href="/productDetail?id=<%= orderProduct.product._id %>">
+                                                                                <img src="/productImages/productImages/<%= orderProduct.product.image[0] %>" alt="Product image">
+                                                                            </a>
+                                                                        </figure>
+                                                                        <h3 class="product-title">
+                                                                            <a href="/productDetail?id=<%= orderProduct.product._id %>">
+                                                                                <%= orderProduct.product.name %>
+                                                                            </a>
+                                                                        </h3>
+                                                                    </div>
                                                                 </td>
-                                                                
-
-                                                        </tr>
-                                                        
-      
-                                                    </tbody>
-                                                    <% }) %>
+                                                                <td class="total-col">₹<%= orderProduct.product.price %></td>
+                                                                <td class="total-col"><%= orderProduct.quantity %></td>
+                                                                <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.price %></td>
+                                                                <td class="total-col"><%= orderProduct.status %></td>
+                                                                <td>
+                                                                    <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= orderProduct.product._id %>">
+                                                                        <button class="btn btn-primary show-details-btn">Show Details</button>
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    <% if (orderProduct.status === 'pending') { %>
+                                                                        <a onclick="cancelOrder('<%= orderProduct.product._id %>')">
+                                                                            <button class="btn btn-primary show-details-btn">Cancel Order</button>
+                                                                        </a>
+                                                                    <% } else if (orderProduct.status === 'delivered') { %>
+                                                                        <a onclick="returnOrder('<%= orderProduct.product._id %>')">
+                                                                            <button class="btn btn-primary show-details-btn">Return Order</button>
+                                                                        </a>
+                                                                    <% } %>
+                                                                </td>
+                                                            </tr>
                                                         <% }) %>
-                                                        
-                                        </table><!-- End .table table-wishlist -->
-                                        
-                                       
+                                                    </tbody>
+                                                </table>
+                                                <div class="text-center">
+                                                    <button class="btn btn-primary">Download Invoice</button>
+                                                </div>
+                                                <hr style="border-color: blue; border-width: 2px;">
+                                            </div>
+                                        <% }) %>
                                     </div>
-                                    <% }) %>
-                                    <% }) %>
+                                    
 
                                     <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
                                         <div class="coupon-list row">

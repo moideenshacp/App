@@ -217,7 +217,7 @@
                                 <tr>
                                     <th>Sl No</th>
                                     <th>Order ID</th>
-                                    <td>User ID</td>
+                                    <td>User Name</td>
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">quantity</th>
@@ -239,7 +239,7 @@
                                                 #<%=order._id%>
                                             </td>
                                             <td>
-                                                <%=order.user%>
+                                                <%=order.user.name%>
                                             </td>
                                             <td><b>
                                                     <%=product.product.name%>
@@ -258,7 +258,7 @@
 
                                                 <td class="text-end">
                                                     <% if (product.status === 'Return request sended') { %>
-                                                        <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %> class="btn btn-md rounded font-sm">Detail</a>
+                                                        <a href="/admin/orderDetail?orderId=<%= order._id %>&productId=<%= product.product._id %>&userId=<%= order.user %> class="btn btn-md rounded font-sm">Detail</a>
                                                         <a href="/admin/returnOrder?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=accept&userId=<%= order.user %>" class="btn btn-md rounded font-sm">Accept</a>
                                                         <a href="/admin/returnOrder?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=deny&userId=<%= order.user %>" class="btn btn-md rounded font-sm">Deny</a>
 

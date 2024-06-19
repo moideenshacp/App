@@ -496,6 +496,9 @@ const productDetail = async(req,res)=>{
 
 const shop = async(req,res)=>{
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 4;
+        const skip = (page - 1) * limit;
 
         const searchQuery = req.query.search; 
 
@@ -507,13 +510,15 @@ const shop = async(req,res)=>{
                 $or: [
                     { name: { $regex: '.*' + searchQuery + '.*', $options: 'i' } }, 
                 ]
-            }).populate('category'); 
+            }).populate('category').skip(skip).limit(limit);
         } else {
-            productData = await products.find({}).populate('category');
+            productData = await products.find({}).populate('category').skip(skip).limit(limit);
         }
+        const totalOrders = await Order.countDocuments();
+        const totalPages = Math.ceil(totalOrders / limit);
 
         categoryData = await category.find();
-        res.render('shop',{productData,categoryData})
+        res.render('shop',{productData,categoryData,currentPage: page, totalPages, limit })
     } catch (error) {
         console.log(error);
     }
