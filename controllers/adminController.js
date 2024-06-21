@@ -514,7 +514,7 @@ const loadOrder = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 3;
         const skip = (page - 1) * limit;
-        const orderlist = await Order.find().populate('products.product').populate('user').skip(skip).limit(limit);
+        const orderlist = await Order.find().populate('products.product').populate('user').sort({date:-1}).skip(skip).limit(limit);
 
         const totalOrders = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrders / limit);
@@ -527,7 +527,7 @@ const loadOrder = async (req, res) => {
 //load order detail
 const orderDetail = async (req, res) => {
     try {
-        const userId = req.session.user_id;
+        const userId = req.query.userId;
         const productId = req.query.productId;
         const orderId = req.query.orderId;
         const orderData = await Order.findOne({_id:orderId}).populate('address.addresses')   
@@ -558,11 +558,12 @@ const orderDetail = async (req, res) => {
     }
 }
 
-const statusDelivered = async (req, res) => {
+const statusChange = async (req, res) => {
     try {
-        let dataIndex = 0
-        const productId = req.body.productId;
-        const userId = req.body.userId;
+        let dataIndex = 0;
+        const { orderId, productId ,userId} = req.query;
+        const action = req.query.action;
+        const productFind = await Product.findOne({ _id: productId })
         console.log(productId + '11111111111111111111110');
         const orderData = await Order.find({ user: userId })
         for (i = 0; i < orderData.length; i++) {
@@ -572,14 +573,40 @@ const statusDelivered = async (req, res) => {
             };
 
         }
-        if (orderProduct) {
-            orderProduct.status = 'delivered';
+        
+        if (action === 'cancelled') {
+
+            orderProduct.status = 'cancelled';
 
             await orderData[dataIndex].save();
+            const productData = await products.findById(orderProduct.product);
 
+            productData.quantity += orderProduct.quantity;
+            productData.sales -= orderProduct.quantity;
+
+
+            await productData.save();
+            if (orderData[dataIndex].paymentMethod === 'Razorpay' || orderData[dataIndex].paymentMethod === 'Wallet') {
+                const user = await users.findById(userId);
+                user.wallet += productFind.price * orderProduct.quantity;
+                await user.save();
+                const refundAmount = productFind.price * orderProduct.quantity
+
+                const walletTransaction = new Wallet({
+                    user: userId,
+                    amount: refundAmount,
+                    type: 'credit',
+            });
+            await walletTransaction.save();
+            }
+        } else if (action === 'delivered') {
+            orderProduct.status = 'delivered'
+            await orderData[dataIndex].save();
+
+        } else {
+            throw new Error('Invalid action type');
         }
-        res.status(200).json({ message: 'succes' });
-
+        res.redirect('/admin/order')
 
 
     } catch (error) {
@@ -635,7 +662,7 @@ const salesReportLoad = async (req, res) => {
 const returnOrder = async (req, res) => {
     try {
         let dataIndex = 0
-        const { orderId, productId, userId } = req.query;
+        const { orderId, productId ,userId} = req.query;
         const action = req.query.action;
         const productFind = await Product.findOne({ _id: productId })
         const orderData = await Order.find({ user: userId })
@@ -785,7 +812,7 @@ module.exports = {
     //order------------------------------------------------------------------------
     loadOrder,
     orderDetail,
-    statusDelivered,
+    statusChange,
     statusCancelled,
 
     //sales report

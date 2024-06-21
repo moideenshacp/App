@@ -25,7 +25,7 @@ const orderSchema = mongoose.Schema({
         
     status: {
         type: String,
-        enum: ['pending', 'delivered','cancelled','Return request sended','Returned','Return Denied'],
+        enum: ['pending', 'delivered','cancelled','Return request sended','Returned','Return Denied','payment failed'],
         default: 'pending'
     },
         total:{
@@ -39,7 +39,7 @@ const orderSchema = mongoose.Schema({
     }],
     paymentMethod: {
         type: String,
-        enum: ['cashOnDelivery','Razorpay','Wallet'],
+        enum: ['cashOnDelivery','Razorpay','Wallet','Razorpay payment failed'],
         // required: true
     },
     totalAmount:{
@@ -52,6 +52,19 @@ const orderSchema = mongoose.Schema({
     address:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'address'   
+     },
+    razorpayOrderId:{
+        type:String
+     },
+     razorpayPaymentId:{
+        type:String
+     },
+     razorpaySignature:{
+        type:String
+     },
+     paymentStatus:{
+        type:String,
+        enum:['payment failed','payment success'],
      }
 
 

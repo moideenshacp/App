@@ -31,6 +31,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <style>
         .wallet-icon {
             margin-right: 8px;
@@ -297,8 +300,18 @@
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
                                         <% orderPoducts.forEach(order => { %>
                                             <div class="order-section">
-                                                <h6>Order ID: <%= order._id %></h6>
+                                                <h6>Order ID: <%= order.orderId %></h6>
                                                 <table class="table table-cart table-mobile">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>Total</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
                                                     <tbody>
                                                         <% order.products.forEach(orderProduct => { %>
                                                             <tr>
@@ -319,11 +332,11 @@
                                                                 <td class="total-col">₹<%= orderProduct.product.price %></td>
                                                                 <td class="total-col"><%= orderProduct.quantity %></td>
                                                                 <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.price %></td>
-                                                                <td class="total-col"><%= orderProduct.status %></td>
+                                                                <td class="total-col-auto"><%= orderProduct.status %></td>
                                                                 <td>
-                                                                    <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= orderProduct.product._id %>">
-                                                                        <button class="btn btn-primary show-details-btn">Show Details</button>
-                                                                    </a>
+                                                                        <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= orderProduct.product._id %>">
+                                                                            <button class="btn btn-primary show-details-btn">Show Details</button>
+                                                                        </a>
                                                                 </td>
                                                                 <td>
                                                                     <% if (orderProduct.status === 'pending') { %>
@@ -341,12 +354,27 @@
                                                     </tbody>
                                                 </table>
                                                 <div class="text-center">
-                                                    <button class="btn btn-primary">Download Invoice</button>
+                                                    <h6>Total Order Amount: <%= order.totalAmount %></h6>
+                                                </div>
+                                                <div class="text-center">
+                                                    <% if (order.paymentStatus ==='payment failed') { %>
+                                                        <a onclick="razorpay('<%=order.totalAmount%>','<%=order.orderId%>')">
+                                                            <button class="btn btn-primary">Retry Payment</button>
+                                                        </a>
+                                                    <% }%>
+                                                </div>
+                                                <br>
+                                                <div class="text-center">
+                                                    <a href="/downloadInvoice/?orderId=<%= order._id %>&productId=<%= order.products[0].product._id %>">
+                                                        <button class="btn btn-primary">Download Invoice</button>
+                                                    </a>
+                                                    
                                                 </div>
                                                 <hr style="border-color: blue; border-width: 2px;">
                                             </div>
                                         <% }) %>
                                     </div>
+                                    
                                     
 
                                     <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
@@ -1129,6 +1157,101 @@
             walletHistoryTable.appendChild(row);
         });
     }
+</script>
+
+<script>
+    function razorpay(subtotal,orderId) {
+            
+            fetch('/RazorpayOrderRetry', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({subtotal,orderId})
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    var options = {
+                        key: data.key_id,
+                        amount: data.amount,
+                        currency: "INR",
+                        name: "MARS _STORE",
+                        description: "Transaction Description",
+                        image: "https://example.com/your_logo",
+                        order_id: data.order_id,
+                        handler: function (response) {
+                            const requestData = {
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                order_id:orderId
+                            };
+                            fetch('/verifySignatureRetry', {
+                                method: 'post',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ requestData }),
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Order Success',
+                                            text: 'Your order has been placed successfully!',
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            window.location.href = '/home';
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Order Failed',
+                                            text: 'Signature verification failed!',
+                                            confirmButtonText: 'OK'
+                                        });
+                                        console.log('Error:', data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Order Failed',
+                                        text: 'An error occurred!',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        },
+                        prefill: {
+                            name: "Customer Name",
+                            email: "customer_email@example.com",
+                            contact: "customer_phone",
+                        },
+                        theme: {
+                            color: "#192e68",
+                        },
+                    };
+                    var paymentGateway = new Razorpay(options);
+                    paymentGateway.open();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
 </script>
 
 

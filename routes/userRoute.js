@@ -128,6 +128,8 @@ user_route.post('/returnOrder',auth.isLogin,orderController.returnOrder)
 user_route.get('/orderDetails',auth.isLogin,orderController.orderDetails)
 //razorpay
 user_route.post('/razorpay',auth.isLogin,orderController.RazorpayOrder)
+user_route.post('/RazorpayOrderRetry',auth.isLogin,orderController.RazorpayOrderRetry)
+
 
 //wishlist
 user_route.get('/wishlist',auth.isLogin,wishlistController.wishlistLoad)
@@ -137,6 +139,8 @@ user_route.post('/removeProductWishlist',auth.isLogin,wishlistController.removeP
 
 //verify signature
 user_route.post('/verifySignature',auth.isLogin,orderController.verifySignature)
+user_route.post('/verifySignatureRetry',auth.isLogin,orderController.verifySignatureRetry)
+
 
 //wallet order
 user_route.post('/wallet',auth.isLogin,orderController.walletOrder)
@@ -151,5 +155,6 @@ user_route.post('/sort',auth.isLogin,userController.sort)
 user_route.post('/applyCoupon',auth.isLogin,couponController.applyCoupon)
 user_route.post('/removeCoupon', auth.isLogin, couponController.removeCoupon);
 
-
+//invoice dowload
+user_route.get('/downloadInvoice',auth.isLogin,orderController.invoiceDowload)
 module.exports = user_route;

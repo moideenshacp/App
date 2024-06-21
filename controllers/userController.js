@@ -514,8 +514,8 @@ const shop = async(req,res)=>{
         } else {
             productData = await products.find({}).populate('category').skip(skip).limit(limit);
         }
-        const totalOrders = await Order.countDocuments();
-        const totalPages = Math.ceil(totalOrders / limit);
+        const totalProducts = await products.countDocuments();
+        const totalPages = Math.ceil(totalProducts / limit);
 
         categoryData = await category.find();
         res.render('shop',{productData,categoryData,currentPage: page, totalPages, limit })

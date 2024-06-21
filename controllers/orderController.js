@@ -6,6 +6,9 @@ const product = require('../models/product');
 const Address = require('../models/address');
 const Order = require('../models/order');
 const Wallet = require('../models/walletHistory')
+const easyinvoice = require('easyinvoice')
+const fs = require('fs');
+const path = require('path');
 const Razorpay = require('razorpay');
 const { logout } = require('./adminController');
 const crypto = require('crypto');
@@ -144,41 +147,63 @@ const walletOrder = async (req, res) => {
     }
 };
 
-const RazorpayOrder = async (req,res)=>{
+const RazorpayOrder = async (req, res) => {
     try {
-        const {subtotal} = req.body
-        console.log("we get innn");
+        const { subtotal ,selectedAddress} = req.body;
         const amount = subtotal * 100;
-        console.log(subtotal);
+
         const options = {
             amount: amount,
             currency: 'INR',
             receipt: 'moideenshacp28@gmail.com'
-        }
-        razorpayInstance.orders.create(options,(err,order) => {
-                if(!err){
-                    res.status(200).json({
-                        success:true,
-                        msg:'Order Created',
-                        order_id:order.id,
-                        amount:amount,
-                        key_id: RAZORPAY_ID_KEY,
-                        contact:"9846648631",
-                        name: "Moideensha cp",
-                        email: "moideenshacp28@gmail.com",
-                    });
-                }
-                else{
-                    console.log(err);
-                    res.status(400).json({success:false,msg:'Something went wrong!'});
-                }
+        };
+
+        razorpayInstance.orders.create(options, async (err, order) => {
+            if (!err) {
+                const userId = req.session.user_id;
+                const userData = await users.findOne({ _id: userId });
+                const productData = await Cart.findOne({ user: userId }).populate('products.product');
+                
+                const orderData = new Order({
+                    orderId: genrateOrderID(),
+                    user: userId,
+                    products: productData.products.map(product => ({
+                        product: product.product._id,
+                        quantity: product.quantity,
+                        total: product.total,
+                        status: 'payment failed'
+                    })),
+                    paymentMethod: 'Razorpay',
+                    address: selectedAddress,
+                    date: Date.now(),
+                    totalAmount: subtotal,
+                    razorpayOrderId: order.id,
+                    paymentStatus:'payment failed' 
+                });
+                
+                await orderData.save();
+
+                res.status(200).json({
+                    success: true,
+                    msg: 'Order Created',
+                    order_id: order.id,
+                    amount: amount,
+                    key_id: RAZORPAY_ID_KEY,
+                    contact: "9846648631",
+                    name: "Moideensha cp",
+                    email: "moideenshacp28@gmail.com"
+                });
+            } else {
+                console.log(err);
+                res.status(400).json({ success: false, msg: 'Something went wrong!' });
             }
-        );
+        });
 
     } catch (error) {
         console.log(error.message);
     }
-}
+};
+
 
 
 
@@ -191,6 +216,8 @@ const verifySignature = async (req, res) => {
             .createHmac('sha256', process.env.RAZORPAY_SECRET_KEY)
             .update(razorpay_order_id + "|" + razorpay_payment_id)
             .digest('hex');
+
+            console.log(generated_signature,'101010101010');
 
         if (generated_signature === razorpay_signature) {
             console.log("Payment is successful");
@@ -207,23 +234,35 @@ const verifySignature = async (req, res) => {
                 const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities,sales:quantities}})
             }
            
-            const order = new Order({
-                orderId:genrateOrderID(),
-                user:userId,
-                products:productData.products,
-                paymentMethod:paymentMethod,
-                address:selectedAddress,
-                date:Date.now(),
-                totalAmount:subtotal
-    
-            })
+            const order = await Order.findOneAndUpdate(
+                { razorpayOrderId: razorpay_order_id },
+                {
+                    $set: {
+                        products: productData.products.map(product => ({
+                            product: product.product._id,
+                            quantity: product.quantity,
+                            total: product.total,
+                            status: 'pending'
+                        })),
+                        paymentMethod: paymentMethod,
+                        address: selectedAddress,
+                        totalAmount: subtotal,
+                        razorpayPaymentId: razorpay_payment_id,
+                        razorpaySignature: razorpay_signature,
+                        paymentStatus:'payment success',
+                        date: Date.now(),
+                    }
+                },
+                { new: true }
+            );
+
             await order.save()
             await Cart.deleteOne({ user: userId });
 
             res.status(200).json({ success: true, message: 'Signature verified and order created successfully' });
         } else {
             console.log("Signature verification failed");
-            res.status(400).json({ success: false, message: 'Signature verification failed' });
+            
         }
     } catch (error) {
         console.log(error);
@@ -231,6 +270,102 @@ const verifySignature = async (req, res) => {
     }
 };
 
+const RazorpayOrderRetry = async (req,res)=>{
+    try {
+        const {subtotal} = req.body
+        console.log("we get innn");
+        const amount = subtotal * 100;
+        console.log(subtotal);
+        const options = {
+            amount: amount,
+            currency: 'INR',
+            receipt: 'moideenshacp28@gmail.com'
+        }
+        razorpayInstance.orders.create(options,async(err,order) => {
+                if(!err){
+                    res.status(200).json({
+                        success:true,
+                        msg:'Order Created',
+                        order_id:order.id,
+                        amount:amount,
+                        key_id: RAZORPAY_ID_KEY,
+                        contact:"9846648631",
+                        name: "Moideensha cp",
+                        email: "moideenshacp28@gmail.com",
+                    });
+                }
+                else{
+                    console.log(err);
+                    res.status(400).json({success:false,msg:'Something went wrong!'});
+                }
+                
+            }
+        );
+
+       
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+const verifySignatureRetry = async (req, res) => {
+    try {
+        const { requestData } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature ,order_id} = requestData;
+
+        const generated_signature = crypto
+            .createHmac('sha256', process.env.RAZORPAY_SECRET_KEY)
+            .update(razorpay_order_id + "|" + razorpay_payment_id)
+            .digest('hex');
+
+            console.log(generated_signature,'101010101010');
+
+        if (generated_signature === razorpay_signature) {
+            console.log("Payment is successful");
+
+            const userId = req.session.user_id;
+            const userData = await users.findOne({_id:userId})
+            const productData = await Order.findOne({orderId:order_id}).populate('products.product')
+            const length = productData.products.length;
+    
+            for(i=0;i<length;i++){
+                const productId = productData.products[i].product._id
+                const quantities = productData.products[i].quantity;
+                
+                const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities,sales:quantities}})
+            }
+           
+            const order = await Order.findOneAndUpdate(
+                { orderId:order_id},
+                {
+                    $set: {
+                        products: productData.products.map(product => ({
+                            product: product.product._id,
+                            quantity: product.quantity,
+                            total: product.total,
+                            status: 'pending'
+                        })),
+                        razorpayPaymentId: razorpay_payment_id,
+                        razorpaySignature: razorpay_signature,
+                        paymentStatus:'payment success',
+                        date: Date.now(),
+                    }
+                },
+                { new: true }
+            );
+
+            await order.save()
+            await Cart.deleteOne({ user: userId });
+
+            res.status(200).json({ success: true, message: 'Signature verified and order created successfully' });
+        } else {
+            console.log("Signature verification failed");
+            
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
 
 
 const cancelOrder= async(req,res)=>{
@@ -354,6 +489,84 @@ const orderDetails =async(req,res)=>{
     }
 }
 
+const invoiceDowload = async(req,res)=>{
+try {
+
+    const userId = req.session.user_id;
+        const productId = req.query.productId;
+        const orderId = req.query.orderId;
+        const orderData = await Order.findOne({_id:orderId}).populate('address.addresses').populate('products.product') 
+        const address = await Address.findOne({user:userId})
+        let orderAddress = null;
+        address.addresses.forEach(add=>{
+            if(add._id.toString()===orderData.address.toString()){
+                orderAddress=add
+            }
+        })
+        const deliveredProducts = orderData.products.filter(orderProduct => orderProduct.status === 'delivered')
+        if (deliveredProducts.length === 0) {
+            return res.status(400).json({ message: 'No delivered product available for this order' });
+        }
+             const data = {    
+            "currency": "INR",
+            "taxNotation": "gst", // or "vat"
+            "marginTop": 25,
+            "marginRight": 25,
+            "marginLeft": 25,
+            "marginBottom": 25,
+            "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png", // Your logo URL
+            "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg", // Your background image URL
+            "sender": {
+                "company": "Mars -eCommerce",
+                "zip": "676366",
+                "city": "malappuram",
+                "country": "India"
+            },
+            "client": {
+                "company": orderAddress.name,
+                "address": orderAddress.address,
+                "zip": orderAddress.pincode,
+                "city": orderAddress.city,
+                "state":orderAddress.state
+            },
+            "invoiceNumber": orderId,
+            "invoiceDate": new Date(order.date).toLocaleDateString(),
+            "products": deliveredProducts.map(orderProduct => ({
+                "quantity": orderProduct.quantity,
+                "description": orderProduct.product.name,
+                "tax": 0, // Assuming no tax for simplicity
+                "price": orderProduct.product.price
+            })),
+            "bottomNotice": "Thank you for your purchase!"
+        };
+
+        // Generate invoice
+        const result = await easyinvoice.createInvoice(data);
+        const invoicesDir = path.join(__dirname, '../invoices');
+        if (!fs.existsSync(invoicesDir)) {
+            fs.mkdirSync(invoicesDir);
+        }
+        const invoicePath = path.join(invoicesDir, `invoice-${orderId}.pdf`);
+        fs.writeFileSync(invoicePath, result.pdf, 'base64');
+
+        // Send the file to the client for download
+        res.download(invoicePath, `invoice-${orderId}.pdf`, (err) => {
+            if (err) {
+                console.error(err);
+            } else {
+                fs.unlinkSync(invoicePath);
+            }
+        });
+
+       
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
 
 
 
@@ -366,5 +579,11 @@ module.exports={
     RazorpayOrder,
     verifySignature,
     walletOrder,
-    returnOrder
+    returnOrder,
+    //invoice dowload=============================
+    invoiceDowload,
+    //retry payment
+    RazorpayOrderRetry,
+    verifySignatureRetry
+
 }

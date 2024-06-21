@@ -211,9 +211,9 @@ const applyCoupon = async(req,res)=>{
 
 
     couponCheck.usedUsers.push(userId);
-        await couponCheck.save();
-        console.log('done');
-        res.status(200).json({ message: 'Coupon applied successfully', discountedSubtotal })
+    await couponCheck.save();
+    console.log('done');
+    res.status(200).json({ message: 'Coupon applied successfully', discountedSubtotal })
 
 } catch (error) {
         console.log(error);
