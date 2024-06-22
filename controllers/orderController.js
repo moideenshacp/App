@@ -182,6 +182,8 @@ const RazorpayOrder = async (req, res) => {
                 });
                 
                 await orderData.save();
+                await Cart.deleteOne({ user: userId });
+
 
                 res.status(200).json({
                     success: true,

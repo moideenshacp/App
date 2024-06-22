@@ -102,18 +102,23 @@ const loadHome = async (req, res) => {
             const orderlist = await Order.find().populate('products.product')
             let totalSalesAmount = 0;
             let deliveredProductCount = 0;
+            totalDiscount =0;
             orderlist.forEach(order => {
                 order.products.forEach(product => {
-                    if (product.status == 'delivered') {
-
-                        if (product.status == 'delivered') {
-                            totalSalesAmount += product.quantity * product.product.price;
+                    if (product.status == 'delivered'||product.status=='Return Denied') {
+                            totalSalesAmount += order.totalAmount;
                             deliveredProductCount += 1;
-                        }
+                            totalDiscount+=order.totalAmount-(product.quantity * product.product.price)
+                        
                     }
                 })
+                
             })
-            res.render('adminHome', { totalSalesAmount, deliveredProductCount })
+            const topSellingProducts = await Product.find({ sales: { $gt: 0 } })
+                .sort({ sales: -1 })
+                .limit(5)
+                console.log(topSellingProducts,'12365489');
+            res.render('adminHome', { totalSalesAmount, deliveredProductCount,totalDiscount,topSellingProducts })
         } else {
             res.redirect('/admin')
         }

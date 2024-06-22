@@ -80,7 +80,7 @@
             <div class="header-middle">
                 <div class="container">
                     <div class="header-left">
-                        
+
                     </div>
 
                     <!-- <a href="index-6.html   " class="logo">
@@ -186,17 +186,19 @@
                             <form id="coupon-form">
                                 <div class="row">
                                     <div class="col">
-                                        <input type="text" class="form-control" required id="checkout-discount-input" placeholder="Have a coupon? ">
+                                        <input type="text" class="form-control" required id="checkout-discount-input"
+                                            placeholder="Have a coupon? ">
                                     </div>
                                     <div class="col-auto"> <!-- Adjusted column width -->
                                         <button type="submit" class="btn btn-primary btn-block">Apply</button>
-                                        <button type="button" id="remove-coupon-btn" class="btn btn-primary btn-block">Remove</button>
+                                        <button type="button" id="remove-coupon-btn"
+                                            class="btn btn-primary btn-block">Remove</button>
                                     </div>
                                     <input type="hidden" value="<%=subtotal%>">
                                 </div>
                                 <label for="checkout-discount-input" class="text-truncate"><span></span></label>
                             </form>
-                            
+
                             <div id="coupon-discount"></div>
                         </div><!-- End .checkout-discount -->
 
@@ -293,10 +295,11 @@
                                                                                     ₹<%=subtotals%>
                                                                                 </td>
                                                                             </tr><!-- End .summary-subtotal -->
-                                                                          
+
                                                                             <tr class="summary-total">
                                                                                 <td>Total:</td>
-                                                                                <td id="total">₹ <%= subtotal %></td>
+                                                                                <td id="total">₹ <%= subtotal %>
+                                                                                </td>
                                                                             </tr>
                                                         </tbody>
                                                     </table><!-- End .table table-summary -->
@@ -319,23 +322,23 @@
                                                         </label>
                                                     </div>
                                                     <%if(subtotal<=1000){%>
-                                                    <div>
-                                                        <label>
-                                                            <input type="radio" name="paymentMethod"
-                                                                value="cashOnDelivery">
-                                                            Cash on delivery
-                                                        </label>
-                                                    </div>
+                                                        <div>
+                                                            <label>
+                                                                <input type="radio" name="paymentMethod"
+                                                                    value="cashOnDelivery">
+                                                                Cash on delivery
+                                                            </label>
+                                                        </div>
 
-                                                    <%}%>
+                                                        <%}%>
 
 
 
-                                                    <button type="submit"
-                                                        class="btn btn-outline-primary-2 btn-order btn-block">
-                                                        <span class="btn-text">Place Order</span>
-                                                        <span class="btn-hover-text">Proceed to Checkout</span>
-                                                    </button>
+                                                            <button type="submit"
+                                                                class="btn btn-outline-primary-2 btn-order btn-block">
+                                                                <span class="btn-text">Place Order</span>
+                                                                <span class="btn-hover-text">Proceed to Checkout</span>
+                                                            </button>
                                                 </div><!-- End .summary -->
                                             </aside><!-- End .col-lg-3 -->
                             </div><!-- End .row -->
@@ -762,7 +765,7 @@
             const SubtotalEle = document.getElementById('total')
             const subtotal = SubtotalEle.textContent.trim();
 
-            console.log(subtotal,'5444');
+            console.log(subtotal, '5444');
             let datas = {
                 selectedAddress,
                 paymentMethod,
@@ -949,7 +952,16 @@
                         },
                     };
                     var paymentGateway = new Razorpay(options);
-                    paymentGateway.open();
+                    paymentGateway.on('payment.failed', function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Failed',
+                            text: 'Your payment was not successful!',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/profile';
+                        });
+                    }); paymentGateway.open();
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -1007,9 +1019,9 @@
             applyCoupon(couponCode);
         });
         document.getElementById('remove-coupon-btn').addEventListener('click', function () {
-        console.log('Remove button clicked'); // Debug log
-        removeCoupon();
-    });
+            console.log('Remove button clicked'); // Debug log
+            removeCoupon();
+        });
 
         function applyCoupon(couponCode) {
             const subtotal = parseFloat("<%= subtotals %>");
@@ -1020,7 +1032,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ couponCode,subtotal }),
+                body: JSON.stringify({ couponCode, subtotal }),
             })
                 .then(response => {
                     if (!response.ok) {
@@ -1033,22 +1045,22 @@
                     if (data.message === 'Coupon applied successfully') {
                         document.getElementById('total').textContent = data.discountedSubtotal;
                         localStorage.setItem('discountedSubtotal', data.discountedSubtotal);  // Store the discounted subtotal
-                        localStorage.setItem('couponCode', couponCode); 
+                        localStorage.setItem('couponCode', couponCode);
                         couponDiscountElement.innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
                         document.getElementById('checkout-discount-input').value = couponCode;
-                    } else if(data.message === 'Coupon is not active'){
+                    } else if (data.message === 'Coupon is not active') {
                         couponDiscountElement.innerHTML = `<p>Coupon is not active!</p>`;
-                    }else if(data.message === 'Coupon has expired'){
+                    } else if (data.message === 'Coupon has expired') {
                         couponDiscountElement.innerHTML = `<p>Coupon has expired!</p>`;
-                    }else if(data.message === 'Coupon not found'){
+                    } else if (data.message === 'Coupon not found') {
                         couponDiscountElement.innerHTML = `<p>Coupon not found!</p>`;
-                    }else if(data.message==='Coupon is already used'){
+                    } else if (data.message === 'Coupon is already used') {
                         couponDiscountElement.innerHTML = `<p>This coupon is already used!</p>`;
                     }
-                    else if(data.message==='min amount is not valid'){
-                        couponDiscountElement.innerHTML =`<p>You didn't achive the minimum amount for claiming this coupon!</p>` ;
+                    else if (data.message === 'min amount is not valid') {
+                        couponDiscountElement.innerHTML = `<p>You didn't achive the minimum amount for claiming this coupon!</p>`;
                     }
-                    else{
+                    else {
                         couponDiscountElement.innerHTML = `<p>Something went wrong!</p>`;
                     }
                 })
@@ -1062,55 +1074,55 @@
 
 
         function removeCoupon() {
-        const subtotal = parseFloat("<%= subtotals %>");
+            const subtotal = parseFloat("<%= subtotals %>");
 
-        fetch('/removeCoupon', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ subtotal }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            fetch('/removeCoupon', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subtotal }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message === 'Coupon removed successfully') {
+                        document.getElementById('total').textContent = data.originalSubtotal;
+                        localStorage.removeItem('discountedSubtotal');
+                        localStorage.removeItem('couponCode');
+                        document.getElementById('coupon-discount').innerHTML = `<p>Coupon removed successfully!</p>`;
+                        document.getElementById('checkout-discount-input').value = '';
+                    } else {
+                        document.getElementById('coupon-discount').innerHTML = `<p>Failed to remove coupon!</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        window.addEventListener('load', () => {
+            const discountedSubtotal = localStorage.getItem('discountedSubtotal');
+            const couponCode = localStorage.getItem('couponCode');
+
+            if (discountedSubtotal) {
+                document.getElementById('total').textContent = discountedSubtotal;
+                document.getElementById('coupon-discount').innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.message === 'Coupon removed successfully') {
-                document.getElementById('total').textContent = data.originalSubtotal;
-                localStorage.removeItem('discountedSubtotal');
-                localStorage.removeItem('couponCode');
-                document.getElementById('coupon-discount').innerHTML = `<p>Coupon removed successfully!</p>`;
-                document.getElementById('checkout-discount-input').value = '';
-            } else {
-                document.getElementById('coupon-discount').innerHTML = `<p>Failed to remove coupon!</p>`;
+            if (couponCode) {
+                document.getElementById('checkout-discount-input').value = couponCode;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
-    }
-
-    window.addEventListener('load', () => {
-        const discountedSubtotal = localStorage.getItem('discountedSubtotal');
-        const couponCode = localStorage.getItem('couponCode');
-
-        if (discountedSubtotal) {
-            document.getElementById('total').textContent = discountedSubtotal;
-            document.getElementById('coupon-discount').innerHTML = `<p>Coupon "${couponCode}" applied successfully!</p>`;
-        }
-        if (couponCode) {
-            document.getElementById('checkout-discount-input').value = couponCode;
-        }
-    });
 
 
 
 
 
-    
+
     </script>
 
 
