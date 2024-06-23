@@ -29,6 +29,16 @@ function generateOtp(){
 }
 
 
+function generateRefferalCode(){
+    var digits ='1234567890';
+    var Id ='';
+    for(let i=0;i<6;i++){
+        Id+=digits[Math.floor(Math.random()*10)]
+    }
+    return Id;
+}
+
+
 //for send otp
 const sendOtpMail = async(name,email)=>{
     try {
@@ -185,9 +195,33 @@ const verifyOtp = async (req, res) => {
                 password: req.session.password,
                 mobile: req.session.mobile,
                 is_admin: 0,
+                referralCode:generateRefferalCode()
             });
             const userDatas = await user.save();
 
+            
+            const checkRefferedPerson = await users.findOne({referralCode:req.session.refferal})
+            if(checkRefferedPerson){
+              
+                checkRefferedPerson.wallet+=50;
+                await checkRefferedPerson.save();
+                const transactionReffered = new Wallet({
+                    user: checkRefferedPerson._id,
+                    amount: 50,
+                    type: 'credit',
+                    
+                });
+                await transactionReffered.save();
+                userDatas.wallet+=20;
+                await userDatas.save()
+                const transactionUser = new Wallet({
+                    user: userDatas._id,
+                    amount: 20,
+                    type: 'credit',
+                    
+                });
+                await transactionUser.save();
+            }
             
             req.session.user_id = null;
             req.session.email = null;
@@ -259,11 +293,15 @@ const loadHome = async(req,res)=>{
 
 //insert user
 
+
+
 const insertUser = async(req,res)=>{
     try {
         
         const checkmail = await users.findOne({email:req.body.email})
-        if (checkmail) {
+        const checkRefferal = await users.findOne({referralCode:req.body.refferal})
+        
+            if (checkmail) {
             res.render('signup',{messages:'email already exist'})
 
         } else {
@@ -271,6 +309,12 @@ const insertUser = async(req,res)=>{
             const name = req.body.name.trim();
             if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
                 return res.render('signup', { messages: 'Invalid name provided' });
+            }
+            if(checkRefferal){
+                console.log('we got refferal person');
+            }else{
+                return res.render('signup', { messages: 'Invalid ReferralCode provided' });
+
             }
             const email =req.body.email;
             const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/;
@@ -299,8 +343,7 @@ const insertUser = async(req,res)=>{
                 email:req.body.email,
                 password:spassword,
                 mobile:req.body.mobile,
-                is_admin:0,
-                
+                is_admin:0                
     
             });
     
@@ -309,7 +352,8 @@ const insertUser = async(req,res)=>{
             req.session.email = userdata.email;
             req.session.name = userdata.name;
             req.session.mobile = req.body.mobile;
-            req.session.password=userdata.password
+            req.session.password=userdata.password,
+            req.session.refferal = req.body.refferal;
             
             if(userdata){
                 await sendOtpMail(req.body.name,req.body.email)

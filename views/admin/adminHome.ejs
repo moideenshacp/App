@@ -331,7 +331,7 @@
                                 <canvas id="myChart" height="120px"></canvas>
                             </article>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-lg-5">
                                 <div class="card mb-4">
                                     <article class="card-body">
@@ -372,7 +372,7 @@
                                 </div>
                             </div>
                             
-                        </div>
+                        </div> -->
                     </div>
                     <div class="top-products">
                         <h2>Top 5 Selling Products</h2>
@@ -386,6 +386,22 @@
                                         <span style="color: blue;">productId:<%=product._id%></span>
                                         <span><h5><%= product.name %></h5></span>
                                         <span>Sold: <%= product.sales %> units</span>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </div> 
+     <hr style="border-color: blue; border-width: 2px;">
+                    <div class="top-products">
+                        <h2>Top 3 Selling Category</h2>
+                        <ul class="product-list">
+                            <% topSellingCategories.forEach(category => { %>
+                                <li class="product-item">
+                                                                 
+                                    <div class="product-details">
+                                        <span style="color: blue;">CategoryId:<%=category._id%></span>
+                                        <span><h5><%= category.categoryDetails.name %></h5></span>
+                                        <span>Sold: <%= category.totalSales %> units</span>
                                     </div>
                                 </li>
                             <% }) %>

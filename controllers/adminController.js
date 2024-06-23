@@ -117,8 +117,42 @@ const loadHome = async (req, res) => {
             const topSellingProducts = await Product.find({ sales: { $gt: 0 } })
                 .sort({ sales: -1 })
                 .limit(5)
-                console.log(topSellingProducts,'12365489');
-            res.render('adminHome', { totalSalesAmount, deliveredProductCount,totalDiscount,topSellingProducts })
+
+            const topSellingCategories = await Product.aggregate([
+                {
+                    $group: {
+                        _id: "$category",
+                        totalSales: { $sum: "$sales" }
+                    }
+                },
+                {
+                    $sort: { totalSales: -1 }
+                },
+                {
+                    $limit: 3
+                },
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: '_id',
+                        foreignField: '_id',
+                        as: 'categoryDetails'
+                    }
+                },
+                {
+                    $unwind: '$categoryDetails'
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        totalSales: 1,
+                        'categoryDetails.name': 1,
+                    }
+                }
+            ]);
+
+                console.log(topSellingCategories,'12365489');
+            res.render('adminHome', { totalSalesAmount, deliveredProductCount,totalDiscount,topSellingProducts,topSellingCategories })
         } else {
             res.redirect('/admin')
         }
