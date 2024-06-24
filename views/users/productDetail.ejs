@@ -33,6 +33,12 @@
     <link rel="stylesheet" href="/usercss/assets/css/plugins/nouislider/nouislider.css">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+         .line-through {
+        text-decoration: line-through;
+        color: #999; /* Optional: change the color to differentiate the original price */
+    }
+    </style>
 </head>
 
 <body>
@@ -271,9 +277,16 @@
                                             )</a>
                                     </div><!-- End .rating-container -->
 
-                                    <div class="product-price">
-                                        ₹ <%=productData.price%>
-                                    </div><!-- End .product-price -->
+                                    <<%if(productData.offerprice>0){%>
+                                        <div class="product-price">
+                                            <span class="line-through">₹<%= productData.price %></span>&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            ₹<%=productData.offerprice%>
+                                        </div><!-- End .product-price -->
+                                    <%}else{%>
+                                        <div class="product-price">
+                                            ₹<%=productData.price%>
+                                        </div><!-- End .product-price -->
+                                    <%}%>
 
 
 

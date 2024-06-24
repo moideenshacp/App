@@ -278,10 +278,19 @@
                                                                         <td>
                                                                             <%=cartProduct.product.name%>
                                                                         </td>
-                                                                        <td>
-                                                                            ₹
-                                                                            <%=cartProduct.product.price*cartProduct.quantity%>
-                                                                        </td>
+                                                                        
+
+                                                                        <%if(cartProduct.product.offerprice>0){%>
+                                                                            <td>
+                                                                                ₹
+                                                                                <%=cartProduct.product.offerprice*cartProduct.quantity%>
+                                                                            </td>                    
+                                                                        <%}else{%>
+                                                                            <td>
+                                                                                ₹
+                                                                                <%=cartProduct.product.price*cartProduct.quantity%>
+                                                                            </td>                     
+                                                                        <%}%>
 
                                                                     </tr>
                                                                     <%})%>
@@ -759,50 +768,55 @@
     <script>
         const form = document.getElementById('form');
 
-        function cashOnDelivery() {
-            const selectedAddress = form.elements['selectedAddress'].value;
-            const paymentMethod = form.elements['paymentMethod'].value;
-            const SubtotalEle = document.getElementById('total')
-            const subtotal = SubtotalEle.textContent.trim();
+            function cashOnDelivery() {
+                const selectedAddress = form.elements['selectedAddress'].value;
+                const paymentMethod = form.elements['paymentMethod'].value;
+                const SubtotalEle = document.getElementById('total')
+                const subtotal = SubtotalEle.textContent.trim();
 
-            console.log(subtotal, '5444');
-            let datas = {
-                selectedAddress,
-                paymentMethod,
-                subtotal
-            };
-            fetch('/order', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datas)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
+                console.log(subtotal, '5444');
+                let datas = {
+                    selectedAddress,
+                    paymentMethod,
+                    subtotal
+                };
+                fetch('/order', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datas)
                 })
-                .then(data => {
-                    if (data.message) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Order Success',
-                            text: 'Your order has been placed successfully!',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '/profile';
-                        });
-                    } else {
-                        console.log('Error:', data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.message) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Order Success',
+                                text: 'Your order has been placed successfully!',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href = '/profile';
+                            });
+                        } else if(data.fail) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Order Failed',
+                text: data.fail || 'Unknown error occurred',
+                confirmButtonText: 'OK'
+            });
         }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
+            }
 
         function Wallet() {
             const selectedAddress = form.elements['selectedAddress'].value;
@@ -846,9 +860,14 @@
                             text: 'insufficient balance in your wallet',
                             confirmButtonText: 'OK'
                         });
-                    } else {
-                        console.log('Error:', data.error);
-                    }
+                    }else if(data.failure) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Order Failed',
+                text: data.failure   || 'Unknown error occurred',
+                confirmButtonText: 'OK'
+            });
+        }
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -881,6 +900,15 @@
                     return response.json();
                 })
                 .then(data => {
+                    if (data.failure) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Order Failed',
+                text: data.msg || 'Unknown error occurred',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
                     console.log(data);
                     var options = {
                         key: data.key_id,

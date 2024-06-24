@@ -52,8 +52,11 @@ const loadCart = async(req,res)=>{
             let subtotal = 0;
             if(cartPoducts.length>0){
          subtotal = cartPoducts[0].products.reduce((acc, val) => {
-            return acc += val.product.price * val.quantity;
-        }, 0);
+            if(val.product.offerprice>0){
+                return acc += val.product.offerprice * val.quantity;
+                }else{
+                    return acc += val.product.price * val.quantity;
+                }        }, 0);
     }
             res.render('carts',{cartPoducts,subtotal,cartcount})
         }
@@ -90,9 +93,14 @@ const totalPrice = async(req,res)=>{
 if(updateCart){
     const fullProduct = await Cart.findOne({user:req.session.user_id}).populate('products.product');
     const subtotal = fullProduct.products.reduce((acc, val) => {
-        return acc += val.product.price * val.quantity;
+        if(val.product.offerprice>0){
+        return acc += val.product.offerprice * val.quantity;
+        }else{
+            return acc += val.product.price * val.quantity;
+        }
     }, 0);
-        res.status(200).json({message:'succes', quantity, price: productPrice.price,subtotal,quantity});
+    console.log(productPrice.offerprice,'00000000000000000');
+        res.status(200).json({message:'succes', quantity, price: productPrice.offerprice > 0 ? productPrice.offerprice : productPrice.price,subtotal,quantity});
 }   
 
        
@@ -118,8 +126,11 @@ if(updateCart){
             let subtotal=0;
             if(cartPoducts.length>0){
             subtotals = cartPoducts[0].products.reduce((acc, val) => {
-                return acc += val.product.price * val.quantity;
-            }, 0);
+                if(val.product.offerprice>0){
+                    return acc += val.product.offerprice * val.quantity;
+                    }else{
+                        return acc += val.product.price * val.quantity;
+                    }            }, 0);
         }
 
         if (cartFind){

@@ -252,10 +252,16 @@
                                     <% let deliveredProductCount = 0; %>
                                     <%orderlist.forEach((order,index)=>{%>
                                         <% order.products.forEach(product=>{%>
-                                            <%if(product.status=='delivered'){%>
+                                            <%if(product.status=='delivered'||product.status=='Return Denied'){%>
 
-                                            <%if(product.status=='delivered'){%>
+                                            <%if(product.status=='delivered'||product.status=='Return Denied'){%>
+                                                <%if(product.product.offerprice>0){%>
+                                                    <% totalSalesAmount += product.quantity * product.product.offerprice; %>
+
+                                               <% }else{%>
                                                 <% totalSalesAmount += product.quantity * product.product.price; %>
+
+                                                <%}%>
                                                 <% deliveredProductCount += 1; %>
                                             <%}%>
 
@@ -276,7 +282,13 @@
                                                         <%=product.product.name%>
                                                     </b></td>
                                                 <td>
-                                                    <%=product.product.price%>
+                                                    <%if(product.product.offerprice>0){%>
+                                                        <%=product.product.offerprice%>
+
+                                                    <%}else{%>
+                                                        <%=product.product.price%>
+
+                                                    <%}%>
                                                 </td>
                                                 <td>
                                                     <%=product.quantity%>
@@ -285,7 +297,12 @@
                                                 <td><span class="badge rounded-pill alert-warning">
                                                         <%=product.status%>
                                                     </span></td>
-                                                    <td>₹<%=product.quantity*product.product.price %>
+                                                    <td>
+                                                        <%if(product.product.offerprice>0){%>
+                                                        ₹<%=product.quantity*product.product.offerprice %>
+                                                        <%}else{%>
+                                                            ₹<%=product.quantity*product.product.price %>
+                                                        <%}%>
                                                     </td>
                                                     
                                             </tr>

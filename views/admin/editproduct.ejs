@@ -186,21 +186,29 @@
                                     </div>
                                 
                                     <div class="row">
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-3">
                                             <div class="mb-4">
                                                 <label class="form-label">Price</label>
                                                 <div class="row gx-2">
-                                                    <input name="price" value="<%= productData.price %>" placeholder="$" type="text" class="form-control" />
+                                                    <input name="price" value="<%= productData.price %>" placeholder="₹" type="text" class="form-control" />
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-3">
+                                            <div class="mb-4">
+                                                <label class="form-label">Offer Price</label>
+                                                <div class="row gx-2">
+                                                    <input name="offerPrice" value="<%=productData.offerprice%>" placeholder="₹" type="text" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
                                             <div class="mb-4">
                                                 <label class="form-label">Quantity</label>
                                                 <input name="quantity" value="<%= productData.quantity %>" type="text" class="form-control" />
                                             </div>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-3">
                                             <label class="form-label">Category</label>
                                             <select class="form-select" name="category">
                                                 <% categorylist.forEach(category => { %>

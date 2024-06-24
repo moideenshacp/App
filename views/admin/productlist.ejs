@@ -15,6 +15,12 @@
         <!-- Template CSS -->
         <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <style>
+             .line-through {
+        text-decoration: line-through;
+        color: #999; /* Optional: change the color to differentiate the original price */
+    }
+        </style>
 
     </head>
 
@@ -244,7 +250,13 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <%= product.price %>
+                                               <% if(product.offerprice>0){%>
+                                                <span class="line-through">₹<%= product.price %></span>&nbsp&nbsp&nbsp&nbsp
+                                                <%= product.offerprice %>
+                                                <%}else{%>
+                                                    <%= product.price %>
+                                                <%}%>
+                                                
                                             </td>
                                             <td>
                                                 <%= product.category.name%>

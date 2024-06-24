@@ -14,7 +14,7 @@ const multer = require('multer')
 const { TopologyClosedEvent } = require('mongodb');
 const { model } = require('mongoose');
 
-
+const { parseISO, format, startOfToday, startOfYesterday, subWeeks, subMonths, subYears, startOfWeek, endOfWeek, startOfMonth, startOfYear, endOfDay, startOfDay, isWithinInterval, addDays, subDays, isSameDay, getYear } = require('date-fns');
 
 //multer
 
@@ -99,18 +99,31 @@ const verifyLogin = async (req, res) => {
 const loadHome = async (req, res) => {
     try {
         if (req.session.admin_id) {
+            
             const orderlist = await Order.find().populate('products.product')
             let totalSalesAmount = 0;
             let deliveredProductCount = 0;
             totalDiscount =0;
             orderlist.forEach(order => {
                 order.products.forEach(product => {
-                    if (product.status == 'delivered'||product.status=='Return Denied') {
-                            totalSalesAmount += order.totalAmount;
-                            deliveredProductCount += 1;
-                            totalDiscount+=order.totalAmount-(product.quantity * product.product.price)
-                        
+                    if (product.status=='delivered'||product.status=='Return Denied') {
+                        if(product.product.offerprice>0){
+                             totalSalesAmount += product.quantity * product.product.offerprice;
+
+                        }else{
+                         totalSalesAmount += product.quantity * product.product.price;
+
+                          }
+                       deliveredProductCount += 1;
+                           
+                    } else if(product.status == 'delivered'||product.status=='Return Denied'){
+                        if(product.product.offerprice>0){
+                        totalDiscount+=order.totalAmount-(product.quantity * product.product.offerprice)
+                    }else{
+                        totalDiscount+=order.totalAmount-(product.quantity * product.product.price)
+
                     }
+               }
                 })
                 
             })
@@ -380,7 +393,7 @@ const productAdd = async (req, res) => {
     try {
 
 
-        const { name, description, price, quantity, category } = req.body;
+        const { name, description, price, quantity, category,offerPrice } = req.body;
         const images = req.files;
 
         const newImage = images.map(images => images.filename)
@@ -390,25 +403,28 @@ const productAdd = async (req, res) => {
         if (!req.files || req.files.length !== 4) {
             const categorylist = await categories.find({});
 
-            return res.render('addproduct', { categorylist, message: 'Select Exactly Four Images', name, description, price, quantity, category });
+            return res.render('addproduct', { categorylist, message: 'Select Exactly Four Images', name, description, price, quantity, category,offerPrice });
         }
 
 
         if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
             const categorylist = await categories.find({});
-            return res.render('addproduct', { categorylist, message: 'Invalid Name Provided', name, description, price, quantity, category });
+            return res.render('addproduct', { categorylist, message: 'Invalid Name Provided', name, description, price, quantity, category,offerPrice  });
         }
 
         if (!description || /^\s*$/.test(description)) {
             const categorylist = await categories.find({});
-            return res.render('addproduct', { categorylist, message: 'Invalid description Provided', name, description, price, quantity, category });
+            return res.render('addproduct', { categorylist, message: 'Invalid description Provided', name, description, price, quantity, category,offerPrice  });
         }
 
         if (isNaN(price) || price <= 0) {
-            return res.render('addproduct', { categorylist, message: 'Price is not valid', name, description, price, quantity, category });
+            return res.render('addproduct', { categorylist, message: 'Price is not valid', name, description, price, quantity, category,offerPrice  });
         }
-        if (isNaN(quantity) || quantity <= 0) {
-            return res.render('addproduct', { categorylist, message: 'quantity is not valid', name, description, price, quantity, category });
+        if (offerPrice && (isNaN(offerPrice) || offerPrice <= 0)) {
+            return res.render('addproduct', { categorylist, message: 'Offer Price is not valid', name, description, price, quantity, category, offerPrice });
+        }
+        if (isNaN(quantity) || quantity < 0) {
+            return res.render('addproduct', { categorylist, message: 'quantity is not valid', name, description, price, quantity, category,offerPrice  });
         }
 
 
@@ -417,6 +433,7 @@ const productAdd = async (req, res) => {
             name: name.trim(),
             description: description.trim(),
             price: parseFloat(price),
+            offerprice:offerPrice ? parseFloat(offerPrice) : 0, 
             quantity: parseFloat(quantity),
             category: category,
             image: newImage
@@ -496,6 +513,7 @@ const editProduct = async (req, res) => {
         const name = req.body.name.trim();
         const description = req.body.description.trim();
         const price = req.body.price;
+        const offerPrice = req.body.offerPrice
         const quantity = req.body.quantity;
         const category = req.body.category;
         console.log(category);
@@ -528,6 +546,11 @@ const editProduct = async (req, res) => {
             const categorylist = await categories.find({})
             return res.render('editproduct', { categorylist, productData, message: 'Price is not valid' });
         }
+        if (offerPrice && (isNaN(offerPrice) || offerPrice <= 0)||offerPrice>price) {
+            const productData = await products.findById({ _id: id })
+            const categorylist = await categories.find({})
+            return res.render('editproduct', { categorylist,productData, message: 'Offer Price is not valid or offerPrice is greater than originl price'});
+        }
         if (isNaN(quantity) || quantity < 0) {
             const productData = await products.findById({ _id: id })
             const categorylist = await categories.find({})
@@ -537,7 +560,7 @@ const editProduct = async (req, res) => {
 
 
 
-        const updatedProduct = await products.findByIdAndUpdate(id, { $set: { name: name, description: description, price: price, quantity: quantity, category: categoryId, image: updatedImages } })
+        const updatedProduct = await products.findByIdAndUpdate(id, { $set: { name: name, description: description, price: price, quantity: quantity, category: categoryId, image: updatedImages,offerprice: offerPrice } })
 
 
         res.redirect('/admin/products')
@@ -830,6 +853,189 @@ const sortSales = async (req, res) => {
 
 
 
+
+const adminDataChart = async (req, res) => {
+    try {
+        const filter = req.query.filter;
+
+        let data;
+
+        switch (filter) {
+            case 'daily':
+                data = await getDailyData();
+                break;
+            case 'weekly':
+                data = await getWeeklyData();
+                break;
+            case 'monthly':
+                data = await getMonthlyData();
+                break;
+            case 'yearly':
+                data = await getYearlyData();
+                break;
+            default:
+                data = await getMonthlyData();
+                break;
+        }
+
+        res.json(data);
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    };
+};
+
+async function getDailyData() {
+    const today = new Date();
+    const startDate = startOfDay(subDays(today, 6)); // Start from 6 days ago
+    const endDate = endOfDay(today);
+    const orderlist =await  Order.find({})
+    let orderData=[]
+    let deliveredProductCount=0;
+
+
+    orderlist.forEach(order => {
+        if (order.date >= startDate && order.date <= endDate) {
+            order.products.forEach(product => {
+                if (product.status === 'delivered'||product.status === 'Return Denied') {
+                    orderData.push(order);
+                }
+            });
+        }
+    });
+
+    // Get the current day of the week
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Generate labels array for the past 7 days
+    const labels = Array.from({ length: 7 }, (_, index) => {
+        const date = subDays(today, 6 - index); // Get the date for each of the past 7 days
+        return format(date, 'EEEE'); // Format the date to get the day of the week
+    });
+
+    const data = labels.map((day, index) => {
+        const date = startOfDay(subDays(today, 6 - index)); // Get the start of the day for each of the past 7 days
+        const filteredOrders = orderData.filter(order => {
+            const orderDay = startOfDay(order.date);
+            return isSameDay(orderDay, date);
+        });
+        return filteredOrders.length;
+    });
+
+    return { labels,data };
+};
+
+
+async function getWeeklyData() {
+    const today = new Date();
+    const startDate = startOfWeek(subWeeks(today, 3)); // Start from the beginning of the first week in the range
+    const endDate = endOfDay(today); // End with today
+    const orderlist =await  Order.find({})
+    let orderData=[]
+    let deliveredProductCount=0;
+
+
+    orderlist.forEach(order => {
+        if (order.date >= startDate && order.date <= endDate) {
+            order.products.forEach(product => {
+                if (product.status === 'delivered'||product.status === 'Return Denied') {
+                    orderData.push(order);
+                }
+            });
+        }
+    });
+
+    const labels = Array.from({ length: 4 }, (_, index) => {
+        const startOfWeekDate = startOfWeek(subWeeks(today, 3 - index)); // Calculate the start of each week
+        const endOfWeekDate = endOfWeek(startOfWeekDate); // Calculate the end of each week
+        return `${format(startOfWeekDate, 'MMM d')} - ${format(endOfWeekDate, 'MMM d')}`; // Format the date range
+    });
+
+    const data = labels.map((weekLabel, index) => {
+        const startOfWeekDate = startOfWeek(subWeeks(today, 3 - index)); // Calculate the start of each week
+        const endOfWeekDate = endOfWeek(startOfWeekDate); // Calculate the end of each week
+        const filteredOrders = orderData.filter(order => {
+            const orderDate = startOfDay(order.date);
+            return isWithinInterval(orderDate, { start: startOfWeekDate, end: endOfWeekDate });
+        });
+        return filteredOrders.length;
+    });
+
+    return { labels, data };
+};
+
+async function getMonthlyData() {
+    const today = new Date();
+    const startDate = startOfMonth(today);
+    const endDate = endOfDay(today);
+    const orderlist =await  Order.find({})
+    let orderData=[]
+    let deliveredProductCount=0;
+
+
+    orderlist.forEach(order => {
+        if (order.date >= startDate && order.date <= endDate) {
+            order.products.forEach(product => {
+                if (product.status === 'delivered'||product.status === 'Return Denied') {
+                    orderData.push(order);
+                }
+            });
+        }
+    });
+
+    const labels = Array.from({ length: 12 }, (_, index) => {
+        const month = startOfMonth(subMonths(today, index));
+        return format(month, 'MMMM');
+    }).reverse();
+    const data = labels.map(month => {
+        const filteredOrders = orderData.filter(order => {
+            const orderMonth = startOfMonth(order.date);
+            return format(orderMonth, 'MMMM') === month;
+        });
+        return filteredOrders.length;
+    });
+
+    return { labels, data };
+};
+
+async function getYearlyData() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const startDate = startOfYear(subYears(today, 4)); // Start date 4 years ago to include 5 years of data
+    const endDate = endOfDay(today);
+    const orderlist =await  Order.find({})
+    let orderData=[]
+    let deliveredProductCount=0;
+
+
+    orderlist.forEach(order => {
+        if (order.date >= startDate && order.date <= endDate) {
+            order.products.forEach(product => {
+                if (product.status === 'delivered'||product.status === 'Return Denied') {
+                    orderData.push(order);
+                }
+            });
+        }
+    });
+
+
+    // Generate labels for the past 5 years, starting from 4 years ago to the current year
+    const labels = Array.from({ length: 5 }, (_, index) => String(currentYear - 4 + index));
+
+    const data = labels.map(year => {
+        const filteredOrders = orderData.filter(order => {
+            const orderYear = getYear(order.date); // Get the year of the order date
+            return String(orderYear) === year;
+        });
+        return filteredOrders.length;
+    });
+
+    return { labels, data };
+};
+
+
+
 module.exports = {
     loadLogin,
     verifyLogin,
@@ -857,6 +1063,7 @@ module.exports = {
     //sales report
     salesReportLoad,
     returnOrder,
-    sortSales
+    sortSales,
+    adminDataChart
 
 }

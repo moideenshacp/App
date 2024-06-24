@@ -229,8 +229,14 @@
                                                             </h3><!-- End .product-title -->
                                                         </div><!-- End .product -->
                                                     </td>
-                                                    <td class="price-col">₹<%= cartProduct.product.price %>
-                                                    </td>
+                                                    <%if(cartProduct.product.offerprice>0){%>
+                                                        <td class="price-col">₹<%= cartProduct.product.offerprice %></td>
+
+                                                    <%}else{%>
+                                                        <td class="price-col">₹<%= cartProduct.product.price %></td>
+
+                                                    <%}%>
+                                                    
                                                     <td class="quantity-col">
                                                         <div class="cart-product-quantity">
                                                             
@@ -244,13 +250,31 @@
                                                                 var maxQty = Math.min(cartProduct.product.quantity, 5);
                                                             %>
 
-                                                            
-                                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="<%= maxQty %>" step="1" data-decimals="0" required onchange="updatePrice('<%= cartProduct.product._id %>', this.value)">
+                                                            <%if(cartProduct.product.quantity<=0){%>
+                                                                <button class=" btn-out-of-stock" disabled><span>Out of
+                                                                    Stock</span></button>
+                                                            <%}else{%>
+                                                                <input type="number" id="qty" class="form-control" value="<%= cartProduct.quantity %>" min="1" max="<%= maxQty %>" step="1" data-decimals="0" required onchange="updatePrice('<%= cartProduct.product._id %>', this.value)">
+
+                                                           <% }%>
                                                             
                                                         </div><!-- End .cart-product-quantity -->
                                                         
                                                     </td>
+                                             
+
+                                                   
+
+                                                    <%if(cartProduct.product.offerprice>0){%>
                                                     <td class="total-col"
+                                                        id="productttlPrice<%=cartProduct.product._id%>">₹<%=
+                                                            cartProduct.product.offerprice * cartProduct.quantity %>
+                                                    </td>
+                                                    <td class="remove-col"><button class="btn-remove"
+                                                            onclick="removeProduct('<%=cartProduct.product._id%>')"><i
+                                                                class="icon-close"></i></button></td>
+                                                    <%}else{%>
+                                                        <td class="total-col"
                                                         id="productttlPrice<%=cartProduct.product._id%>">₹<%=
                                                             cartProduct.product.price * cartProduct.quantity %>
                                                     </td>
@@ -258,6 +282,7 @@
                                                             onclick="removeProduct('<%=cartProduct.product._id%>')"><i
                                                                 class="icon-close"></i></button></td>
                                                 </tr>
+                                                <%}%>
                                             </tbody>
                                             <% }) %>
                                                 <% }) %>

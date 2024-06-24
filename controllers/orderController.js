@@ -47,6 +47,17 @@ const order = async(req,res)=>{
         const productData = await Cart.findOne({user:userId}).populate('products.product')
         const length = productData.products.length;
 
+        for (let i = 0; i < productData.products.length; i++) {
+            const productId = productData.products[i].product._id;
+            const quantities = productData.products[i].quantity;
+            const productFinding = await product.findById(productId);
+
+            if (!productFinding || productFinding.quantity < quantities) {
+                return res.status(200).json({ fail: `Product ${productData.products[i].product.name} is out of stock` });
+            }
+            
+        }
+
         for(i=0;i<length;i++){
             const productId = productData.products[i].product._id
             const quantities = productData.products[i].quantity;
@@ -88,6 +99,16 @@ const walletOrder = async (req, res) => {
         }
 
         const length = productData.products.length;
+        for (let i = 0; i < productData.products.length; i++) {
+            const productId = productData.products[i].product._id;
+            const quantities = productData.products[i].quantity;
+            const productFinding = await product.findById(productId);
+
+            if (!productFinding || productFinding.quantity < quantities) {
+                return res.status(200).json({ failure: `Product ${productData.products[i].product.name} is out of stock` });
+            }
+            
+        }
 
         for (let i = 0; i < length; i++) {
             const productId = productData.products[i].product._id;
@@ -150,6 +171,18 @@ const walletOrder = async (req, res) => {
 const RazorpayOrder = async (req, res) => {
     try {
         const { subtotal ,selectedAddress} = req.body;
+        const userId = req.session.user_id;
+        const productData = await Cart.findOne({ user: userId }).populate('products.product');
+        
+
+        for (let i = 0; i < productData.products.length; i++) {
+            const productId = productData.products[i].product._id;
+            const quantities = productData.products[i].quantity;
+            const productFinding = await product.findById(productId);
+
+            if (!productFinding || productFinding.quantity < quantities) {
+                return res.status(200).json({ failure: true, msg: `Product ${productData.products[i].product.name} is out of stock` });            }
+        }
         const amount = subtotal * 100;
 
         const options = {
@@ -212,7 +245,7 @@ const RazorpayOrder = async (req, res) => {
 const verifySignature = async (req, res) => {
     try {
         const { requestData } = req.body;
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature,selectedAddress,paymentMethod,subtotal } = requestData;
+        const { razorpay_order_id,razorpay_payment_id, razorpay_signature,selectedAddress,paymentMethod,subtotal } = requestData;
 
         const generated_signature = crypto
             .createHmac('sha256', process.env.RAZORPAY_SECRET_KEY)
@@ -226,12 +259,17 @@ const verifySignature = async (req, res) => {
 
             const userId = req.session.user_id;
             const userData = await users.findOne({_id:userId})
-            const productData = await Cart.findOne({user:userId}).populate('products.product')
+            const productData = await Order.findOne({razorpayOrderId:razorpay_order_id}).populate('products.product')
             const length = productData.products.length;
+            
     
             for(i=0;i<length;i++){
                 const productId = productData.products[i].product._id
                 const quantities = productData.products[i].quantity;
+                const productFinding = await product.findById(productId);
+                if (!productFinding || productFinding.quantity < quantities) {
+                    return res.status(400).json({ failure: true, msg: `Product ${productData.products[i].product.name} is out of stock` });                }
+                
                 
                 const productcheck = await product.findByIdAndUpdate({_id:productId},{$inc:{quantity:-quantities,sales:quantities}})
             }
@@ -276,6 +314,7 @@ const RazorpayOrderRetry = async (req,res)=>{
     try {
         const {subtotal} = req.body
         console.log("we get innn");
+        
         const amount = subtotal * 100;
         console.log(subtotal);
         const options = {

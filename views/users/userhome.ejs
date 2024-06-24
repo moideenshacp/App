@@ -35,6 +35,12 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        .line-through {
+       text-decoration: line-through;
+       color: #999; /* Optional: change the color to differentiate the original price */
+   }
+   </style>
 
 </head>
 
@@ -306,9 +312,16 @@
                                         <a href="#"><%=product.category.name%></a>
                                     </div><!-- End .product-cat -->
                                     <h3 class="product-title"><a href="product.html"><%=product.name%></a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        ₹<%=product.price%>
-                                    </div><!-- End .product-price -->
+                                    <%if(product.offerprice>0){%>
+                                        <div class="product-price">
+                                            <span class="line-through">₹<%= product.price %></span>&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            ₹<%=product.offerprice%>
+                                        </div><!-- End .product-price -->
+                                    <%}else{%>
+                                        <div class="product-price">
+                                            ₹<%=product.price%>
+                                        </div><!-- End .product-price -->
+                                    <%}%>
 
                                     <div class="product-nav product-nav-thumbs">
                                         <a href="#" class="active">

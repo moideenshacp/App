@@ -330,9 +330,20 @@
                                                                         </h3>
                                                                     </div>
                                                                 </td>
-                                                                <td class="total-col">₹<%= orderProduct.product.price %></td>
+                                                               <% if(orderProduct.product.offerprice>0){%>
+                                                                    <td class="total-col">₹<%= orderProduct.product.offerprice %></td>
+
+                                                                <%}else{%>
+                                                                    <td class="total-col">₹<%= orderProduct.product.price %></td>
+
+                                                                <%}%>
                                                                 <td class="total-col"><%= orderProduct.quantity %></td>
+                                                                <%if(orderProduct.product.offerprice>0){%>
+                                                                <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.offerprice %></td>
+                                                            <%}else{%>
                                                                 <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.price %></td>
+
+                                                            <%}%>
                                                                 <td class="total-col-auto"><%= orderProduct.status %></td>
                                                                 <td>
                                                                         <a href="/orderDetails?orderId=<%= order._id %>&productId=<%= orderProduct.product._id %>">
@@ -1177,6 +1188,7 @@
                     return response.json();
                 })
                 .then(data => {
+                    
                     console.log(data);
                     var options = {
                         key: data.key_id,

@@ -92,6 +92,9 @@ admin_route.post('/salesReport',auth.isLogin,adminController.sortSales)
 //return order
 admin_route.get('/returnOrder',auth.isLogin,adminController.returnOrder)
 
+//chart
+admin_route.get('/sales-data',auth.isLogin,adminController.adminDataChart)
+
 
 
 module.exports = admin_route;
