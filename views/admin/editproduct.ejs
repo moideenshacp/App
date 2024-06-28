@@ -213,7 +213,12 @@
                                             <select class="form-select" name="category">
                                                 <% categorylist.forEach(category => { %>
                                                     <% if (category.is_listed === true) { %>
-                                                        <option value="<%= category.name %>" <% if (productData.category.name === category.name) { %> selected <% } %>><%= category.name %></option>
+                                                        <option value="<%= category.name %>" 
+                                                            <% if (productData.category.name === category.name) { %> 
+                                                                selected 
+                                                            <% } %>>
+                                                            <%= category.name %>
+                                                        </option>
                                                     <% } %>
                                                 <% }) %>
                                             </select>

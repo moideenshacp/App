@@ -541,7 +541,7 @@ const productDetail = async(req,res)=>{
 const shop = async(req,res)=>{
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 4;
+        const limit = parseInt(req.query.limit) || 8;
         const skip = (page - 1) * limit;
 
         const searchQuery = req.query.search; 
@@ -862,7 +862,7 @@ const resendotpPassword  = async(req,res,email)=>{
 //signout
 const signout = async(req,res)=>{
     try {
-        req.session.destroy()
+        req.session.user_id=null;
         res.redirect('/')
         
     } catch (error) {

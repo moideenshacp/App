@@ -474,7 +474,7 @@
 
     orderlist.forEach(order => {
         order.products.forEach(product => {
-            if (product.status === 'delivered') {
+            if (product.status === 'delivered'||product.status === 'Return Denied') {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>#${order._id}</td>

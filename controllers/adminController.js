@@ -218,7 +218,7 @@ const block = async (req, res) => {
 //logout
 const logout = async (req, res) => {
     try {
-        req.session.destroy();
+        req.session.admin_id = null;
         res.redirect('/admin')
 
     } catch (error) {
@@ -272,8 +272,12 @@ const productList = async (req, res) => {
 const addcategory = async (req, res) => {
     try {
         const name = req.body.name.trim();
+        const offerPrice = req.body.offerPrice;
+        console.log(offerPrice,'offerrrrrrrrrrrrrrrrrr');
         const description = req.body.description.trim();
         const lowercase = name.toLowerCase()
+
+        const parsedOfferPrice = offerPrice ? parseFloat(offerPrice) : 0;
 
         if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
             const categorylist = await categories.find({});
@@ -292,10 +296,15 @@ const addcategory = async (req, res) => {
             return res.render('category', { categorylist, message: 'Invalid description Provided' });
         }
 
+        if (parsedOfferPrice !== 0 && (isNaN(parsedOfferPrice) || parsedOfferPrice < 1 || parsedOfferPrice > 100)) {
+            const categorylist = await categories.find({});
+            return res.render('category', {categorylist, messages: 'Invalid discount provided. It must be a percentage between 1 and 100.'});
+        }
 
         const category = new categories({
             name: name,
-            description: description
+            description: description,
+            offerprice:parsedOfferPrice
 
         });
 
@@ -751,10 +760,21 @@ const returnOrder = async (req, res) => {
 
             if (orderData[dataIndex].paymentMethod === 'Razorpay' || orderData[dataIndex].paymentMethod === 'Wallet') {
                 const user = await users.findById(userId);
-                user.wallet += productFind.price * orderProduct.quantity;
-                await user.save();
-                const refundAmount = productFind.price * orderProduct.quantity
+                if(productFind.offerprice>0){
 
+                
+                user.wallet += productFind.offerprice * orderProduct.quantity;
+                }else{
+                    user.wallet += productFind.price * orderProduct.quantity;
+
+                }
+                await user.save();
+                if(productFind.offerprice>0){
+                var refundAmount = productFind.offerprice * orderProduct.quantity
+                }else{
+                    var refundAmount = productFind.price * orderProduct.quantity
+
+                }
                 const walletTransaction = new Wallet({
                     user: userId,
                     amount: refundAmount,
@@ -834,7 +854,7 @@ const sortSales = async (req, res) => {
 
         orderlist.forEach(order => {
             order.products.forEach(product => {
-                if (product.status === 'delivered') {
+                if (product.status === 'delivered'||product.status === 'Return Denied') {
                     totalSalesAmount += product.quantity * product.product.price;
                     deliveredProductCount += 1;
                 }

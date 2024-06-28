@@ -9,6 +9,10 @@ const categorySchema = mongoose.Schema({
     description:{
         type:String,
         required:true
+    }
+    ,
+    offerprice:{
+        type:Number,
     },
     is_listed:{
         type:Boolean,

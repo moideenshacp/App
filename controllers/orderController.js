@@ -576,7 +576,7 @@ try {
                 "quantity": orderProduct.quantity,
                 "description": orderProduct.product.name,
                 "tax": 0, // Assuming no tax for simplicity
-                "price": orderProduct.product.price
+                "price": orderProduct.product.offerprice > 0 ? orderProduct.product.offerprice : orderProduct.product.price
             })),
             "bottomNotice": "Thank you for your purchase!"
         };

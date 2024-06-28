@@ -17,6 +17,7 @@ const passport = require('passport')
 require('./passportsetup')
 
 const app = express();
+app.use(nocache())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +29,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(nocache())
 app.use(express.json())
 
 
