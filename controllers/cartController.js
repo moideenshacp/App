@@ -48,15 +48,28 @@ const loadCart = async(req,res)=>{
     try {
         const cartData = await Cart.find({user:req.session.user_id})
         const cartcount = cartData.map(cartDoc => cartDoc.products.length);
-            const cartPoducts = await Cart.find({user:req.session.user_id}).populate('products.product')
+            const cartPoducts = await Cart.find({user:req.session.user_id}) .populate({
+                path: 'products.product',
+                populate: {
+                  path: 'category'
+                }
+              });
             let subtotal = 0;
             if(cartPoducts.length>0){
-         subtotal = cartPoducts[0].products.reduce((acc, val) => {
-            if(val.product.offerprice>0){
-                return acc += val.product.offerprice * val.quantity;
-                }else{
-                    return acc += val.product.price * val.quantity;
-                }        }, 0);
+         subtotal = Math.round(cartPoducts[0].products.reduce((acc, val) => {
+            const product = val.product;
+                const category = product.category;
+                if (product.offerprice > 0 && category.offerprice > 0) {
+                    return acc + (product.offerprice - (product.offerprice * category.offerprice / 100)) * val.quantity;
+                } else if (product.offerprice > 0) {
+                    return acc + product.offerprice * val.quantity;
+                } else if (category && category.offerprice > 0) {
+                    const discountPrice = product.price - (product.price * category.offerprice / 100);
+                    return acc + (discountPrice * val.quantity);
+                } else {
+                    return acc + product.price * val.quantity;
+                }
+            }, 0));
     }
             res.render('carts',{cartPoducts,subtotal,cartcount})
         }
@@ -87,20 +100,46 @@ const totalPrice = async(req,res)=>{
         
         const productId = req.body.productId;
         const quantity = req.body.qty;
-        const productPrice = await product.findOne({_id:productId})
+        const productPrice = await product.findOne({_id:productId}).populate('category');
         const updateCart = await Cart.updateOne({'products.product':productId},{ $set: { 'products.$.quantity': quantity } })
 
 if(updateCart){
-    const fullProduct = await Cart.findOne({user:req.session.user_id}).populate('products.product');
-    const subtotal = fullProduct.products.reduce((acc, val) => {
-        if(val.product.offerprice>0){
-        return acc += val.product.offerprice * val.quantity;
-        }else{
-            return acc += val.product.price * val.quantity;
+    const fullProduct = await Cart.findOne({user:req.session.user_id}).populate({
+        path: 'products.product',
+        populate: {
+            path: 'category'
         }
-    }, 0);
-    console.log(productPrice.offerprice,'00000000000000000');
-        res.status(200).json({message:'succes', quantity, price: productPrice.offerprice > 0 ? productPrice.offerprice : productPrice.price,subtotal,quantity});
+    });
+    const subtotal = Math.round(fullProduct.products.reduce((acc, val) => {
+        const product = val.product;
+        const category = product.category;
+        if (product.offerprice > 0 && category.offerprice > 0) {
+            return acc + (product.offerprice - (product.offerprice * category.offerprice / 100)) * val.quantity;
+        } else if (product.offerprice > 0) {
+            return acc + product.offerprice * val.quantity;
+        } else if (category && category.offerprice > 0) {
+            const discountPrice = product.price - (product.price * category.offerprice / 100);
+            return acc + (discountPrice * val.quantity);
+        } else {
+            return acc + product.price * val.quantity;
+        }
+    }, 0));
+
+
+    let price;
+            if (productPrice.offerprice > 0) {
+                if (productPrice.category && productPrice.category.offerprice > 0) {
+                    price = Math.round(productPrice.offerprice - (productPrice.offerprice * productPrice.category.offerprice / 100));
+                } else {
+                    price = productPrice.offerprice;
+                }
+            } else if (productPrice.category && productPrice.category.offerprice > 0) {
+                const discountedPrice = productPrice.price - (productPrice.price * productPrice.category.offerprice / 100);
+                price = Math.round(discountedPrice);
+            } else {
+                price = productPrice.price;
+            }
+        res.status(200).json({message:'succes', quantity, price,subtotal,quantity});
 }   
 
        
@@ -121,16 +160,30 @@ if(updateCart){
             const addressescount = addressData.map(addressDoc => addressDoc.addresses.length);
 
 
-            const cartPoducts = await Cart.find({user:req.session.user_id}).populate('products.product')
+            const cartPoducts = await Cart.find({user:req.session.user_id}).populate({
+                path: 'products.product',
+                populate: {
+                    path: 'category'
+                }
+            });
             let subtotals = 0;
             let subtotal=0;
             if(cartPoducts.length>0){
-            subtotals = cartPoducts[0].products.reduce((acc, val) => {
-                if(val.product.offerprice>0){
-                    return acc += val.product.offerprice * val.quantity;
-                    }else{
-                        return acc += val.product.price * val.quantity;
-                    }            }, 0);
+            subtotals =Math.round(cartPoducts[0].products.reduce((acc, val) => {
+                const product = val.product;
+                const category = product.category;
+
+                if (product.offerprice > 0 && category && category.offerprice > 0) {
+                    return acc + (product.offerprice - (product.offerprice * category.offerprice / 100)) * val.quantity;
+                } else if (product.offerprice > 0) {
+                    return acc + product.offerprice * val.quantity;
+                } else if (category && category.offerprice > 0) {
+                    const discountPrice = product.price - (product.price * category.offerprice / 100);
+                    return acc + (discountPrice * val.quantity);
+                } else {
+                    return acc + product.price * val.quantity;
+                }
+            }, 0));
         }
 
         if (cartFind){

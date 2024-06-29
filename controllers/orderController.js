@@ -415,7 +415,8 @@ const cancelOrder= async(req,res)=>{
         const productId = req.body.productId;
         const userId = req.session.user_id
         console.log(productId+'1111111111111111111111');
-        const productCart = await product.findOne({_id:productId})
+        const productCart = await product.findOne({_id:productId}).populate('category')
+        console.log(productCart,'productcarttttttttt');
         const orderData = await Order.find({user:userId})
         for(i=0;i<orderData.length;i++){
         if(orderData[i].products.find(product => product.product.toString() === productId)){
@@ -440,9 +441,20 @@ const cancelOrder= async(req,res)=>{
             
             if (orderData[dataIndex].paymentMethod === 'Razorpay'|| orderData[dataIndex].paymentMethod === 'Wallet') {
                 const user = await users.findById(userId);
-                user.wallet += productCart.price * orderProduct.quantity;
+                let refundAmount = 0;
+
+                if (productCart.offerprice > 0  && productCart.category.offerprice > 0) {
+                    refundAmount = (productCart.offerprice - (productCart.offerprice * productCart.category.offerprice / 100)) * orderProduct.quantity;
+                } else if (productCart.offerprice > 0) {
+                    refundAmount = productCart.offerprice * orderProduct.quantity;
+                } else if (productCart.category.offerprice > 0) {
+                    const discountedPrice = productCart.price - (productCart.price * productCart.category.offerprice / 100);
+                    refundAmount = discountedPrice * orderProduct.quantity;
+                } else {
+                    refundAmount = productCart.price * orderProduct.quantity;
+                }
+                user.wallet += refundAmount;
                 await user.save();
-                const refundAmount = productCart.price * orderProduct.quantity
 
                  const walletTransaction = new Wallet({
                     user: userId,

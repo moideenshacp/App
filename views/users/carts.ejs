@@ -229,13 +229,21 @@
                                                             </h3><!-- End .product-title -->
                                                         </div><!-- End .product -->
                                                     </td>
-                                                    <%if(cartProduct.product.offerprice>0){%>
-                                                        <td class="price-col">₹<%= cartProduct.product.offerprice %></td>
+                                                    <%if(cartProduct.product.offerprice>0 && cartProduct.product.category.offerprice > 0){%>
+                                                        <td class="price-col">₹<%=Math.round(cartProduct.product.offerprice - (cartProduct.product.offerprice * cartProduct.product.category.offerprice) / 100)%></td>
+
+                                                    <%}else if(cartProduct.product.offerprice>0){%>
+                                                        <td class="price-col">₹<%=cartProduct.product.offerprice%></td>
+
+                                                    <%}else if(cartProduct.product.category.offerprice > 0){%>
+                                                        <td class="price-col">₹<%=Math.round(cartProduct.product.price - (cartProduct.product.price * cartProduct.product.category.offerprice) / 100)%></td>
 
                                                     <%}else{%>
-                                                        <td class="price-col">₹<%= cartProduct.product.price %></td>
-
+                                                        <td class="price-col">₹<%=cartProduct.product.price%></td>
                                                     <%}%>
+
+
+
                                                     
                                                     <td class="quantity-col">
                                                         <div class="cart-product-quantity">
@@ -262,27 +270,43 @@
                                                         
                                                     </td>
                                              
-
-                                                   
-
-                                                    <%if(cartProduct.product.offerprice>0){%>
+                                                    <%if(cartProduct.product.offerprice>0 && cartProduct.product.category.offerprice > 0){%>
                                                     <td class="total-col"
+                                                        id="productttlPrice<%=cartProduct.product._id%>">₹<%=
+                                                        Math.round(cartProduct.product.offerprice - (cartProduct.product.offerprice * cartProduct.product.category.offerprice) / 100) * cartProduct.quantity %>
+                                                    </td>
+                                                    <td class="remove-col"><button class="btn-remove"
+                                                            onclick="removeProduct('<%=cartProduct.product._id%>')"><i
+                                                                class="icon-close"></i></button></td>
+                                                    <%}else if(cartProduct.product.offerprice>0){%>
+                                                        <td class="total-col"
                                                         id="productttlPrice<%=cartProduct.product._id%>">₹<%=
                                                             cartProduct.product.offerprice * cartProduct.quantity %>
                                                     </td>
                                                     <td class="remove-col"><button class="btn-remove"
                                                             onclick="removeProduct('<%=cartProduct.product._id%>')"><i
                                                                 class="icon-close"></i></button></td>
-                                                    <%}else{%>
-                                                        <td class="total-col"
+                                                
+                                                <%}else if(cartProduct.product.category.offerprice > 0){%>
+                                                    <td class="total-col"
                                                         id="productttlPrice<%=cartProduct.product._id%>">₹<%=
-                                                            cartProduct.product.price * cartProduct.quantity %>
+                                                        Math.round(cartProduct.product.price - (cartProduct.product.price * cartProduct.product.category.offerprice) / 100) * cartProduct.quantity  %>
                                                     </td>
                                                     <td class="remove-col"><button class="btn-remove"
                                                             onclick="removeProduct('<%=cartProduct.product._id%>')"><i
                                                                 class="icon-close"></i></button></td>
-                                                </tr>
+
+                                                <%}else{%>
+                                                    <td class="total-col"
+                                                        id="productttlPrice<%=cartProduct.product._id%>">₹<%=
+                                                        cartProduct.product.price * cartProduct.quantity %>
+                                                    </td>
+                                                    <td class="remove-col"><button class="btn-remove"
+                                                            onclick="removeProduct('<%=cartProduct.product._id%>')"><i
+                                                                class="icon-close"></i></button></td>
+
                                                 <%}%>
+                                            </tr>
                                             </tbody>
                                             <% }) %>
                                                 <% }) %>

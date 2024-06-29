@@ -486,11 +486,23 @@ const loadprofile = async(req,res)=>{
     try {
         const user = await users.find({_id:req.session.user_id})
         const address = await Address.findOne({user:req.session.user_id})
-        const orderPoducts = await Order.find({user:req.session.user_id}).populate('products.product').sort({ date: -1 });
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5;
+        const skip = (page - 1) * limit;
+
+        const orderPoducts = await Order.find({user:req.session.user_id}).populate({
+            path: 'products.product',
+            populate: {
+                path: 'category'
+            }
+        }).sort({ date: -1 }).skip(skip).limit(limit)
+        const totalOrders = await Order.countDocuments({ user: req.session.user_id });
         const orderAddress = await Order.findOne().populate('address')
         const couponView = await Coupon.find()
+        let activeTab = req.query.tab || 'dashboard';
 
-        res.render('profile',{address,user,orderPoducts,couponView})
+        res.render('profile',{address,user,orderPoducts,couponView,totalOrders, currentPage: page, pages: Math.ceil(totalOrders / limit),activeTab})
     } catch (error) {
         console.log(error.message);
     }
@@ -501,8 +513,13 @@ const loadprofile = async(req,res)=>{
 const wallet =  async (req, res) => {
     try {
         const userId = req.session.user_id;
-        const transactions = await Wallet.find({ user: userId }).sort({ date: -1 });
-        res.status(200).json({ success: true, transactions });
+        const page = parseInt(req.query.page) || 1;
+        const limit = 8;
+        const transactions = await Wallet.find({ user: userId }).sort({ date: -1 }).skip((page - 1) * limit) .limit(limit);
+
+        const totalItems = await Wallet.countDocuments({ user: userId });
+
+        res.status(200).json({ success: true, transactions ,totalPages: Math.ceil(totalItems / limit),currentPage: page, totalItems});
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Failed to fetch wallet history' });

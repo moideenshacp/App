@@ -224,6 +224,8 @@
                                                 <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Description</th>
+                                                <th>Discount</th>
+
                                                 
                                                 <th class="text-end">Action</th>
                                             </tr>
@@ -239,6 +241,13 @@
                                                 <td><%=index+1%></td>
                                                 <td><b><%=category.name%></b></td>
                                                 <td><%= category.description%></td>
+                                                <%if(category.offerprice==0){%>
+                                                    <td><%=category.offerprice%></td>
+
+                                               <% }else{%>
+                                                <td><%=category.offerprice%>%</td>
+
+                                                <%}%>
                                                 <td class="text-end">
                                                     <button class="btn btn-md rounded font-sm" style="align-items: center; padding: 0;">
                                                         <a href="/admin/edit-category?id=<%=category._id%>" style="display: block; padding: 0.5rem; text-decoration: none; color: inherit;">Edit</a>

@@ -280,17 +280,24 @@
                                                                         </td>
                                                                         
 
-                                                                        <%if(cartProduct.product.offerprice>0){%>
+                                                                        <% if (cartProduct.product.offerprice > 0 && cartProduct.product.category.offerprice > 0) { %>
                                                                             <td>
-                                                                                ₹
-                                                                                <%=cartProduct.product.offerprice*cartProduct.quantity%>
+                                                                                ₹<%= Math.round(cartProduct.product.offerprice - (cartProduct.product.offerprice * cartProduct.product.category.offerprice) / 100) * cartProduct.quantity %>
                                                                             </td>                    
-                                                                        <%}else{%>
+                                                                        <% } else if (cartProduct.product.offerprice > 0) { %>
                                                                             <td>
-                                                                                ₹
-                                                                                <%=cartProduct.product.price*cartProduct.quantity%>
+                                                                                ₹<%= cartProduct.product.offerprice * cartProduct.quantity %>
                                                                             </td>                     
-                                                                        <%}%>
+                                                                        <% } else if (cartProduct.product.category.offerprice > 0) { %> <!-- Added missing { here -->
+                                                                            <td>
+                                                                                ₹<%=  Math.round(cartProduct.product.price - (cartProduct.product.price * cartProduct.product.category.offerprice) / 100)* cartProduct.quantity %>
+                                                                            </td> 
+                                                                        <% } else { %>
+                                                                            <td>
+                                                                                ₹<%= cartProduct.product.price * cartProduct.quantity %>
+                                                                            </td>
+                                                                        <% } %>
+                                                                        
 
                                                                     </tr>
                                                                     <%})%>

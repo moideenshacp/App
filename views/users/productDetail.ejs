@@ -277,17 +277,29 @@
                                             )</a>
                                     </div><!-- End .rating-container -->
 
-                                    <<%if(productData.offerprice>0){%>
+
+
+                                    <%if(productData.offerprice>0 && productData.category.offerprice>0){%>
+                                        <div class="product-price">
+                                            <span class="line-through">₹<%= productData.price %></span>&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            ₹<%=Math.round(productData.offerprice - (productData.offerprice * productData.category.offerprice) / 100)%>
+                                        </div><!-- End .product-price -->
+                                    <%}else if(productData.offerprice>0){%>
                                         <div class="product-price">
                                             <span class="line-through">₹<%= productData.price %></span>&nbsp&nbsp&nbsp&nbsp&nbsp
                                             ₹<%=productData.offerprice%>
+                                        </div><!-- End .product-price -->
+                                    <%}else if(productData.category.offerprice>0){%>
+                                        <div class="product-price">
+                                            <span class="line-through">₹<%= productData.price %></span>&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            ₹<%=Math.round(productData.price - (productData.price * productData.category.offerprice) / 100)%>
                                         </div><!-- End .product-price -->
                                     <%}else{%>
                                         <div class="product-price">
                                             ₹<%=productData.price%>
                                         </div><!-- End .product-price -->
-                                    <%}%>
 
+                                    <%}%>
 
 
                                 

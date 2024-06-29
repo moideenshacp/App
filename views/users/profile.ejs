@@ -295,6 +295,9 @@
                                             <!-- Wallet transactions will be appended here -->
                                         </tbody>
                                     </table>
+                                    <div id="pagination-container" class="text-center mt-3">
+                                        <!-- Pagination controls will be appended here -->
+                                    </div>
                                 </div>
                             </div>
 								    </div><!-- .End .tab-pane -->
@@ -330,19 +333,27 @@
                                                                         </h3>
                                                                     </div>
                                                                 </td>
-                                                               <% if(orderProduct.product.offerprice>0){%>
+                                                               <% if(orderProduct.product.offerprice>0 && orderProduct.product.category.offerprice > 0){%>
+                                                                    <td class="total-col">₹<%= Math.round(orderProduct.product.offerprice - (orderProduct.product.offerprice * orderProduct.product.category.offerprice) / 100) %></td>
+
+                                                                <%}else if(orderProduct.product.offerprice>0){%>
                                                                     <td class="total-col">₹<%= orderProduct.product.offerprice %></td>
 
+                                                                <%}else if(orderProduct.product.category.offerprice > 0){%>
+                                                                    <td class="total-col">₹<%=  Math.round(orderProduct.product.price - (orderProduct.product.price * orderProduct.product.category.offerprice) / 100) %></td>
                                                                 <%}else{%>
                                                                     <td class="total-col">₹<%= orderProduct.product.price %></td>
-
                                                                 <%}%>
                                                                 <td class="total-col"><%= orderProduct.quantity %></td>
-                                                                <%if(orderProduct.product.offerprice>0){%>
-                                                                <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.offerprice %></td>
-                                                            <%}else{%>
-                                                                <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.price %></td>
 
+                                                                <%if(orderProduct.product.offerprice>0 && orderProduct.product.category.offerprice > 0){%>
+                                                                <td class="total-col">₹<%=Math.round(orderProduct.product.offerprice - (orderProduct.product.offerprice * orderProduct.product.category.offerprice) / 100)* orderProduct.quantity %></td>
+                                                            <%}else if(orderProduct.product.offerprice>0){%>
+                                                                <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.offerprice %></td>
+                                                            <%}else if(orderProduct.product.category.offerprice > 0){%>
+                                                                <td class="total-col">₹<%= orderProduct.quantity * Math.round(orderProduct.product.price - (orderProduct.product.price * orderProduct.product.category.offerprice) / 100)%></td>
+                                                            <%}else{%>
+                                                                <td class="total-col">₹<%= orderProduct.quantity * orderProduct.product.price  %></td>
                                                             <%}%>
                                                                 <td class="total-col-auto"><%= orderProduct.status %></td>
                                                                 <td>
@@ -385,6 +396,33 @@
                                                 <hr style="border-color: blue; border-width: 2px;">
                                             </div>
                                         <% }) %>
+                                        <nav aria-label="Order pagination">
+                                            <ul class="pagination justify-content-center">
+                                                <% if (currentPage > 1) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                            <span class="sr-only">Previous</span>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                    
+                                                <% for (let i = 1; i <= pages; i++) { %>
+                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                                    </li>
+                                                <% } %>
+                                    
+                                                <% if (currentPage < pages) { %>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                            <span aria-hidden="true">&raquo;</span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </li>
+                                                <% } %>
+                                            </ul>
+                                        </nav>
                                     </div>
                                     
                                     
@@ -1135,40 +1173,59 @@
         });
     }
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/wallet/history')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    displayWalletHistory(data.transactions);
-                } else {
-                    console.error('Failed to fetch wallet history');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
+    fetchWalletHistory();
+});
 
-    function displayWalletHistory(transactions) {
-        const walletHistoryTable = document.getElementById('wallet-history-table');
-        transactions.forEach(transaction => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${new Date(transaction.date).toLocaleDateString()}</td>
-                <td>${transaction.type}</td>
-                <td>${transaction.amount > 0 ? '+' : ''}₹${Math.abs(transaction.amount)}</td>
-            `;
-            walletHistoryTable.appendChild(row);
-        });
+const fetchWalletHistory = async (page = 1, limit = 8) => {
+    try {
+        const response = await fetch(`/wallet/history?page=${page}&limit=${limit}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (data.success) {
+            displayWalletHistory(data.transactions);
+            setupPagination(data.totalPages, data.currentPage);
+        } else {
+            console.error('Failed to fetch wallet history');
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
+};
+
+function displayWalletHistory(transactions) {
+    const walletHistoryTable = document.getElementById('wallet-history-table');
+    walletHistoryTable.innerHTML = '';
+
+    transactions.forEach(transaction => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${new Date(transaction.date).toLocaleDateString()}</td>
+            <td>${transaction.type}</td>
+            <td>${transaction.amount > 0 ? '+' : ''}₹${Math.abs(transaction.amount)}</td>
+        `;
+        walletHistoryTable.appendChild(row);
+    });
+}
+
+function setupPagination(totalPages, currentPage) {
+    const paginationContainer = document.getElementById('pagination-container');
+    paginationContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerText = i;
+        pageButton.className = 'btn btn-primary';
+        pageButton.disabled = i === currentPage;
+        pageButton.onclick = () => fetchWalletHistory(i);
+
+        paginationContainer.appendChild(pageButton);
+    }
+}
+
 </script>
 
 <script>
@@ -1266,6 +1323,7 @@
         }
 
 </script>
+
 
 
 </body>

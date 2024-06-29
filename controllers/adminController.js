@@ -370,13 +370,18 @@ const editcategory = async (req, res) => {
 
         const name = req.body.name.trim();
         const description = req.body.description.trim();
+        const offerPrice = req.body.offerPrice;
         const lowercase = name.toLowerCase();
+        const parsedDiscount = offerPrice ? parseFloat(offerPrice) : 0;
 
         if (!name || !/^[a-zA-Z][a-zA-Z\s]{1,}$/.test(name)) {
             return res.render('editcategory', { categoryData, message: 'Invalid Name Provided' });
         }
         if (!description || /^\s*$/.test(description)) {
             return res.render('editcategory', { categoryData, message: 'Invalid description Provided' });
+        }
+        if (parsedDiscount !== 0 && (isNaN(parsedDiscount) || parsedDiscount < 1 || parsedDiscount > 100)) {
+            return res.render('editcategory', {categoryData, messages: 'Invalid discount provided. It must be a percentage between 1 and 100.'});
         }
 
         const existingCategory = await categories.findOne({ name: { $regex: '^' + lowercase + '$', $options: 'i' } });
@@ -385,7 +390,7 @@ const editcategory = async (req, res) => {
             return res.render('editcategory', { categoryData, message: 'Category name already exists.' });
         }
 
-        const updatedCategory = await categories.findByIdAndUpdate(id, { $set: { name: lowercase, description: description } })
+        const updatedCategory = await categories.findByIdAndUpdate(id, { $set: { name: lowercase, description: description,offerprice:parsedDiscount } })
         res.redirect('/admin/category')
 
 
@@ -522,11 +527,12 @@ const editProduct = async (req, res) => {
         const name = req.body.name.trim();
         const description = req.body.description.trim();
         const price = req.body.price;
-        const offerPrice = req.body.offerPrice
+        const offerPrices = req.body.offerPrice
         const quantity = req.body.quantity;
         const category = req.body.category;
         console.log(category);
         const editedImageIndex = req.body.editedImageIndex;
+        const offerPrice = offerPrices ? offerPrices : 0;
 
         const categoryDocument = await categories.findOne({ name: category });
         const categoryId = categoryDocument ? categoryDocument._id : null;
