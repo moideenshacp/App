@@ -1,5 +1,6 @@
 // const { name } = require('ejs');
 const users = require('../models/userModel');
+require('dotenv').config();
 const Otp = require('../models/otpModel')
 const categories =  require('../models/category')
 const products = require('../models/product')
