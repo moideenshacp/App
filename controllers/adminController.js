@@ -581,7 +581,7 @@ const editProduct = async (req, res) => {
             
         if (images && images.length > 0) {
             images.forEach((item, index) => {
-                if (index < 4) { // Assuming you have up to 4 image slots
+                if (index <= 4) { // Assuming you have up to 4 image slots
                     productData.image[index] = item.filename;
                 }
             });
