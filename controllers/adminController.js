@@ -605,7 +605,12 @@ const loadOrder = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 3;
         const skip = (page - 1) * limit;
-        const orderlist = await Order.find().populate('products.product').populate('user').sort({date:-1}).skip(skip).limit(limit);
+        const orderlist = await Order.find().populate({
+            path: 'products.product',
+            populate: {
+                path: 'category'
+            }
+        }).populate('user').sort({date:-1}).skip(skip).limit(limit);
 
         const totalOrders = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrders / limit);
@@ -622,7 +627,12 @@ const orderDetail = async (req, res) => {
         const productId = req.query.productId;
         const orderId = req.query.orderId;
         const orderData = await Order.findOne({_id:orderId}).populate('address.addresses')   
-        const orders = await Order.find({user:userId}).populate('products.product')
+        const orders = await Order.find({user:userId}).populate({
+            path: 'products.product',
+            populate: {
+                path: 'category'
+            }
+        })
         const address = await Address.findOne({user:userId})
 
         console.log('User ID:', userId);
@@ -742,7 +752,12 @@ const statusCancelled = async (req, res) => {
 
 const salesReportLoad = async (req, res) => {
     try {
-        const orderlist = await Order.find().populate('products.product').populate('user')
+        const orderlist = await Order.find().populate({
+            path: 'products.product',
+            populate: {
+                path: 'category'
+            }
+        }).populate('user')
 
         res.render('salesReport', { orderlist })
     } catch (error) {
@@ -755,7 +770,7 @@ const returnOrder = async (req, res) => {
         let dataIndex = 0
         const { orderId, productId ,userId} = req.query;
         const action = req.query.action;
-        const productFind = await Product.findOne({ _id: productId })
+        const productFind = await Product.findOne({ _id: productId }).populate('category')
         const orderData = await Order.find({ user: userId })
         for (i = 0; i < orderData.length; i++) {
             if (orderData[i].products.find(product => product.product.toString() === productId)) {
@@ -780,21 +795,20 @@ const returnOrder = async (req, res) => {
 
             if (orderData[dataIndex].paymentMethod === 'Razorpay' || orderData[dataIndex].paymentMethod === 'Wallet') {
                 const user = await users.findById(userId);
-                if(productFind.offerprice>0){
+                let refundAmount = 0;
 
-                
-                user.wallet += productFind.offerprice * orderProduct.quantity;
-                }else{
-                    user.wallet += productFind.price * orderProduct.quantity;
-
+                if (productFind.offerprice > 0  && productFind.category.offerprice > 0) {
+                    refundAmount = (productFind.offerprice - (productFind.offerprice * productFind.category.offerprice / 100)) * orderProduct.quantity;
+                } else if (productFind.offerprice > 0) {
+                    refundAmount = productFind.offerprice * orderProduct.quantity;
+                } else if (productFind.category.offerprice > 0) {
+                    const discountedPrice = productFind.price - (productFind.price * productFind.category.offerprice / 100);
+                    refundAmount = discountedPrice * orderProduct.quantity;
+                } else {
+                    refundAmount = productFind.price * orderProduct.quantity;
                 }
+                user.wallet += refundAmount;
                 await user.save();
-                if(productFind.offerprice>0){
-                var refundAmount = productFind.offerprice * orderProduct.quantity
-                }else{
-                    var refundAmount = productFind.price * orderProduct.quantity
-
-                }
                 const walletTransaction = new Wallet({
                     user: userId,
                     amount: refundAmount,

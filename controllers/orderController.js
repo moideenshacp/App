@@ -416,7 +416,6 @@ const cancelOrder= async(req,res)=>{
         const userId = req.session.user_id
         console.log(productId+'1111111111111111111111');
         const productCart = await product.findOne({_id:productId}).populate('category')
-        console.log(productCart,'productcarttttttttt');
         const orderData = await Order.find({user:userId})
         for(i=0;i<orderData.length;i++){
         if(orderData[i].products.find(product => product.product.toString() === productId)){
@@ -517,7 +516,12 @@ const orderDetails =async(req,res)=>{
         const productId = req.query.productId;
         const orderId = req.query.orderId;
         const orderData = await Order.findOne({_id:orderId}).populate('address.addresses')   
-        const orders = await Order.find({user:userId}).populate('products.product')
+        const orders = await Order.find({user:userId}).populate({
+            path: 'products.product',
+            populate: {
+                path: 'category'
+            }
+        })
         const address = await Address.findOne({user:userId})
         let orderProduct = null;
         orders.forEach(order => {
@@ -548,7 +552,12 @@ try {
     const userId = req.session.user_id;
         const productId = req.query.productId;
         const orderId = req.query.orderId;
-        const orderData = await Order.findOne({_id:orderId}).populate('address.addresses').populate('products.product') 
+        const orderData = await Order.findOne({_id:orderId}).populate('address.addresses').populate({
+            path: 'products.product',
+            populate: {
+                path: 'category'
+            }
+        }) 
         const address = await Address.findOne({user:userId})
         let orderAddress = null;
         address.addresses.forEach(add=>{
@@ -556,10 +565,25 @@ try {
                 orderAddress=add
             }
         })
-        const deliveredProducts = orderData.products.filter(orderProduct => orderProduct.status === 'delivered')
+        const deliveredProducts = orderData.products.filter(orderProduct => orderProduct.status === 'delivered' ||orderProduct.status === 'Return Denied')
         if (deliveredProducts.length === 0) {
             return res.status(400).json({ message: 'No delivered product available for this order' });
         }
+
+        const calculatePrice = (orderProduct) => {
+            const product = orderProduct.product;
+            const category = product.category;
+
+            if (product.offerprice > 0 && category.offerprice > 0) {
+                return Math.round(product.offerprice - (product.offerprice * category.offerprice) / 100);
+            } else if (product.offerprice > 0) {
+                return product.offerprice;
+            } else if (category.offerprice > 0) {
+                return Math.round(product.price - (product.price * category.offerprice) / 100);
+            } else {
+                return product.price;
+            }
+        };
              const data = {    
             "currency": "INR",
             "taxNotation": "gst", // or "vat"
@@ -588,7 +612,7 @@ try {
                 "quantity": orderProduct.quantity,
                 "description": orderProduct.product.name,
                 "tax": 0, // Assuming no tax for simplicity
-                "price": orderProduct.product.offerprice > 0 ? orderProduct.product.offerprice : orderProduct.product.price
+                "price":  calculatePrice(orderProduct)
             })),
             "bottomNotice": "Thank you for your purchase!"
         };

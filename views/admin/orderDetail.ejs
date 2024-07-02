@@ -188,15 +188,21 @@ padding-top: 15px;
                         </div>
                         
                         <div class="col-md-4 col-lg-3">
-                            <%if(orderProduct.product.offerprice>0){%>
+                            <%if(orderProduct.product.offerprice>0 && orderProduct.product.category.offerprice > 0){%>
                                 <a href="/productDetail?id=<%=orderProduct.product._id%>">
-                                <p><b>₹<%=orderProduct.product.offerprice%></b></p></a>
+                                <p><b>₹<%= Math.round(orderProduct.product.offerprice - (orderProduct.product.offerprice * orderProduct.product.category.offerprice) / 100) %></b></p></a>
 
-                            <%}else{%>
+                                <%}else if(orderProduct.product.offerprice>0){%>
                                 <a href="/productDetail?id=<%=orderProduct.product._id%>">
-                                    <p><b>₹<%=orderProduct.product.price%></b></p></a>
+                                    <p><b>₹<%= orderProduct.product.offerprice %></b></p></a>
 
-                           <% }%>
+                                <%}else if(orderProduct.product.category.offerprice > 0){%>
+                                    <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                                    <p><b>₹<%=  Math.round(orderProduct.product.price - (orderProduct.product.price * orderProduct.product.category.offerprice) / 100) %></b></p></a>
+                                <%}else{%>
+                                    <a href="/productDetail?id=<%=orderProduct.product._id%>">
+                                        <p><b>₹<%= orderProduct.product.price %></b></p></a>
+                                <%}%>
                         </div>
                       </div>
                    
@@ -205,12 +211,17 @@ padding-top: 15px;
                     <div class="row my-4">
                         <div class="col-md-12">
                             <p class="lead fw-bold mb-0 text-end" style="color: #f37a27;">
-                                <%if(orderProduct.product.offerprice>0){%>
-                                    Total Price: ₹<%=orderProduct.product.offerprice %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.offerprice * orderProduct.quantity %>
-                                    <%}else{%>
-                                        Total Price: ₹<%=orderProduct.product.price %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.price * orderProduct.quantity %>
+                                <%if(orderProduct.product.offerprice>0 && orderProduct.product.category.offerprice > 0){%>
+                                    Total Price: ₹<%= Math.round(orderProduct.product.offerprice - (orderProduct.product.offerprice * orderProduct.product.category.offerprice) / 100) %> x <%= orderProduct.quantity %> = ₹<%= Math.round(orderProduct.product.offerprice - (orderProduct.product.offerprice * orderProduct.product.category.offerprice) / 100)  * orderProduct.quantity %>
+                                    <%}else if(orderProduct.product.offerprice>0){%>
+                                        Total Price: ₹<%=orderProduct.product.offerprice %> x <%= orderProduct.quantity %> = ₹<%= orderProduct.product.offerprice * orderProduct.quantity %>
     
-                                        <% }%>                            </p>
+                                    <%}else if(orderProduct.product.category.offerprice > 0){%>
+                                        Total Price: ₹<%=Math.round(orderProduct.product.price - (orderProduct.product.price * orderProduct.product.category.offerprice) / 100) %> x <%= orderProduct.quantity %> = ₹<%= Math.round(orderProduct.product.price - (orderProduct.product.price * orderProduct.product.category.offerprice) / 100)  * orderProduct.quantity %>
+                                        <%}else{%>
+    
+                                        Total Price: ₹<%= orderProduct.product.price %> x <%= orderProduct.quantity %> = ₹<%=  orderProduct.product.price  * orderProduct.quantity %>
+                                        <%}%>                          </p>
                         </div>
                     </div>
                     
