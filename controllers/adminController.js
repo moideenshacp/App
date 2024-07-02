@@ -521,8 +521,9 @@ const editProduct = async (req, res) => {
 
         const productData = await products.findOne({ _id: id });
         const images = req.files;
-        const newImageNames = images.map(image => image.filename);
+        console.log(images,'imaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
+        
 
         const name = req.body.name.trim();
         const description = req.body.description.trim();
@@ -531,7 +532,6 @@ const editProduct = async (req, res) => {
         const quantity = req.body.quantity;
         const category = req.body.category;
         console.log(category);
-        const editedImageIndex = req.body.editedImageIndex;
         const offerPrice = offerPrices ? offerPrices : 0;
 
         const categoryDocument = await categories.findOne({ name: category });
@@ -539,10 +539,6 @@ const editProduct = async (req, res) => {
         console.log(categoryId);
 
 
-        const updatedImages = [...productData.image];
-        if (editedImageIndex !== undefined) {
-            updatedImages[editedImageIndex] = newImageNames[0];
-        }
 
 
 
@@ -575,8 +571,26 @@ const editProduct = async (req, res) => {
 
 
 
-        const updatedProduct = await products.findByIdAndUpdate(id, { $set: { name: name, description: description, price: price, quantity: quantity, category: categoryId, image: updatedImages,offerprice: offerPrice } })
+        // const updatedProduct = await products.findByIdAndUpdate(id, { $set: { name: name, description: description, price: price, quantity: quantity, category: categoryId,offerprice: offerPrice } })
+        productData.name =name;
+        productData.description =description;
+        productData.price =price;
+        productData.quantity =quantity;
+        productData.category =categoryId;
+        productData.offerprice =offerPrice;
+            
+        if (images && images.length > 0) {
+            images.forEach((item, index) => {
+                if (index < 4) { // Assuming you have up to 4 image slots
+                    productData.image[index] = item.filename;
+                }
+            });
+        }
 
+       const savedProduct = await productData.save()
+       if(savedProduct){console.log('sucess')}else{
+        console.log('not okay');
+       }
 
         res.redirect('/admin/products')
 

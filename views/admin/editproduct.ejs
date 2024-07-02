@@ -15,6 +15,30 @@
         <!-- Template CSS -->
         <link href="/admincss/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet" />
+        <script src="https://unpkg.com/cropperjs"></script>
+        <style>
+            .preview-image {
+    width: 100px;
+    height: 100px;
+    margin: 2px;
+    display: inline-block
+}
+
+.cropper-container {
+        width: 100%;
+        max-height: 400px;
+        margin-bottom: 10px;
+    }
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+        background-color: #363636;
+    }
+        
+        </style>
 
     </head>
 
@@ -229,15 +253,23 @@
                                     <div class="card-body">
                                         <div class="input-upload">
                                             <% for (let i = 0; i <= 3; i++) { %>
+
                                                 <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
                                                     <label for="imageInput<%= i %>" class="image-label">Image <%= i + 1 %>
-                                                        <div class="rounded-image-preview">
-                                                            <img id="imagePreview<%= i %>" src="/productImages/productImages/<%= productData.image[i] %>" alt="Preview">
-                                                        </div>
-                                                        
-                                                        <input name="image" type="file" accept=".png, .jpeg, .jpg, .webp" id="imageInput<%= i %>" class="imageInput" data-index="<%= i %>" onchange="previewImage(this, 'imagePreview<%= i %>')" value="<%= productData.image[i] %>">
+                                                            <div class="rounded-image-preview">
+                                                                <img id="imagePreview<%= i %>"
+                                                                    src="/productImages/productImages/<%= productData.image[i] %>"
+                                                                    alt="Preview">
+                                                            </div>
+    
+                                                            <input name="image" type="file"
+                                                                accept=".png, .jpeg, .jpg, .webp" id="imageInput<%= i %>"
+                                                                class="imageInput" data-index="<%= i %>"
+                                                                onchange="previewImage(event)"
+                                                                value="<%= productData.image[i] %>">
                                                     </label>
                                                 </div>
+    
                                             <% } %>
                                         </div>
                                     </div>
@@ -257,6 +289,15 @@
                     </div>
               
                 </div>
+                <div id="cropperModal" class="modal">
+                    <div class="modal-content">
+                        <div class="cropper-container">
+                            <img id="cropperImage" src="" alt="Image for cropping" />
+                        </div>
+                        <button onclick="cropImage()">Crop</button>
+                        <button onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
             </section>
             <!-- content-main end// -->
             <footer class="main-footer font-xs">
@@ -272,47 +313,63 @@
         <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
 
 
-
 <script>
-        function previewImage(input, previewId) {
-            const preview = document.getElementById(previewId);
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                preview.src = "";
+    let cropper;
+                    let currentInput;
+
+                    function previewImage(event, previewId, index) {
+    const input = event.target;
+    const file = input.files[0];
+    currentInput = input;
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const cropperImage = document.getElementById('cropperImage');
+            cropperImage.src = e.target.result;
+            document.getElementById('cropperModal').style.display = 'block';
+            if (cropper) {
+                cropper.destroy();
             }
-        }
-
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-        let editedImageIndex;
-
-        
-        //event listener for clicking on image input
-        document.querySelectorAll('.imageInput').forEach((input) => {
-            input.addEventListener('change', function () {
-                // index of clicked image
-                editedImageIndex = parseInt(this.getAttribute('data-index'));
-                console.log('Index of clicked image:', editedImageIndex);
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: 3 / 4,
+                viewMode: 1,
             });
-        });
+        };
+        reader.readAsDataURL(file);
+    }
 
-        const form = document.getElementById('editProductForm');
-        form.addEventListener('submit', function () {
-            
-            const editedImageIndexInput = document.createElement('input');
-            editedImageIndexInput.setAttribute('type', 'hidden');
-            editedImageIndexInput.setAttribute('name', 'editedImageIndex');
-            editedImageIndexInput.setAttribute('value', editedImageIndex);
-            form.appendChild(editedImageIndexInput);
-        });
-    });
-    </script>
+    // Set the editedImageIndex for the current input
+    currentInput.dataset.index = index;
+}
+
+                    function cropImage() {
+                        if (cropper) {
+                            cropper.getCroppedCanvas({
+                                width: 300,
+                                height: 400,
+                            }).toBlob(function (blob) {
+                                const croppedImageSrc = URL.createObjectURL(blob);
+                                const imagePreview = document.getElementById(currentInput.id.replace('imageInput', 'imagePreview'));
+                                if (imagePreview) {
+                                    imagePreview.src = croppedImageSrc;
+                                }
+                                const dataTransfer = new DataTransfer();
+                                const file = new File([blob],` croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+                                dataTransfer.items.add(file);
+                                currentInput.files = dataTransfer.files;
+                                closeModal();
+                            }, 'image/jpeg');
+                        }
+                    }
+
+                    function closeModal() {
+                        document.getElementById('cropperModal').style.display = 'none';
+                        if (cropper) {
+                            cropper.destroy();
+                            cropper = null;
+                        }
+                    }
+</script>
 
 
 
