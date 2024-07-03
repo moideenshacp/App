@@ -229,6 +229,7 @@ const verifyOtp = async (req, res) => {
             req.session.name = null;
             req.session.mobile = null;
             req.session.password=null;
+            req.session.refferal=null;
           
           if(userDatas){
                   return res.render('login', { message: 'registered successfully,Login in now' });
