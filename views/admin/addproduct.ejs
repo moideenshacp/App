@@ -265,19 +265,20 @@
                                                 <div class="input-upload">
                                                     <% for (let i = 0; i <= 3; i++) { %>
                                                         <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
-                                                            <label for="imageInput<%= i %>" class="image-label">Image <%= i+1 %>
+                                                            <label for="imageInput<%= i %>" class="image-label">
+                                                                Image <%= i + 1 %>
                                                                 <div class="rounded-image-preview">
                                                                     <img id="imagePreview<%= i %>" src="" alt="Preview">
                                                                 </div>
                                                                 <img src="assets/imgs/theme/upload.svg" alt="" class="image-preview" style="max-width: 160px;" />
-
-                                                                <input name="image" type="file" accept=".png, .jpeg, .jpg, .webp" id="image" class="form-control"  onchange="previewImage(event)">
+                                                                <input name="image" type="file" accept=".png, .jpeg, .jpg, .webp" id="imageInput<%= i %>"
+                                                                    class="form-control" onchange="previewImage(event)">
                                                             </label>
                                                         </div>
-                                                        
-                                                        
                                                     <% } %>
+                                                    
                                                 </div>
+                                                
                                                 
                                             </div>
 
@@ -324,65 +325,71 @@
         <!-- Main Script -->
         <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
 
-
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+        <!-- Include Cropper.js from a CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
         <script>
             // CROPPER JS
     let cropper;
     let currentInput;
     let croppedFiles = new Map(); // To store the cropped files
 
-    function previewImage(event) {
-        const input = event.target;
-        const file = input.files[0];
-        currentInput = input; // Save the reference to the current input
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const cropperImage = document.getElementById('cropperImage');
-                cropperImage.src = e.target.result;
-                document.getElementById('cropperModal').style.display = 'block';
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(cropperImage, {
-                    aspectRatio: 3/4, // Portrait aspect ratio
-                    viewMode: 1,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    }
+    function previewImage(event, index) {
+    const input = event.target;
+    const file = input.files[0];
+    currentInput = input; // Save the reference to the current input
 
-    function cropImage() {
-        if (cropper) {
-            cropper.getCroppedCanvas({
-                width: 300, // desired width
-                height: 400, // desired height
-            }).toBlob(function (blob) {
-                const croppedImageSrc = URL.createObjectURL(blob);
-                const imagePreview = currentInput.previousElementSibling;
-                if (imagePreview && imagePreview.tagName === 'IMG') {
-                    imagePreview.src = croppedImageSrc;
-                }
-                // Replace the file input with the cropped image blob
-                const dataTransfer = new DataTransfer();
-                const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
-                dataTransfer.items.add(file);
-                currentInput.files = dataTransfer.files;
-                // Store the cropped file in the Map
-                croppedFiles.set(currentInput.name, file);
-                closeModal();
-            }, 'image/jpeg');
-        }
-    }
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const cropperImage = document.getElementById('cropperImage');
+            cropperImage.src = e.target.result;
+            document.getElementById('cropperModal').style.display = 'block';
 
-    function closeModal() {
-        document.getElementById('cropperModal').style.display = 'none';
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
+            if (cropper) {
+                cropper.destroy();
+            }
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: 3 / 4, // Portrait aspect ratio
+                viewMode: 1,
+            });
+        };
+        reader.readAsDataURL(file);
     }
+}
+
+function cropImage() {
+    if (cropper) {
+        cropper.getCroppedCanvas({
+            width: 300,
+            height: 400,
+        }).toBlob(function (blob) {
+            const croppedImageSrc = URL.createObjectURL(blob);
+            const imagePreview = document.getElementById(`imagePreview${currentInput.id.replace('imageInput', '')}`);
+            
+            if (imagePreview) {
+                imagePreview.src = croppedImageSrc;
+            }
+
+            const dataTransfer = new DataTransfer();
+            const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+            dataTransfer.items.add(file);
+            currentInput.files = dataTransfer.files;
+
+            closeModal();
+        }, 'image/jpeg');
+    }
+}
+
+function closeModal() {
+    document.getElementById('cropperModal').style.display = 'none';
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+}
+
         </script>
 
 

@@ -276,10 +276,10 @@
                                                     <%= new Date(order.date).toLocaleDateString() %>
                                                 </td>
                                                 <td>
-                                                    <%=order.user.name%>
+                                                    <%=order.user?.name%>
                                                 </td>
                                                 <td><b>
-                                                        <%=product.product.name%>
+                                                        <%=product.product?.name%>
                                                     </b></td>
                                                 <td>
                                                     <%if(product.product.offerprice>0 && product.product.category.offerprice > 0){%>

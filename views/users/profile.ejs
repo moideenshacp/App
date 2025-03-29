@@ -308,6 +308,7 @@
                                                     </thead>
                                                     <tbody>
                                                         <% order.products.forEach(orderProduct => { %>
+                                                            
                                                             <tr>
                                                                 <td class="product-col">
                                                                     <div class="product">
@@ -352,12 +353,12 @@
                                                                         </a>
                                                                 </td>
                                                                 <td>
-                                                                    <% if (orderProduct.status === 'pending') { %>
-                                                                        <a onclick="cancelOrder('<%= orderProduct.product._id %>')">
+                                                                    <% if (orderProduct.status === 'Order confirmed') { %>
+                                                                        <a onclick="cancelOrder('<%= order._id %>','<%= orderProduct.product._id %>')">
                                                                             <button class="btn btn-primary show-details-btn">Cancel Order</button>
                                                                         </a>
                                                                     <% } else if (orderProduct.status === 'delivered') { %>
-                                                                        <a onclick="returnOrder('<%= orderProduct.product._id %>')">
+                                                                        <a onclick="returnOrder('<%= order._id %>','<%= orderProduct.product._id %>')">
                                                                             <button class="btn btn-primary show-details-btn">Return Order</button>
                                                                         </a>
                                                                     <% } %>
@@ -377,12 +378,28 @@
                                                     <% }%>
                                                 </div>
                                                 <br>
+                                                <% 
+                                                <!-- // Check if any product in the order is 'Order confirmed' (to show 'Cancel Entire Order' button) -->
+                                                const canCancelWholeOrder = order.products.some(product => product.status === 'Order confirmed');
+                                                
+                                                <!-- // Check if any product in the order is 'delivered' (to show 'Download Invoice' button) -->
+                                                const canDownloadInvoice = order.products.some(product => product.status === 'delivered');
+                                                %>
+                                                
                                                 <div class="text-center">
-                                                    <a href="/downloadInvoice/?orderId=<%= order._id %>&productId=<%= order.products[0].product._id %>">
-                                                        <button class="btn btn-primary">Download Invoice</button>
-                                                    </a>
-                                                    
+                                                    <% if (canCancelWholeOrder) { %>
+                                                        <a onclick="cancelOrder('<%= order._id %>')">
+                                                            <button class="btn btn-danger">Cancel Entire Order</button>
+                                                        </a>
+                                                    <% } %>
+                                                
+                                                    <% if (canDownloadInvoice) { %>
+                                                        <a href="/downloadInvoice/?orderId=<%= order._id %>">
+                                                            <button class="btn btn-success">Download Invoice</button>
+                                                        </a>
+                                                    <% } %>
                                                 </div>
+                                                
                                                 <hr style="border-color: blue; border-width: 2px;">
                                             </div>
                                         <% }) %>
@@ -803,7 +820,8 @@
 
 
     <script>
-        function cancelOrder(productId) {
+        function cancelOrder(orderId,productId) {
+            const url = productId ? "/cancelOrder" : "/cancelWholeOrder";
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'You are about to cancel this ordered product.',
@@ -813,12 +831,12 @@
                 cancelButtonText: 'No, keep it'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('/cancelOrder', {
+                    fetch(url, {
                         method: 'post',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ productId })
+                        body: JSON.stringify({orderId, productId})
                     })
                         .then(response => {
                             if (!response.ok) {
@@ -827,7 +845,7 @@
                             return response.json();
                         })
                         .then(data => {
-                            if (data.message == 'succes') {
+                            if (data.message == 'Order cancelled successfully') {
                                 window.location.reload();
                             } else {
                                 console.log('Error:', data.error);
@@ -841,7 +859,7 @@
 
         }
 
-        function returnOrder(productId) {
+        function returnOrder(orderId,productId) {
     Swal.fire({
         title: 'Are you sure?',
         text: 'You are about to return this ordered product.',
@@ -864,7 +882,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ productId: productId, reason: result.value })
+                body: JSON.stringify({orderId:orderId, productId: productId, reason: result.value })
             })
             .then(response => response.json())
             .then(data => {

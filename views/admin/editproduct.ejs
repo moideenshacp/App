@@ -311,9 +311,17 @@
         <script src="/admincss/assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="/admincss/assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+        <!-- Include Cropper.js from a CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+
 
 
 <script>
+    console.log(window.Cropper); 
+
     let cropper;
                     let currentInput;
 
@@ -325,15 +333,23 @@
         const reader = new FileReader();
         reader.onload = function (e) {
             const cropperImage = document.getElementById('cropperImage');
+            if (!cropperImage) {
+    console.error("cropperImage element not found");
+    return;
+}
             cropperImage.src = e.target.result;
-            document.getElementById('cropperModal').style.display = 'block';
+            // document.getElementById('cropperModal').style.display = 'block';
             if (cropper) {
                 cropper.destroy();
             }
-            cropper = new Cropper(cropperImage, {
-                aspectRatio: 3 / 4,
-                viewMode: 1,
-            });
+            document.getElementById("cropperModal").style.display = "block";
+setTimeout(() => {
+    cropper = new Cropper(cropperImage, {
+        aspectRatio: 3 / 4,
+        viewMode: 1,
+    });
+}, 100); // Adding a small delay
+
         };
         reader.readAsDataURL(file);
     }
@@ -341,6 +357,7 @@
     // Set the editedImageIndex for the current input
     currentInput.dataset.index = index;
 }
+console.log(window.Cropper); // Should not be undefined
 
                     function cropImage() {
                         if (cropper) {

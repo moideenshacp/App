@@ -35,9 +35,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
          .line-through {
-        text-decoration: line-through;
-        color: #999; /* Optional: change the color to differentiate the original price */
-    }
+    text-decoration: line-through;
+    color: #999; /* Faded color for original price */
+}
+
+.wishlist-active svg {
+    fill: red !important;  
+}
+
+.wishlist-active {
+    color: red !important; /* This will apply for Font Awesome or text */
+}
     </style>
 </head>
 
@@ -317,10 +325,27 @@
                                                     class="btn-product btn-cart" id="addToCart"><span>add to
                                                         cart</span></a>
                                                 <%}%>
-                                                    <div class="details-action-wrapper">
-                                                        <a onclick="Addwishlist('<%=productData.id%>')" class="btn-product btn-wishlist"
-                                                            title="Wishlist"><span>Add to Wishlist</span></a>
-                                                    </div><!-- End .details-action-wrapper -->
+
+
+                                                   <% 
+    const wishlistProductIds = wishlistData.map(item => item.products.map(p => p.product.toString())).flat();
+%>
+
+<div class="details-action-wrapper">
+    <a onclick="Addwishlist('<%= productData.id %>')" 
+        class="btn-product  <%= wishlistProductIds.includes(productData.id) ? 'wishlist-active' : '' %>" 
+        data-product-id="<%= productData.id %>"
+        title="Wishlist">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+            fill="<%= wishlistProductIds.includes(productData.id) ? 'red' : 'grey' %>"/>
+        </svg>
+        <span>Add to Wishlist</span>
+    </a>
+</div>
+
+
+
                                     </div><!-- End .product-details-action -->
                                     <div>
                                         <%if(productData.quantity===0){%>
@@ -512,13 +537,25 @@
                                                         <img src="/productImages/productImages/<%=product.image[0]%>"
                                                             alt="Product image" class="product-image">
                                                     </a>
-
-                                                    <div class="product-action-vertical">
-                                                        <a onclick="Addwishlist('<%=product.id%>')"
-                                                            class="btn-product-icon btn-wishlist btn-expandable"><span>add
-                                                                to wishlist</span></a>
-                                                        
-                                                    </div><!-- End .product-action-vertical -->
+                                                    
+                                                   <% 
+                                                   const wishlistProductIds = wishlistData.map(item => item.products.map(p => p.product.toString())).flat();
+                                               %>
+                                               
+                                               <div class="product-action-vertical">
+                                                <a onclick="Addwishlist('<%= product.id %>')"
+                                                    class="btn-product-icon <%= wishlistProductIds.includes(product.id) ? 'wishlist-active' : '' %>"
+                                                    data-product-id="<%= product.id %>">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+                                                        fill="<%= wishlistProductIds.includes(product.id) ? 'red' : 'grey' %>"/>
+                                                    </svg>
+                                                    <span>Add to wishlist</span>
+                                                </a>
+                                            </div>
+                                            
+                                            
+                                            
                                                     <%if(productData.quantity===0){%>
                                                         <div class="product-action">
                                                             <a class="btn-product" disabled><span>Out of
@@ -896,48 +933,43 @@
                 });
         }
 
-
-
         function Addwishlist(productId) {
-            fetch('/wishlist', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId})
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.message) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Product added to wishlist successfully.',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } else if (data.fail) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Product is already in Wishlist!',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                    else {
-                        console.log('Error:', data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    fetch('/wishlist', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const wishlistBtn = document.querySelector(`[data-product-id="${productId}"]`);
+        const heartIcon = wishlistBtn.querySelector('svg path');
+
+        if (data.message === 'added') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Product added to wishlist.',
+                confirmButtonText: 'OK'
+            });
+            wishlistBtn.classList.add('wishlist-active');
+            if (heartIcon) heartIcon.setAttribute('fill', 'red'); // Change to red
+        } else if (data.message === 'removed') {
+            Swal.fire({
+                icon: 'info',
+                title: 'Removed!',
+                text: 'Product removed from wishlist.',
+                confirmButtonText: 'OK'
+            });
+            wishlistBtn.classList.remove('wishlist-active');
+            if (heartIcon) heartIcon.setAttribute('fill', 'grey'); // Change to grey
         }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
     </script>
 
 
