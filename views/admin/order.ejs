@@ -179,33 +179,10 @@
                 <div>
                     <h2 class="content-title card-title">Order List</h2>
                 </div>
-                <div>
-                    <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                </div>
+  
             </div>
             <div class="card mb-4">
-                <header class="card-header">
-                    <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input type="text" placeholder="Search..." class="form-control" />
-                        </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                            <select class="form-select">
-                                <option>Status</option>
-                                <option>Active</option>
-                                <option>Disabled</option>
-                                <option>Show all</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                            <select class="form-select">
-                                <option>Show 20</option>
-                                <option>Show 30</option>
-                                <option>Show 40</option>
-                            </select>
-                        </div>
-                    </div>
-                </header>
+               
                 <!-- card-header end// -->
 
 
@@ -289,9 +266,24 @@
                                                                     Change Status
                                                                 </button>
                                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                    <li><a  href="/admin/statusChange?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=delivered&userId=<%= order.user._id %>"  class="dropdown-item">Delivered</a></li>
-                                                                    <li><a href="/admin/statusChange?orderId=<%= order._id %>&productId=<%= product.product._id %>&action=cancelled&userId=<%= order.user._id %>" class="dropdown-item">Cancelled</a></li>
+                                                                    <li>
+                                                                        <button 
+                                                                            class="dropdown-item" 
+                                                                            onclick="confirmStatusChange('<%= order._id %>', '<%= product.product._id %>', 'delivered', '<%= order.user._id %>')"
+                                                                        >
+                                                                            Delivered
+                                                                        </button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button 
+                                                                            class="dropdown-item" 
+                                                                            onclick="confirmStatusChange('<%= order._id %>', '<%= product.product._id %>', 'cancelled', '<%= order.user._id %>')"
+                                                                        >
+                                                                            Cancelled
+                                                                        </button>
+                                                                    </li>
                                                                 </ul>
+                                                                
                                                             </div>
 
                                                         <%}%>
@@ -359,90 +351,50 @@
     <!-- Main Script -->
     <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     <script>
-        function delivered(userId,productId) {
-
-            console.log('hiii');
+        function confirmStatusChange(orderId, productId, action, userId) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: 'You are about to change the status to delivered.',
+                title: `Are you sure?`,
+                text: `You are about to mark this order as ${action}.`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, change it!',
-                cancelButtonText: 'No, keep it'
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('/admin/statusDelivered', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({userId,productId})
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.message == 'succes') {
-                                window.location.reload();
-                            } else {
-                                console.log('Error:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+                    changeStatus(orderId, productId, action, userId);
                 }
             });
-
         }
-
-
-
-
-
-        function cancelled(userId,productId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You are about to cancel the order.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, cancel it!',
-                cancelButtonText: 'No, keep it'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/admin/statusCancelled', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({userId,productId})
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.message == 'succes') {
-                                window.location.reload();
-                            } else {
-                                console.log('Error:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+    
+        function changeStatus(orderId, productId, action, userId) {
+            fetch(`/admin/statusChange?orderId=${orderId}&productId=${productId}&action=${action}&userId=${userId}`, {
+                method: 'PATCH'
+            })
+            .then(response => {
+                if (response.ok) {
+                    Swal.fire(
+                        'Success!',
+                        `Order marked as ${action}.`,
+                        'success'
+                    ).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Error', 'Failed to update order status.', 'error');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'An error occurred while processing the request.', 'error');
             });
-
         }
-        
     </script>
+    
 </body>
 
 </html>

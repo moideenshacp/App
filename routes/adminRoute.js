@@ -89,8 +89,8 @@ admin_route.post("/edit-category", adminController.editcategory);
 //order
 admin_route.get("/order", auth.isLogin, adminController.loadOrder);
 admin_route.get("/orderDetail", auth.isLogin, adminController.orderDetail);
-admin_route.get("/statusChange", adminController.statusChange);
-admin_route.patch("/statusCancelled", adminController.statusCancelled);
+admin_route.patch("/statusChange", adminController.statusChange);
+
 ///coupon
 admin_route.get("/Addcoupon", auth.isLogin, couponController.couponAddLoad);
 admin_route.get("/coupon", auth.isLogin, couponController.couponList);

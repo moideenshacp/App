@@ -772,6 +772,7 @@ const statusChange = async (req, res) => {
     // Fetch the order
     const order = await Order.findOne({ _id: orderId, user: userId });
 
+
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
@@ -820,6 +821,7 @@ const statusChange = async (req, res) => {
         await walletTransaction.save();
       }
     } else if (action === "delivered") {
+
       orderProduct.status = "delivered";
     } else {
       return res.status(400).json({ message: "Invalid action type" });
@@ -827,46 +829,14 @@ const statusChange = async (req, res) => {
 
     // Save updated order
     await order.save();
-    res.redirect("/admin/order");
+    return res.status(200).json({ message: "Order status updated successfully" });
   } catch (error) {
     console.error("Error changing order status:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-const statusCancelled = async (req, res) => {
-  try {
-    let dataIndex = 0;
-    const productId = req.body.productId;
-    const userId = req.body.userId;
-    const orderData = await Order.find({ user: userId });
-    for (i = 0; i < orderData.length; i++) {
-      if (
-        orderData[i].products.find(
-          (product) => product.product.toString() === productId
-        )
-      ) {
-        var orderProduct = orderData[i].products.find(
-          (product) => product.product.toString() === productId
-        );
-        dataIndex = i;
-      }
-    }
-    if (orderProduct) {
-      orderProduct.status = "cancelled";
 
-      await orderData[dataIndex].save();
-      const productData = await products.findById(orderProduct.product);
-
-      productData.quantity += orderProduct.quantity;
-
-      await productData.save();
-    }
-    res.status(200).json({ message: "succes" });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const salesReportLoad = async (req, res) => {
   try {
@@ -1284,8 +1254,7 @@ module.exports = {
   loadOrder,
   orderDetail,
   statusChange,
-  statusCancelled,
-
+  
   //sales report
   salesReportLoad,
   returnOrder,
