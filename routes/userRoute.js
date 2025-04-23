@@ -38,7 +38,6 @@ user_route.post("/signup", userController.insertUser);
 
 //login
 user_route.get("/login", auth.isLogout, userController.loadLogin);
-// user_route.post('/login',userController.insertUser)
 user_route.post("/home", userController.verify);
 
 //for otp
@@ -48,12 +47,11 @@ user_route.post("/otp", userController.verifyOtp);
 //resend otp
 user_route.post("/resendotp", userController.resendotp);
 
+//google authentication
 user_route.get(
   "/google",
   passport.authenticate("google", { scope: ["email", "profile"] })
 );
-
-//google authentication
 user_route.get(
   "/auth/google/callback",
   auth.isLogout,
@@ -62,6 +60,8 @@ user_route.get(
     failureRedirect: "/failure",
   })
 );
+
+
 //for success
 user_route.get("/success", auth.isLogout, userController.googleInsert);
 //failure
@@ -83,6 +83,8 @@ user_route.get(
   blockAuth.block,
   userController.loadprofile
 );
+
+//wallet history
 user_route.get("/wallet/history", auth.isLogin, userController.wallet);
 
 //userhome
@@ -121,10 +123,11 @@ user_route.post("/removeAddress", auth.isLogin, userController.removeAddress);
 
 //edit address
 user_route.get("/edit-Address", auth.isLogin, userController.loadEditAddress);
-user_route.post("/edit-Address", auth.isLogin, userController.updateAddress);
+user_route.patch("/edit-Address", auth.isLogin, userController.updateAddress);
 
 //load checkout
 user_route.get("/checkout", auth.isLogin, cartController.loadCheckout);
+
 //------------adddress add
 user_route.get(
   "/checkoutAddress",
@@ -136,20 +139,21 @@ user_route.post(
   auth.isLogin,
   cartController.checkoutAddress
 );
-//-------------------edit adit
+
+//-------------------edit address checkout
 user_route.get(
   "/checkoutEditAddress",
   auth.isLogin,
   cartController.checkoutEditAddressLoad
 );
-user_route.post(
+user_route.patch(
   "/checkoutEditAddress",
   auth.isLogin,
   cartController.checkoutEditAddress
 );
 
 //editprofile
-user_route.post("/editProfile", auth.isLogin, userController.editProfile);
+user_route.patch("/editProfile", auth.isLogin, userController.editProfile);
 
 //forrgetpassword
 user_route.get(
@@ -180,15 +184,18 @@ user_route.post(
 
 //cash on delivery
 
+user_route.get('/orderSuccess',auth.isLogin,orderController.loadOrderSuccess)
+user_route.get('/orderFailure',auth.isLogin,orderController.loadOrderFailure)
 user_route.post("/order", auth.isLogin, orderController.order);
-user_route.post("/cancelOrder", auth.isLogin, orderController.cancelOrder);
-user_route.post(
+user_route.patch("/cancelOrder", auth.isLogin, orderController.cancelOrder);
+user_route.patch(
   "/cancelWholeOrder",
   auth.isLogin,
   orderController.cancelWholeOrder
 );
-user_route.post("/returnOrder", auth.isLogin, orderController.returnOrder);
+user_route.patch("/returnOrder", auth.isLogin, orderController.returnOrder);
 user_route.get("/orderDetails", auth.isLogin, orderController.orderDetails);
+
 //razorpay
 user_route.post("/razorpay", auth.isLogin, orderController.RazorpayOrder);
 user_route.post(

@@ -379,9 +379,13 @@
                                                 </div>
                                                 <br>
                                                 <% 
-                                                <!-- // Check if any product in the order is 'Order confirmed' (to show 'Cancel Entire Order' button) -->
-                                                const canCancelWholeOrder = order.products.some(product => product.status === 'Order confirmed');
+
+                                                 <!-- Count how many products have status 'Order confirmed' -->
+                                                const confirmedCount = order.products.filter(product => product.status === 'Order confirmed').length;
                                                 
+                                                <!-- Show cancel button only if 2 or more confirmed products -->
+                                                const canCancelWholeOrder = confirmedCount >= 2;
+
                                                 <!-- // Check if any product in the order is 'delivered' (to show 'Download Invoice' button) -->
                                                 const canDownloadInvoice = order.products.some(product => product.status === 'delivered');
                                                 %>
@@ -832,7 +836,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(url, {
-                        method: 'post',
+                        method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -845,12 +849,19 @@
                             return response.json();
                         })
                         .then(data => {
-                            if (data.message == 'Order cancelled successfully') {
-                                window.location.reload();
-                            } else {
-                                console.log('Error:', data.error);
-                            }
-                        })
+                    if (data.message === 'Order cancelled successfully') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Cancelled!',
+                            text: 'Your order has been cancelled successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        console.log('Error:', data.error);
+                    }
+                })
                         .catch(error => {
                             console.error('Error:', error);
                         });
@@ -878,7 +889,7 @@
     }).then((result) => {
         if (result.isConfirmed) {
             fetch('/returnOrder', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -983,7 +994,7 @@
     }
    
             fetch('/editProfile', {
-                method: 'post',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },

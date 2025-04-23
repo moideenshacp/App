@@ -88,6 +88,21 @@ const order = async (req, res) => {
     console.log(error);
   }
 };
+
+const loadOrderSuccess = async (req, res) => {
+  try {
+    res.render("orderSuccess");
+  } catch (error) {
+    console.log(error);
+  }
+};
+const loadOrderFailure = async (req, res) => {
+  try {
+    res.render("orderFailure");
+  } catch (error) {
+    console.log(error);
+  }
+};
 const walletOrder = async (req, res) => {
   try {
     const userId = req.session.user_id;
@@ -805,6 +820,8 @@ module.exports = {
   order,
   cancelOrder,
   cancelWholeOrder,
+  loadOrderFailure,
+  loadOrderSuccess,
   orderDetails,
   RazorpayOrder,
   verifySignature,
@@ -815,4 +832,5 @@ module.exports = {
   //retry payment
   RazorpayOrderRetry,
   verifySignatureRetry,
+
 };

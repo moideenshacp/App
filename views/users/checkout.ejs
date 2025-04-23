@@ -134,7 +134,7 @@
 
                                 </li>
 
-                                
+
                                 <li>
                                 <li><a href="/profile">Profile</a></li>
                                 </li>
@@ -268,26 +268,43 @@
                                                                         <td>
                                                                             <%=cartProduct.product.name%>
                                                                         </td>
-                                                                        
 
-                                                                        <% if (cartProduct.product.offerprice > 0 && cartProduct.product.category.offerprice > 0) { %>
+
+                                                                        <% if (cartProduct.product.offerprice> 0 &&
+                                                                            cartProduct.product.category.offerprice > 0)
+                                                                            { %>
                                                                             <td>
-                                                                                ₹<%= Math.round(cartProduct.product.offerprice - (cartProduct.product.offerprice * cartProduct.product.category.offerprice) / 100) * cartProduct.quantity %>
-                                                                            </td>                    
-                                                                        <% } else if (cartProduct.product.offerprice > 0) { %>
-                                                                            <td>
-                                                                                ₹<%= cartProduct.product.offerprice * cartProduct.quantity %>
-                                                                            </td>                     
-                                                                        <% } else if (cartProduct.product.category.offerprice > 0) { %> <!-- Added missing { here -->
-                                                                            <td>
-                                                                                ₹<%=  Math.round(cartProduct.product.price - (cartProduct.product.price * cartProduct.product.category.offerprice) / 100)* cartProduct.quantity %>
-                                                                            </td> 
-                                                                        <% } else { %>
-                                                                            <td>
-                                                                                ₹<%= cartProduct.product.price * cartProduct.quantity %>
+                                                                                ₹<%= Math.round(cartProduct.product.offerprice
+                                                                                    - (cartProduct.product.offerprice *
+                                                                                    cartProduct.product.category.offerprice)
+                                                                                    / 100) * cartProduct.quantity %>
                                                                             </td>
-                                                                        <% } %>
-                                                                        
+                                                                            <% } else if
+                                                                                (cartProduct.product.offerprice> 0) { %>
+                                                                                <td>
+                                                                                    ₹<%= cartProduct.product.offerprice
+                                                                                        * cartProduct.quantity %>
+                                                                                </td>
+                                                                                <% } else if
+                                                                                    (cartProduct.product.category.offerprice>
+                                                                                    0) { %>
+                                                                                    <!-- Added missing { here -->
+                                                                                    <td>
+                                                                                        ₹<%= Math.round(cartProduct.product.price
+                                                                                            - (cartProduct.product.price
+                                                                                            *
+                                                                                            cartProduct.product.category.offerprice)
+                                                                                            / 100)* cartProduct.quantity
+                                                                                            %>
+                                                                                    </td>
+                                                                                    <% } else { %>
+                                                                                        <td>
+                                                                                            ₹<%= cartProduct.product.price
+                                                                                                * cartProduct.quantity
+                                                                                                %>
+                                                                                        </td>
+                                                                                        <% } %>
+
 
                                                                     </tr>
                                                                     <%})%>
@@ -450,25 +467,26 @@
                 <div class="header-search-wrapper search-wrapper-wide">
                     <label for="q" class="sr-only">Search</label>
                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                    <input type="search" class="form-control" name="search" id="search" placeholder="Search product ..." required>
+                    <input type="search" class="form-control" name="search" id="search" placeholder="Search product ..."
+                        required>
                 </div><!-- End .header-search-wrapper -->
             </form>
 
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
-                    <li class="">  
+                    <li class="">
                         <a href="/home" class="">Home</a>
 
-                     
+
                     </li>
                     <li>
                         <a href="/shop" class="sf">Shop</a>
 
-                        
+
                     </li>
-                    
+
                     <li>
-                        <li><a href="/profile">Profile</a></li>
+                    <li><a href="/profile">Profile</a></li>
                     </li>
                 </ul>
             </nav><!-- End .mobile-nav -->
@@ -631,55 +649,45 @@
     <script>
         const form = document.getElementById('form');
 
-            function cashOnDelivery() {
-                const selectedAddress = form.elements['selectedAddress'].value;
-                const paymentMethod = form.elements['paymentMethod'].value;
-                const SubtotalEle = document.getElementById('total')
-                const subtotal = SubtotalEle.textContent.trim();
+        function cashOnDelivery() {
+            const selectedAddress = form.elements['selectedAddress'].value;
+            const paymentMethod = form.elements['paymentMethod'].value;
+            const SubtotalEle = document.getElementById('total')
+            const subtotal = SubtotalEle.textContent.trim();
 
-                console.log(subtotal, '5444');
-                let datas = {
-                    selectedAddress,
-                    paymentMethod,
-                    subtotal
-                };
-                fetch('/order', {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(datas)
+            console.log(subtotal, '5444');
+            let datas = {
+                selectedAddress,
+                paymentMethod,
+                subtotal
+            };
+            fetch('/order', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.message) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Order Success',
-                                text: 'Your order has been placed successfully!',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                window.location.href = '/profile';
-                            });
-                        } else if(data.fail) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Order Failed',
-                text: data.fail || 'Unknown error occurred',
-                confirmButtonText: 'OK'
-            });
-        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                .then(data => {
+                    if (data.message) {
+                        window.location.href = '/orderSuccess';
 
-            }
+                    } else if (data.fail) {
+                        window.location.href = '/orderFailure';
+
+                    }
+                })
+                .catch(error => {
+                    window.location.href = '/orderFailure';
+                });
+
+        }
 
         function Wallet() {
             const selectedAddress = form.elements['selectedAddress'].value;
@@ -708,14 +716,7 @@
                 })
                 .then(data => {
                     if (data.message === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Order Success',
-                            text: 'Your order has been placed successfully!',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '/profile';
-                        });
+                        window.location.href = '/orderSuccess';
                     } else if (data.fail) {
                         Swal.fire({
                             icon: 'error',
@@ -723,17 +724,12 @@
                             text: 'insufficient balance in your wallet',
                             confirmButtonText: 'OK'
                         });
-                    }else if(data.failure) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Order Failed',
-                text: data.failure   || 'Unknown error occurred',
-                confirmButtonText: 'OK'
-            });
-        }
+                    } else if (data.failure) {
+                        window.location.href = '/orderFailure';
+                    }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    window.location.href = '/orderFailure';
                 });
         }
 
@@ -764,14 +760,9 @@
                 })
                 .then(data => {
                     if (data.failure) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Order Failed',
-                text: data.msg || 'Unknown error occurred',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+                        window.location.href = '/orderFailure';
+                        return;
+                    }
                     console.log(data);
                     var options = {
                         key: data.key_id,
@@ -805,14 +796,7 @@
                                 })
                                 .then(data => {
                                     if (data.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Order Success',
-                                            text: 'Your order has been placed successfully!',
-                                            confirmButtonText: 'OK'
-                                        }).then(() => {
-                                            window.location.href = '/profile';
-                                        });
+                                        window.location.href = '/orderSuccess';
                                     } else {
                                         Swal.fire({
                                             icon: 'error',
@@ -825,12 +809,7 @@
                                 })
                                 .catch(error => {
                                     console.error('Error:', error);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Order Failed',
-                                        text: 'An error occurred!',
-                                        confirmButtonText: 'OK'
-                                    });
+                                    window.location.href = '/orderFailure';
                                 });
                         },
                         prefill: {
@@ -844,14 +823,7 @@
                     };
                     var paymentGateway = new Razorpay(options);
                     paymentGateway.on('payment.failed', function (response) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Payment Failed',
-                            text: 'Your payment was not successful!',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '/profile';
-                        });
+                        window.location.href = '/orderFailure';
                     }); paymentGateway.open();
                 })
                 .catch(error => {
