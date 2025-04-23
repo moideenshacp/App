@@ -1,5 +1,4 @@
 const users = require("../models/userModel");
-const categories = require("../models/category");
 const Cart = require("../models/cart");
 const product = require("../models/product");
 const Address = require("../models/address");
@@ -9,14 +8,12 @@ const easyinvoice = require("easyinvoice");
 const fs = require("fs");
 const path = require("path");
 const Razorpay = require("razorpay");
-const { logout } = require("./adminController");
 const crypto = require("crypto");
 require("dotenv").config();
 var {
   validatePaymentVerification,
 } = require("razorpay/dist/utils/razorpay-utils");
-const { fail } = require("assert");
-const { wallet } = require("./userController");
+
 
 function genrateOrderID() {
   var digits = "1234567890";

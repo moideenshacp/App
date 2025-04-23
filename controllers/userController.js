@@ -2,18 +2,13 @@
 const users = require("../models/userModel");
 require("dotenv").config();
 const Otp = require("../models/otpModel");
-const categories = require("../models/category");
 const products = require("../models/product");
-const cart = require("../models/cart");
 const Address = require("../models/address");
 const Order = require("../models/order");
 const Wallet = require("../models/walletHistory");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-// const { name } = require('ejs');
-const passport = require("passport");
 const category = require("../models/category");
-const order = require("../models/order");
 const Coupon = require("../models/coupon");
 const wishlist = require("../models/wishlist");
 
